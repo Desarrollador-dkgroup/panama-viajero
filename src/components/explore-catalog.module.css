@@ -1,0 +1,488 @@
+/* Distribución del catálogo y jerarquía del banner */
+.catalog {
+  padding-block: 18px 40px;
+}
+
+.banner h1 {
+  color: var(--brand);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 11px !important;
+  letter-spacing: 0.1em;
+  color: var(--brand);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+  margin-top: 24px;
+}
+
+.sidebar {
+  position: sticky;
+  top: 92px;
+  min-width: 0;
+}
+
+.results {
+  min-width: 0;
+}
+
+.mobileFilters {
+  display: none;
+}
+
+/* Grupos de filtros con controles nativos */
+.filterPanel {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  background: white;
+}
+
+.filterHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 12px;
+}
+
+.filterHeading h2 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 20px;
+}
+
+.filterHeading button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 6px;
+  background: var(--brand);
+  color: white;
+  font-size: 11px;
+}
+
+.filterGroup {
+  min-width: 0;
+  margin: 0 0 16px;
+  padding: 12px 0 0;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+.filterGroup legend {
+  padding: 0 5px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.checkboxGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px 7px;
+}
+
+.checkboxGrid label {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  font-size: 10px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.checkboxGrid input {
+  flex-shrink: 0;
+  margin: 1px 0 0;
+  width: 12px;
+  height: 12px;
+  accent-color: var(--brand);
+}
+
+.rangeLabel {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 11px;
+}
+
+.rangeLabel input {
+  display: block;
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.filterFootnote {
+  display: flex;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.filterFootnote svg {
+  flex-shrink: 0;
+}
+
+.filterHint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--brand);
+}
+
+/* Bloque de ubicación: abre Google Maps mediante un enlace oficial */
+.mapPanel {
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 208px;
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: linear-gradient(120deg, rgb(73 86 162 / 4%), rgb(73 86 162 / 12%));
+}
+
+.mapDecoration {
+  position: absolute;
+  right: 24px;
+  top: 28px;
+  color: rgb(73 86 162 / 15%);
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+.mapContent {
+  position: relative;
+  width: 100%;
+}
+
+.mapContent h2 {
+  font-size: 23px;
+  margin-block: 9px;
+}
+
+.mapContent > p {
+  max-width: 480px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.mapActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.primaryButton:hover {
+  background: var(--brand);
+}
+
+.primaryButton:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.mapLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--brand);
+}
+
+.mapStatus {
+  margin-top: 8px;
+  font-size: 11px !important;
+}
+
+.mapStatus:empty {
+  display: none;
+}
+
+/* Resultados compactos y ordenación */
+.resultsHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-block: 22px 14px;
+  scroll-margin-top: 90px;
+}
+
+.resultsHeading h2 {
+  font-size: 20px;
+}
+
+.resultsHeading p {
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.sort {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.sort select {
+  max-width: 180px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--ink);
+  background: white;
+  font-size: 12px;
+}
+
+.resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.resultCard {
+  min-width: 0;
+  background: white;
+  animation: resultsAppear 320ms ease-out;
+}
+
+.resultCard :global(.catalog-image) {
+  height: 140px;
+}
+
+.cardBody {
+  padding: 12px;
+}
+
+.cardHeading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cardHeading h3 {
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.tags span {
+  padding: 3px 6px;
+  border: 1px solid rgb(73 86 162 / 20%);
+  border-radius: 20px;
+  color: var(--brand);
+  background: rgb(73 86 162 / 4%);
+  font-size: 9px;
+}
+
+/* Paginación y ausencia de resultados */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 26px;
+}
+
+.pagination button {
+  display: grid;
+  place-items: center;
+  min-width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: white;
+  color: var(--brand);
+}
+
+.pagination button[aria-current="page"], .pagination button:hover:enabled {
+  background: var(--brand);
+  color: white;
+}
+
+.pagination button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 42px 20px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.empty > svg {
+  color: var(--brand);
+}
+
+.empty p, .demoNote {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.demoNote {
+  margin-top: 18px;
+  text-align: center;
+}
+
+/* Ajustes de tabletas y pantallas estrechas */
+@media (max-width: 1000px) {
+  .layout {
+    grid-template-columns: 215px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .resultsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 18px;
+  }
+
+  .sidebar {
+    position: static;
+  }
+
+  .mobileFilters {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    color: var(--brand);
+    background: white;
+    text-align: left;
+  }
+
+  .mobileFilters > svg:last-child {
+    margin-left: auto;
+  }
+
+  .filterBody {
+    display: none;
+  }
+
+  .filtersOpen .filterBody {
+    display: block;
+    margin-top: 10px;
+    animation: resultsAppear 220ms ease-out;
+  }
+
+  .checkboxGrid label {
+    font-size: 12px;
+  }
+
+  .mapPanel {
+    padding: 22px;
+  }
+
+  .resultsHeading {
+    flex-wrap: wrap;
+  }
+
+  .sort {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .resultsGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .resultCard :global(.catalog-image) {
+    height: 175px;
+  }
+
+  .cardHeading h3 {
+    font-size: 15px;
+  }
+
+  .mapContent h2 {
+    font-size: 21px;
+  }
+
+  .mapDecoration {
+    opacity: 0.5;
+    right: -20px;
+  }
+}
+
+/* Mantiene el movimiento opcional según las preferencias del dispositivo */
+@keyframes resultsAppear {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resultCard, .filtersOpen .filterBody {
+    animation: none;
+  }
+}
