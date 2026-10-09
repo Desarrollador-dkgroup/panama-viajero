@@ -2,15 +2,28 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  ArrowLeft, ArrowRight, ChevronRight, Heart, ImageIcon, MapPin, Search, Star,
+  ArrowLeft, ArrowRight, ChevronRight, Heart, ImageIcon, MapPin, Star,
 } from "lucide-react";
-import { activities, destinations, restaurants, stays } from "@/data/home";
-import { ServicePreviewDialog, type ServicePreview } from "@/components/service-preview";
+import { activities, restaurants, stays } from "@/data/home";
 import { CategoryNavigation } from "@/components/category-navigation";
+import { SiteBanner } from "@/components/site-banner";
 
-type CatalogItem = (typeof stays)[number];
+const homeProvinces = [
+  { slug: "bocas", name: "Bocas del Toro", subtitle: "Playas y vida caribeña", image: "bocas-del-toro.jpg" },
+  { slug: "cocle", name: "Coclé", subtitle: "Playas, cultura y naturaleza", image: "el-valle.jpg" },
+  { slug: "colon", name: "Colón", subtitle: "Historia y costas del Caribe", image: "portobelo.jpg" },
+  { slug: "chiriqui", name: "Chiriquí", subtitle: "Montañas, café y aventura", image: "boquete.jpg" },
+  { slug: "darien", name: "Darién", subtitle: "Naturaleza y biodiversidad", image: "tierras-altas.jpg" },
+  { slug: "herrera", name: "Herrera", subtitle: "Tradición y folclore", image: "pedasi.jpg" },
+  { slug: "los-santos", name: "Los Santos", subtitle: "Cultura y playas del Pacífico", image: "santa-catalina.jpg" },
+  { slug: "panama", name: "Panamá", subtitle: "Ciudad, historia y modernidad", image: "ciudad-de-panama.jpg" },
+  { slug: "panama-oeste", name: "Panamá Oeste", subtitle: "Escapadas cerca de la ciudad", image: "isla-taboga.jpg" },
+  { slug: "veraguas", name: "Veraguas", subtitle: "Islas, montañas y aventura", image: "san-blas.jpg" },
+];
+
+type CatalogItem = (typeof stays)[number] & { slug?: string };
 type Collection = "destinos" | "alojamientos" | "restaurantes" | "actividades";
 
 // Define los encabezados de las páginas de cada colección
@@ -24,6 +37,9 @@ const collectionTitles: Record<Collection, string> = {
 // Reserva el espacio de las fotografías que todavía no están disponibles
 export function CatalogImage({ src, alt }: { src: string; alt: string }) {
   const [failed, setFailed] = useState(false);
+  const imageSource = src.startsWith("/") || src.startsWith("http")
+    ? src
+    : "/P-Principal/Banner.png";
 
   return (
     <div className="catalog-image">
@@ -33,7 +49,7 @@ export function CatalogImage({ src, alt }: { src: string; alt: string }) {
         </div>
       ) : (
         <Image
-          src={src}
+          src={imageSource}
           alt={alt}
           fill
           sizes="(max-width: 640px) 85vw, (max-width: 900px) 45vw, 33vw"
@@ -45,20 +61,29 @@ export function CatalogImage({ src, alt }: { src: string; alt: string }) {
 }
 
 // Presenta los datos de una tarjeta y su control de favoritos
-function CatalogCard({ item, folder, unit, favorite, onFavorite, onOpen }: {
+function CatalogCard({ item, folder, unit, favorite, onFavorite }: {
   item: CatalogItem;
   folder: string;
   unit: string;
   favorite: boolean;
   onFavorite: () => void;
-  onOpen: () => void;
 }) {
+  const fallbackSlug = item.name.toLowerCase().replace(/\s+/g, "-");
+  const serviceSlug = item.slug ?? fallbackSlug;
+
   return (
     <article className="catalog-card">
-      <button className="service-image-button" onClick={onOpen}
-        aria-label={`Ver ${item.name}`}>
-        <CatalogImage src={`/P-Principal/${folder}/${item.image}`} alt={item.name} />
-      </button>
+      <Link className="service-image-button" href={`/servicios/${serviceSlug}`}
+        target="_blank" rel="noopener noreferrer" aria-label={`Ver ${item.name}`}>
+        <CatalogImage
+          src={item.image.startsWith("http")
+            ? item.image
+            : item.image.includes("/")
+              ? "/P-Principal/Banner.png"
+              : `/P-Principal/${folder}/${item.image}`}
+          alt={item.name}
+        />
+      </Link>
       <button
         className={`favorite-button ${favorite ? "selected" : ""}`}
         aria-label={`${favorite ? "Quitar" : "Añadir"} ${item.name} de favoritos`}
@@ -131,7 +156,70 @@ export function HomeContent({ collection }: { collection?: Collection }) {
   const [search, setSearch] = useState("");
   const [favorites, setFavorites] = useState<string[]>([]);
   // Conserva el servicio seleccionado para su vista previa
-  const [selectedService, setSelectedService] = useState<ServicePreview | null>(null);
+  const [databaseStays, setDatabaseStays] = useState<typeof stays>(stays);
+  const [databaseRestaurants, setDatabaseRestaurants] = useState<typeof restaurants>([]);
+
+  // Carga los hospedajes publicados para reflejarlos también en la portada.
+  useEffect(() => {
+    fetch("/api/services?category=hospedaje")
+      .then(async (response) => {
+        if (!response.ok) return;
+        const result = await response.json() as {
+          services?: Array<Record<string, unknown>>;
+        };
+        const services = result.services ?? [];
+        if (!services.length) return;
+
+        const mapped = services.map((service) => {
+          const city = service.cities as { name?: string } | null;
+          const photos = service.service_photos as Array<{ storage_path?: string }> | null;
+          const cents = service.cached_price_from_cents ?? service.base_price_cents;
+
+          return {
+            slug: String(service.slug ?? service.id),
+            name: String(service.name),
+            location: city?.name ?? "Panamá",
+            price: Number(cents ?? 0) / 100,
+            rating: Number(service.rating_avg ?? 0).toFixed(1),
+            image: photos?.[0]?.storage_path ?? "",
+          };
+        });
+
+        setDatabaseStays(mapped);
+      })
+      .catch(() => undefined);
+  }, []);
+
+  // Carga todos los restaurantes publicados para la colección de la portada.
+  useEffect(() => {
+    fetch("/api/services?category=restaurantes")
+      .then(async (response) => {
+        if (!response.ok) return;
+        const result = await response.json() as {
+          services?: Array<Record<string, unknown>>;
+        };
+        const services = result.services ?? [];
+        if (!services.length) return;
+
+        const mapped = services.map((service) => {
+          const city = service.cities as { name?: string } | null;
+          const photos = service.service_photos as Array<{ storage_path?: string }> | null;
+          const cents = service.cached_price_from_cents ?? service.base_price_cents;
+
+          return {
+            slug: String(service.slug ?? service.id),
+            name: String(service.name),
+            location: city?.name ?? "Panamá",
+            price: Number(cents ?? 0) / 100,
+            rating: Number(service.rating_avg ?? 0).toFixed(1),
+            image: photos?.[0]?.storage_path ?? "",
+          };
+        });
+
+        setDatabaseRestaurants(mapped);
+      })
+      .catch(() => undefined);
+  }, []);
 
   // Alterna la selección de favoritos
   const toggleFavorite = (name: string) => {
@@ -148,33 +236,19 @@ export function HomeContent({ collection }: { collection?: Collection }) {
   return (
     <main id="contenido">
       {/* Banner principal y formulario de búsqueda */}
-      <section className="hero">
-        <Image src="/P-Principal/Banner.png" alt="Paisaje de Panamá" fill
-          priority sizes="100vw" className="hero-image" />
-        <div className="hero-overlay" />
-        <div className="container hero-content">
-          <h1>
-            {collection ? collectionTitles[collection] : (
-              <>¿Qué quieres descubrir<br />en Panamá?</>
-            )}
-          </h1>
-          <p>Encuentra lugares, sabores y experiencias<br />para tu próxima aventura.</p>
-          <form className="search-form" onSubmit={(event) => {
-            event.preventDefault();
-            setSearch(query.trim());
-            document.getElementById(collection ?? "destinos")?.scrollIntoView();
-          }}>
-            <Search aria-hidden="true" size={24} />
-            <input
-              aria-label="Buscar destino, alojamiento o restaurante"
-              placeholder="Busca un destino, alojamiento o experiencia"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-            />
-            <button type="submit">Buscar</button>
-          </form>
-        </div>
-      </section>
+      <SiteBanner
+        title={collection ? collectionTitles[collection] : (
+          <>¿Qué quieres descubrir<br />en Panamá?</>
+        )}
+        description={<>Encuentra lugares, sabores y experiencias<br />para tu próxima aventura.</>}
+        query={query}
+        showSearch
+        onQueryChange={setQuery}
+        onSearch={() => {
+          setSearch(query.trim());
+          document.getElementById(collection ?? "destinos")?.scrollIntoView();
+        }}
+      />
 
       <div className="container home-sections">
         {/* Accesos a las categorías del catálogo */}
@@ -188,18 +262,17 @@ export function HomeContent({ collection }: { collection?: Collection }) {
 
         {(!collection || collection === "destinos") && (
         <CatalogSection id="destinos" title="Destinos populares" showMore={!collection}>
-          {destinations.filter((item) => matches(item.name)).map((item) => (
-            <article key={item.name} className="destination-card">
-              <button className="service-image-button" onClick={() => setSelectedService(item)}
-                aria-label={`Ver ${item.name}`}>
+          {homeProvinces.filter((item) => matches(item.name)).map((item) => (
+            <article key={item.slug} className="destination-card">
+              <Link className="service-image-button" href={`/destinos/${item.slug}`}>
                 <CatalogImage src={`/P-Principal/Destinos/${item.image}`} alt={item.name} />
-              </button>
+              </Link>
               <div className="destination-caption">
                 <h3>{item.name}</h3><p>{item.subtitle}</p>
               </div>
             </article>
           ))}
-          {!destinations.some((item) => matches(item.name)) && <p>No hay destinos coincidentes.</p>}
+          {!homeProvinces.some((item) => matches(item.name)) && <p>No hay destinos coincidentes.</p>}
         </CatalogSection>
         )}
 
@@ -209,26 +282,26 @@ export function HomeContent({ collection }: { collection?: Collection }) {
           title="Encuentra tu próxima estadía"
           showMore={!collection}
         >
-          {stays.filter((item) => matches(`${item.name} ${item.location}`)).map((item) => (
-            <CatalogCard key={item.name} item={item} folder="Alojamientos" unit="noche"
+          {databaseStays.filter((item) => matches(`${item.name} ${item.location}`)).map((item) => (
+            <CatalogCard key={item.slug ?? `${item.name}-${item.location}`} item={item}
+              folder="Alojamientos" unit="noche"
               favorite={favorites.includes(item.name)}
-              onFavorite={() => toggleFavorite(item.name)}
-              onOpen={() => setSelectedService({ ...item, unit: "noche" })} />
+            onFavorite={() => toggleFavorite(item.name)} />
           ))}
-          {!stays.some((item) => matches(`${item.name} ${item.location}`))
+          {!databaseStays.some((item) => matches(`${item.name} ${item.location}`))
             && <p>No hay alojamientos coincidentes.</p>}
         </CatalogSection>
         )}
 
         {(!collection || collection === "restaurantes") && (
         <CatalogSection id="restaurantes" title="¿Algo para comer?" showMore={!collection}>
-          {restaurants.filter((item) => matches(`${item.name} ${item.location}`)).map((item) => (
-            <CatalogCard key={item.name} item={item} folder="Restaurantes" unit="persona"
+          {databaseRestaurants.filter((item) => matches(`${item.name} ${item.location}`)).map((item) => (
+            <CatalogCard key={item.slug ?? `${item.name}-${item.location}`} item={item}
+              folder="Restaurantes" unit="persona"
               favorite={favorites.includes(item.name)}
-              onFavorite={() => toggleFavorite(item.name)}
-              onOpen={() => setSelectedService({ ...item, unit: "persona" })} />
+              onFavorite={() => toggleFavorite(item.name)} />
           ))}
-          {!restaurants.some((item) => matches(`${item.name} ${item.location}`))
+          {!databaseRestaurants.some((item) => matches(`${item.name} ${item.location}`))
             && <p>No hay restaurantes coincidentes.</p>}
         </CatalogSection>
         )}
@@ -242,13 +315,12 @@ export function HomeContent({ collection }: { collection?: Collection }) {
           >
             {activities.filter((item) => matches(`${item.name} ${item.location}`)).map((item) => (
               <CatalogCard
-                key={item.name}
+                key={item.slug ?? `${item.name}-${item.location}`}
                 item={item}
                 folder="Actividades"
                 unit="persona"
                 favorite={favorites.includes(item.name)}
                 onFavorite={() => toggleFavorite(item.name)}
-                onOpen={() => setSelectedService({ ...item, unit: "persona" })}
               />
             ))}
             {!activities.some((item) => matches(`${item.name} ${item.location}`)) && (
@@ -278,7 +350,6 @@ export function HomeContent({ collection }: { collection?: Collection }) {
         </section>
         )}
       </div>
-      <ServicePreviewDialog service={selectedService} onClose={() => setSelectedService(null)} />
     </main>
   );
 }

@@ -1,6 +1,9 @@
-import { ExploreCatalog } from "@/components/explore-catalog";
+import { PromotionsPage } from "@/components/promotions-page";
+import { getPromotions } from "@/lib/promotions";
 
-// Presenta el catálogo filtrable de promociones
-export default function Page() {
-  return <ExploreCatalog key="promociones" category="promociones" />;
+// Presenta el catálogo de promociones publicado en la base de datos.
+export default async function Page() {
+  const promotions = await getPromotions();
+
+  return <PromotionsPage promotions={promotions} />;
 }

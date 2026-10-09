@@ -60,6 +60,49 @@ h3 {
   font-family: var(--font-tango), "Segoe UI", system-ui, sans-serif;
 }
 
+/* Filtros interactivos de servicios en sitios turísticos */
+.tourist-filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+}
+
+.tourist-filter-panel { padding: 10px 18px; border-radius: 18px; background: #fff;
+  box-shadow: 0 10px 28px rgb(0 0 0 / 12%); }
+
+.tourist-filters button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 64px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-width: 0 1px 0 0;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.tourist-filters button span { color: var(--accent); }
+.tourist-filters button.selected { color: #fff; background: var(--brand); }
+.tourist-filters button.selected span { color: #fff; }
+.tourist-services-title { margin: 22px 0 0; color: var(--brand); font-size: 28px; }
+.tourist-services-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px; margin: 20px 0 28px; }
+.tourist-services-grid a { padding: 18px; border: 1px solid var(--border); border-radius: 14px; }
+.tourist-services-grid a span { display: block; margin-top: 8px; color: var(--brand); }
+.tourist-content-grid { margin-top: -115px; }
+.tourist-hero-image .catalog-image { height: 100%; }
+.tourist-hero-image .catalog-image img { object-fit: cover; }
+
+@media (max-width: 760px) {
+  .tourist-content-grid { margin-top: 0; grid-template-columns: 1fr !important; }
+  .tourist-filter-panel { padding: 8px; }
+  .tourist-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tourist-services-grid { grid-template-columns: 1fr; }
+}
+
 h1, h2, h3, p {
   margin: 0;
 }
@@ -272,6 +315,13 @@ button, a, .catalog-card, .destination-card {
   font-size: 19px;
   line-height: 1.25;
   margin-block: 10px 15px;
+}
+
+.hero-eyebrow {
+  color: var(--brand) !important;
+  font-size: 12px !important;
+  font-weight: 700;
+  letter-spacing: 0.1em;
 }
 
 .search-form {

@@ -1,14 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Heart, MapPin, Search, SlidersHorizontal, Star } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import {
+  ChevronLeft, ChevronRight, Heart, MapPin, Search, SlidersHorizontal, Star,
+} from "lucide-react";
 import { CategoryNavigation } from "@/components/category-navigation";
 import { CatalogImage } from "@/components/home-content";
 import { CatalogFilterPanel, defaultFilters } from "@/components/catalog-filter-panel";
 import type { CatalogFilters } from "@/components/catalog-filter-panel";
 import { LocationMap } from "@/components/location-map";
-import { ServicePreviewDialog } from "@/components/service-preview";
 import { catalogConfig, getCatalog } from "@/data/catalog";
 import type { CatalogCategory, CatalogService } from "@/data/catalog";
 import styles from "./explore-catalog.module.css";
@@ -18,19 +20,29 @@ const normalize = (value: string) => value.normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const pageSize = 6;
 
+// Traduce los nombres de las rutas a los identificadores reales de Supabase.
+const databaseCategories: Record<CatalogCategory, string> = {
+  alojamientos: "hospedaje",
+  restaurantes: "restaurantes",
+  actividades: "actividades",
+  transporte: "transporte",
+  tours: "tour-operador",
+  promociones: "otras",
+};
+
 // Presenta una tarjeta del catálogo y conserva separados sus dos botones
-function ExploreCard({ item, unit, favorite, onFavorite, onOpen }: {
+function ExploreCard({ item, unit, favorite, onFavorite }: {
   item: CatalogService;
   unit: string;
   favorite: boolean;
   onFavorite: () => void;
-  onOpen: () => void;
 }) {
   return (
     <article className={`catalog-card ${styles.resultCard}`}>
-      <button className="service-image-button" aria-label={`Ver ${item.name}`} onClick={onOpen}>
+      <Link className="service-image-button" aria-label={`Ver ${item.name}`}
+        href={`/servicios/${item.id}`} target="_blank" rel="noopener noreferrer">
         <CatalogImage src={item.imagePath} alt={item.name} />
-      </button>
+      </Link>
       <button className={`favorite-button ${favorite ? "selected" : ""}`}
         aria-label={`${favorite ? "Quitar" : "Añadir"} ${item.name} de favoritos`}
         aria-pressed={favorite} onClick={onFavorite}>
@@ -55,7 +67,46 @@ function ExploreCard({ item, unit, favorite, onFavorite, onOpen }: {
 // Compone el catálogo filtrable sin modificar el menú ni el pie compartidos
 export function ExploreCatalog({ category }: { category: CatalogCategory }) {
   const config = catalogConfig[category];
-  const items = getCatalog(category);
+  const [items, setItems] = useState(() => getCatalog(category));
+  const [databaseStatus, setDatabaseStatus] = useState("demo");
+
+  // Carga los servicios publicados y conserva datos de demostración si no hay registros.
+  useEffect(() => {
+    const loadServices = async () => {
+      const databaseCategory = databaseCategories[category];
+      const response = await fetch(`/api/services?category=${databaseCategory}`);
+      if (!response.ok) return;
+
+      const result = await response.json() as { services?: Array<Record<string, unknown>> };
+      const services = result.services ?? [];
+      if (!services.length) return;
+
+      const mapped = services.map((service) => {
+        const city = service.cities as { name?: string } | null;
+        const photos = service.service_photos as Array<{ storage_path?: string }> | null;
+        const priceCents = service.cached_price_from_cents ?? service.base_price_cents;
+
+        return {
+          id: String(service.id),
+          name: String(service.name),
+          location: city?.name ?? "Panamá",
+          province: "Panamá",
+          price: Number(priceCents ?? 0) / 100,
+          rating: Number(service.rating_avg ?? 0).toFixed(1),
+          image: photos?.[0]?.storage_path ?? "",
+          imagePath: photos?.[0]?.storage_path ?? "/P-Principal/Banner.png",
+          type: config.typeLabel,
+          amenities: ["Servicio publicado"],
+          environment: "Recomendado",
+        };
+      });
+
+      setItems(mapped);
+      setDatabaseStatus("database");
+    };
+
+    loadServices().catch(() => setDatabaseStatus("demo"));
+  }, [category, config.typeLabel]);
 
   // Mantiene la búsqueda, los filtros y los controles de presentación
   const [query, setQuery] = useState("");
@@ -65,7 +116,6 @@ export function ExploreCatalog({ category }: { category: CatalogCategory }) {
   const [page, setPage] = useState(1);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
-  const [selected, setSelected] = useState<CatalogService | null>(null);
   const resultsHeading = useRef<HTMLDivElement>(null);
 
   // Filtra todas las condiciones antes de ordenar y paginar los resultados
@@ -176,7 +226,7 @@ export function ExploreCatalog({ category }: { category: CatalogCategory }) {
             <div className={styles.resultsGrid}>
               {visibleItems.map((item) => (
                 <ExploreCard key={item.id} item={item} unit={config.unit}
-                  favorite={favorites.includes(item.id)} onOpen={() => setSelected(item)}
+                  favorite={favorites.includes(item.id)}
                   onFavorite={() => setFavorites((current) => current.includes(item.id)
                     ? current.filter((id) => id !== item.id) : [...current, item.id])} />
               ))}
@@ -203,12 +253,14 @@ export function ExploreCatalog({ category }: { category: CatalogCategory }) {
                   onClick={() => changePage(currentPage + 1)}><ChevronRight size={18} /></button>
               </nav>
             )}
-            <p className={styles.demoNote}>Catálogo de demostración. Precios y atributos de ejemplo.</p>
+            <p className={styles.demoNote}>
+              {databaseStatus === "database"
+                ? "Servicios publicados desde Supabase."
+                : "Catálogo de demostración. Precios y atributos de ejemplo."}
+            </p>
           </div>
         </div>
       </div>
-      <ServicePreviewDialog service={selected ? { ...selected, unit: config.unit } : null}
-        onClose={() => setSelected(null)} />
     </main>
   );
 }

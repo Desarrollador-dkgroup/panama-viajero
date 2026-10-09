@@ -1,0 +1,26 @@
+.page { background: #fff; }
+.hero { position: relative; min-height: 430px; overflow: hidden; }
+.hero > img { object-fit: cover; }
+.heroOverlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(0 0 0 / 68%), transparent 75%); }
+.heroContent { position: relative; z-index: 1; width: min(1180px, calc(100% - 48px)); margin: 0 auto; padding-top: 66px; color: #fff; }
+.backLink { display: inline-flex; align-items: center; gap: 6px; color: #fff; font-weight: 700; }
+.heroContent p { margin: 65px 0 12px; color: #fff; font-size: .78rem; font-weight: 700; letter-spacing: .1em; }
+.heroContent h1 { margin: 0; font-size: clamp(2.8rem, 6vw, 5rem); }
+.heroContent span { display: block; max-width: 520px; margin-top: 12px; font-size: 1.15rem; }
+.content { position: relative; width: min(1180px, calc(100% - 48px)); margin: -52px auto 72px; z-index: 2; }
+.content :global(.categories) { padding: 18px; border-radius: 18px; background: #fff;
+  box-shadow: 0 10px 28px rgb(0 0 0 / 12%); }
+.heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin: 42px 0 18px; }
+.heading p { margin: 0 0 6px; color: var(--brand); font-size: .75rem; font-weight: 700; letter-spacing: .1em; }
+.heading h2 { margin: 0; font-size: clamp(1.8rem, 4vw, 2.7rem); }
+.heading > span { display: inline-flex; align-items: center; gap: 5px; color: var(--brand); }
+.siteGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.siteCard { overflow: hidden; border-radius: 14px; background: #fff; box-shadow: 0 8px 22px rgb(0 0 0 / 10%); }
+.siteImageLink { display: block; }
+.siteCard :global(.catalog-image) { height: 220px; }
+.siteBody { padding: 22px 26px 26px; }
+.siteBody h3 { margin: 0; color: var(--brand); font-size: 1.35rem; font-style: italic; }
+.siteBody p { min-height: 72px; margin: 16px 0; line-height: 1.65; }
+.siteBody a { color: var(--accent); font-weight: 700; }
+@media (max-width: 900px) { .siteGrid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) { .hero { min-height: 390px; } .heroContent, .content { width: calc(100% - 32px); } .heroContent { padding-top: 38px; } .heroContent p { margin-top: 52px; } .content { margin-top: -32px; } .content :global(.categories) { padding: 10px; } .siteGrid { grid-template-columns: 1fr; } .heading { align-items: start; flex-direction: column; } .siteCard :global(.catalog-image) { height: 240px; } }

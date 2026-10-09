@@ -10,8 +10,8 @@ import { ArrowUpRight, LogOut, Menu, Settings, ShieldCheck, UserCircle, X } from
 // Comparte las rutas entre las versiones de escritorio y móvil
 const links = [
   { label: "Inicio", href: "/" },
-  { label: "Explorar", href: "/alojamientos" },
-  { label: "Promociones", href: "/#experiencias" },
+  { label: "Destinos", href: "/destinos" },
+  { label: "Promociones", href: "/promociones" },
   { label: "Favoritos", href: "/#favoritos" },
 ];
 
@@ -47,7 +47,8 @@ export function SiteMenu() {
   // Identifica las páginas de catálogo sin alterar la apariencia del menú
   const isSelected = (href: string) => {
     if (pathname === "/") return selectedHref === href;
-    return href === "/alojamientos" && [
+    return href === "/destinos" && [
+      "/destinos",
       "/alojamientos", "/restaurantes", "/actividades", "/transporte", "/tours", "/promociones",
     ].includes(pathname);
   };

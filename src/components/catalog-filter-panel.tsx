@@ -100,7 +100,9 @@ export function CatalogFilterPanel({ category, filters, onChange, onReset }: {
         selected={filters.amenities} onToggle={(value) => toggle("amenities", value)} />
       <FilterChoices title="Entorno" choices={environmentOptions}
         selected={filters.environments} onToggle={(value) => toggle("environments", value)} />
-      <p className={styles.filterFootnote}><MapPin size={13} />Datos de ejemplo para probar filtros.</p>
+      <p className={styles.filterFootnote}>
+        <MapPin size={13} />Datos de ejemplo para probar filtros.
+      </p>
       <span className={styles.filterHint}><SlidersHorizontal size={14} />Ajusta tu búsqueda</span>
     </div>
   );

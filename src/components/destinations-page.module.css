@@ -1,0 +1,45 @@
+.page { background: #fff; }
+.hero { min-height: 285px; position: relative; overflow: visible; }
+.hero > img { object-fit: cover; object-position: center; z-index: 0; }
+.heroShade { position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, #fff 8%, rgb(255 255 255 / 82%) 34%, transparent 70%); }
+.heroCopy { position: relative; z-index: 2; width: min(1120px, calc(100% - 48px)); margin: 0 auto; padding: 38px 0 24px; }
+.eyebrow { color: var(--brand); font-size: .75rem; font-weight: 700; letter-spacing: .08em; }
+.heroCopy h1 { max-width: 500px; margin: 12px 0; color: var(--ink); font-size: clamp(2rem, 4vw, 3.2rem); line-height: .98; }
+.heroCopy > p:last-child { max-width: 420px; color: #3f4657; font-size: 1.1rem; }
+.searchPanel { position: absolute; z-index: 3; bottom: 24px; left: 24px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; width: min(610px, calc(100% - 48px)); padding: 4px 6px 4px 16px; border: 2px solid var(--accent); border-radius: 14px; background: #fff; }
+.searchPanel > svg { color: var(--accent); }
+.searchPanel input { min-width: 0; padding: 14px; border: 0; color: #4c5362; outline: 0; }
+.searchPanel button { display: inline-flex; align-items: center; justify-content: center; min-width: 130px; padding: 14px 24px; border: 0; border-radius: 10px; background: var(--accent); color: #fff; font-weight: 700; cursor: pointer; }
+.content { width: min(1120px, calc(100% - 48px)); margin: 42px auto 72px; }
+.sectionHeading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 38px 0 16px; }
+.sectionHeading h2 { margin: 0; color: var(--ink); font-size: clamp(1.5rem, 3vw, 2rem); }
+.sectionHeading a { display: inline-flex; align-items: center; gap: 3px; color: var(--brand); font-weight: 700; }
+.destinationGrid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 180px; gap: 16px; }
+.featuredDestination, .destinationCard { position: relative; overflow: hidden; border-radius: 14px; background: #e9ebf5; }
+.featuredDestination { grid-column: span 2; grid-row: span 2; }
+.destinationGrid :global(.catalog-image) { height: 100%; }
+.destinationGrid :global(.catalog-image) img { object-fit: cover; }
+.destinationCard::after { position: absolute; inset: 35% 0 0; background: linear-gradient(transparent, rgb(0 0 0 / 72%)); content: ""; }
+.featuredDestination::after { position: absolute; inset: 35% 0 0; background: linear-gradient(transparent, rgb(0 0 0 / 72%)); content: ""; }
+.featuredDestination > div:last-child { position: absolute; z-index: 2; right: 22px; bottom: 18px; left: 22px; color: #fff; }
+.featuredDestination h3 { margin: 0; font-size: clamp(1.8rem, 3vw, 2.8rem); text-transform: capitalize; }
+.featuredDestination p { margin: 4px 0 0; }
+.featuredDestination div, .destinationCard div { position: absolute; z-index: 2; right: 16px; bottom: 14px; left: 16px; color: #fff; }
+.featuredDestination strong { display: block; font-size: 2rem; }
+.featuredDestination span { display: block; margin-top: 5px; }
+.destinationCard strong { display: block; font-size: 1.3rem; }
+.destinationCard span { display: block; margin-top: 4px; font-size: .82rem; }
+.sectionActions { display: flex; align-items: center; gap: 8px; }
+.sectionActions a { margin-right: 8px; }
+.sectionActions button { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--border); border-radius: 50%; background: #fff; color: var(--brand); cursor: pointer; }
+.recommendationGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.recommendationCard { overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
+.recommendationCard :global(.catalog-image) { height: 170px; }
+.recommendationBody { display: flex; justify-content: space-between; gap: 8px; padding: 14px 14px 5px; }
+.recommendationBody h3 { margin: 0; font-size: 1rem; }
+.recommendationBody p { display: flex; align-items: center; gap: 4px; margin: 6px 0 0; color: #697083; font-size: .85rem; }
+.rating { color: var(--accent); font-weight: 700; white-space: nowrap; }
+.tags { display: flex; gap: 6px; padding: 8px 14px 14px; }
+.tags span { padding: 4px 8px; border: 1px solid rgb(73 86 162 / 35%); border-radius: 999px; color: var(--brand); font-size: .72rem; }
+@media (max-width: 900px) { .destinationGrid { grid-template-columns: repeat(3, 1fr); } .recommendationGrid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .hero { min-height: 420px; } .heroCopy { width: calc(100% - 32px); padding-top: 48px; } .heroShade { background: linear-gradient(180deg, #fff 4%, rgb(255 255 255 / 78%) 48%, transparent 82%); } .searchPanel { bottom: 18px; width: calc(100% - 32px); } .searchPanel input { padding: 12px 8px; } .searchPanel button { min-width: 90px; padding: 12px 10px; } .content { width: calc(100% - 32px); margin-top: 42px; } .destinationGrid { grid-template-columns: 1fr 1fr; grid-auto-rows: 135px; } .featuredDestination { grid-column: 1 / -1; grid-row: span 2; } .recommendationGrid { grid-template-columns: 1fr; } .recommendationCard :global(.catalog-image) { height: 210px; } }

@@ -1,6 +1,6 @@
-import { HomeContent } from "@/components/home-content";
+import { DestinationsPage } from "@/components/destinations-page";
 
-// Presenta el catálogo de destinos
+// Presenta la página principal de destinos
 export default function CollectionPage() {
-  return <HomeContent collection="destinos" />;
+  return <DestinationsPage />;
 }

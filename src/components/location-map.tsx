@@ -43,7 +43,9 @@ export function LocationMap() {
 
   return (
     <section className={styles.mapPanel} aria-label="Explorar ubicación en Google Maps">
-      <div className={styles.mapDecoration} aria-hidden="true"><Map size={115} strokeWidth={1} /></div>
+      <div className={styles.mapDecoration} aria-hidden="true">
+        <Map size={115} strokeWidth={1} />
+      </div>
       <div className={styles.mapContent}>
         <span className={styles.eyebrow}><MapPin size={15} />CERCA DE TU PRÓXIMA AVENTURA</span>
         <h2>Explora Panamá en el mapa</h2>
