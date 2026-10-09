@@ -156,8 +156,8 @@ export function HomeContent({ collection }: { collection?: Collection }) {
   const [search, setSearch] = useState("");
   const [favorites, setFavorites] = useState<string[]>([]);
   // Conserva el servicio seleccionado para su vista previa
-  const [databaseStays, setDatabaseStays] = useState<typeof stays>(stays);
-  const [databaseRestaurants, setDatabaseRestaurants] = useState<typeof restaurants>([]);
+  const [databaseStays, setDatabaseStays] = useState<CatalogItem[]>(stays);
+  const [databaseRestaurants, setDatabaseRestaurants] = useState<CatalogItem[]>([]);
 
   // Carga los hospedajes publicados para reflejarlos también en la portada.
   useEffect(() => {
@@ -315,7 +315,7 @@ export function HomeContent({ collection }: { collection?: Collection }) {
           >
             {activities.filter((item) => matches(`${item.name} ${item.location}`)).map((item) => (
               <CatalogCard
-                key={item.slug ?? `${item.name}-${item.location}`}
+                key={`${item.name}-${item.location}`}
                 item={item}
                 folder="Actividades"
                 unit="persona"

@@ -19,6 +19,24 @@ export type PromotionRecord = {
   offerType: string;
 };
 
+type PromotionRow = {
+  id: string;
+  slug: string;
+  title: string;
+  place_name: string;
+  eyebrow: string | null;
+  tags: string | null;
+  period_label: string;
+  discount_value: string;
+  discount_suffix: string | null;
+  price_line: string | null;
+  photo_storage_path: string;
+  valid_from: string;
+  valid_to: string;
+  destination_kind: string;
+  destination_category_id: string | null;
+};
+
 // Convierte las etiquetas almacenadas como texto en una lista reutilizable.
 const splitTags = (value: string | null) => {
   if (!value) return [];
@@ -42,7 +60,7 @@ export async function getPromotions(): Promise<PromotionRecord[]> {
   if (error || !data) return [];
 
   const now = Date.now();
-  return data.map((promotion) => ({
+  return (data as unknown as PromotionRow[]).map((promotion) => ({
     id: promotion.id,
     slug: promotion.slug,
     title: promotion.title,

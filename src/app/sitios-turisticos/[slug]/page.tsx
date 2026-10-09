@@ -26,16 +26,19 @@ export default async function TouristSitePage({
   const image = site.photo_storage_path ?? "/P-Principal/Banner.png";
   return (
     <main>
-      <section style={{ position: "relative", minHeight: 390, overflow: "hidden",
+      <section className="tourist-hero" style={{ position: "relative", minHeight: 470, overflow: "hidden",
         background: "var(--brand)" }}>
         <div className="tourist-hero-image" style={{ position: "absolute", inset: 0 }}>
           <CatalogImage src={image} alt={site.name} />
         </div>
-        <div style={{ position: "absolute", inset: 0, padding: "70px max(24px, 8vw)",
+        <div style={{ position: "absolute", inset: 0, padding: "42px max(24px, 8vw)",
           color: "#fff", background: "linear-gradient(90deg, rgb(0 0 0 / 65%), transparent)" }}>
-          <Link href="/destinos" style={{ fontWeight: 700 }}><ArrowLeft size={17} /> Volver a destinos</Link>
-          <h1 style={{ marginTop: 80, fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>{site.name}</h1>
-          <p style={{ fontSize: 18, maxWidth: 650 }}>{site.short_description}</p>
+          <Link className="tourist-back-link" href="/destinos">
+            <ArrowLeft size={17} />
+            <span>Volver a destinos</span>
+          </Link>
+          <h1 style={{ marginTop: 44, fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>{site.name}</h1>
+          <p className="tourist-hero-description">{site.description}</p>
         </div>
       </section>
       <div className="container" style={{ marginTop: -42, position: "relative", zIndex: 2 }}>
@@ -45,6 +48,8 @@ export default async function TouristSitePage({
             slug: service.slug,
             name: service.name,
             category: (service.categories as { id?: string } | null)?.id ?? "otros",
+            categoryLabel: (service.categories as { label?: string } | null)?.label ?? "Servicio",
+            city: (service.cities as { name?: string } | null)?.name ?? site.name,
           }))} />
         </div>
         <div className="tourist-content-grid" style={{ display: "grid",
@@ -56,7 +61,6 @@ export default async function TouristSitePage({
             <p style={{ marginTop: 12, color: "var(--brand)", fontWeight: 700 }}>
               <MapPin size={16} /> {(site.cities as { name?: string } | null)?.name ?? "Panamá"}
             </p>
-            <p style={{ marginTop: 8, color: "var(--muted)" }}>{site.description}</p>
             <div style={{ height: 190, marginTop: 20, borderRadius: 14, background: "#cdebf3",
               display: "grid", placeItems: "center", color: "var(--brand)" }}>
               <MapPin size={32} /> Ver ubicación en el mapa
