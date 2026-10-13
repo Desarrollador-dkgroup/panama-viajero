@@ -8,6 +8,7 @@ export type ServiceDetailData = {
   location: string;
   description: string;
   image: string;
+  photos: Array<{ path: string; isCover: boolean; position: number }>;
   rating: string;
   reviews: number;
   price: number;
@@ -32,8 +33,12 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
   const query = supabase.from("services").select(`
     id, slug, category_id, name, description, cached_price_from_cents,
     base_price_cents, rating_avg, rating_count, area_label,
-    cities(name), service_photos(storage_path, is_cover, position)
+    cities(name), service_photos(storage_path, is_cover, position),
+    service_amenities(amenities(label))
   `);
+
+  // Limita la consulta pública a servicios publicados.
+  query.eq("status", "published");
 
   const serviceResult = identifier.match(/^[0-9a-f-]{36}$/i)
     ? await query.eq("id", identifier).maybeSingle()
@@ -55,9 +60,11 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
   const menu: ServiceDetailData["menu"] = [];
 
   if (category === "hospedaje") {
-    const { data } = await supabase.from("room_types").select(
-      "name, description, capacity, beds_label, price_cents"
-    ).eq("service_id", String(service.id)).order("position");
+    const { data } = await supabase
+      .from("room_types")
+      .select("name, description, capacity, beds_label, price_cents")
+      .eq("service_id", String(service.id))
+      .order("position");
 
     for (const room of data ?? []) {
       rooms.push({
@@ -71,22 +78,22 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
   }
 
   if (category === "restaurantes") {
-    const { data: sections } = await supabase.from("menu_sections").select(
-      "id, title, position, menu_dishes(name, description, price_cents, position)"
-    ).eq("service_id", String(service.id)).order("position");
+    const { data: sections } = await supabase
+      .from("menu_sections")
+      .select("id, title, position, menu_dishes(name, description, price_cents, position)")
+      .eq("service_id", String(service.id))
+      .order("position");
 
     for (const section of sections ?? []) {
       menu.push({
         section: section.title,
-        dishes: (section.menu_dishes ?? []).map((dish: {
-          name: string;
-          description: string;
-          price_cents: number;
-        }) => ({
-          name: dish.name,
-          description: dish.description,
-          price: dish.price_cents / 100,
-        })),
+        dishes: (section.menu_dishes ?? []).map(
+          (dish: { name: string; description: string; price_cents: number }) => ({
+            name: dish.name,
+            description: dish.description,
+            price: dish.price_cents / 100,
+          }),
+        ),
       });
     }
   }
@@ -98,15 +105,22 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
     name: String(service.name),
     location: city?.name ?? String(service.area_label ?? "Panamá"),
     description: String(service.description ?? "Información del servicio."),
-    image: cover?.storage_path?.startsWith("http")
-      ? cover.storage_path
-      : "/P-Principal/Banner.png",
+    image: cover?.storage_path?.startsWith("http") ? cover.storage_path : "/P-Principal/Banner.png",
+    // Conserva todas las imágenes y su orden para la futura galería.
+    photos: (photos ?? []).map((photo) => ({
+      path: photo.storage_path ?? "",
+      isCover: photo.is_cover ?? false,
+      position: photo.position ?? 0,
+    })),
     rating: Number(service.rating_avg ?? 0).toFixed(1),
     reviews: Number(service.rating_count ?? 0),
     price: Number(priceCents) / 100,
     rooms,
-    amenities: ["Servicio publicado", "Ubicación en Panamá"],
-    policies: ["Consulta las condiciones directamente con el negocio."],
+    // Lee las comodidades asociadas al servicio sin añadir atributos ficticios.
+    amenities: (service.service_amenities as Array<{
+      amenities: { label: string } | null;
+    }> | null ?? []).flatMap((entry) => entry.amenities ? [entry.amenities.label] : []),
+    policies: [],
     menu,
   };
 }

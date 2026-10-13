@@ -10,7 +10,7 @@ import styles from "./province-page.module.css";
 export async function ProvincePage({ slug }: { slug: string }) {
   const province = getProvinceDetails(slug);
   const databaseSites = await getTouristSites(slug);
-  const sites = databaseSites.length ? databaseSites : province.sites;
+  const sites = databaseSites;
 
   return (
     <main className={styles.page}>
@@ -28,25 +28,27 @@ export async function ProvincePage({ slug }: { slug: string }) {
       </section>
       <div className={styles.content}>
         <div className={styles.heading}>
-          <div><p>EXPLORA {province.name.toUpperCase()}</p><h2>Sitios turísticos</h2></div>
-          <span><MapPin size={18} /> Panamá</span>
+          <div>
+            <p>EXPLORA {province.name.toUpperCase()}</p>
+            <h2>Sitios turísticos</h2>
+          </div>
+          <span>
+            <MapPin size={18} /> Panamá
+          </span>
         </div>
         <section className={styles.siteGrid} aria-label={`Sitios turísticos de ${province.name}`}>
           {sites.map((site) => (
-            <article key={"slug" in site ? site.slug : site.name} className={styles.siteCard}>
-              <Link href={`/sitios-turisticos/${"slug" in site ? site.slug : site.name}`}
-                className={styles.siteImageLink}>
-                <CatalogImage
-                  src={"photoPath" in site ? site.photoPath : `/P-Principal/Destinos/${site.image}`}
-                  alt={site.name}
-                />
+            <article key={site.id} className={styles.siteCard}>
+              <Link href={`/sitios-turisticos/${site.slug}`} className={styles.siteImageLink}>
+                <CatalogImage src={site.photoPath} alt={site.name} />
               </Link>
               <div className={styles.siteBody}>
                 <h3>{site.name}</h3>
-                <p>{"shortDescription" in site ? site.shortDescription : site.description}</p>
+                <p>{site.shortDescription}</p>
               </div>
             </article>
           ))}
+          {sites.length === 0 && <p>No hay sitios turísticos disponibles.</p>}
         </section>
       </div>
     </main>
