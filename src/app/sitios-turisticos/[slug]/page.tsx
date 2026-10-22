@@ -12,7 +12,7 @@ export default async function TouristSitePage({ params }: { params: Promise<{ sl
   const { data: site } = await supabase
     .from("tourist_sites")
     .select(
-      "id, name, description, short_description, photo_storage_path, cities(name), provinces(id)",
+      "id, name, description, short_description, photo_storage_path, province_id, maps_embed_url",
     )
     .eq("slug", slug)
     .maybeSingle();
@@ -68,7 +68,7 @@ export default async function TouristSitePage({ params }: { params: Promise<{ sl
               name: service.name,
               category: (service.categories as { id?: string } | null)?.id ?? "otros",
               categoryLabel: (service.categories as { label?: string } | null)?.label ?? "Servicio",
-              city: (service.cities as { name?: string } | null)?.name ?? site.name,
+              city: service.destination_province_id ?? site.province_id ?? site.name,
             }))}
           />
         </div>
@@ -85,21 +85,31 @@ export default async function TouristSitePage({ params }: { params: Promise<{ sl
           <aside style={{ border: "1px solid var(--border)", borderRadius: 16, padding: 20 }}>
             <h2>Sobre {site.name}</h2>
             <p style={{ marginTop: 12, color: "var(--brand)", fontWeight: 700 }}>
-              <MapPin size={16} /> {(site.cities as { name?: string } | null)?.name ?? "Panamá"}
+              <MapPin size={16} /> {site.province_id ?? "Panamá"}
             </p>
-            <div
-              style={{
-                height: 190,
-                marginTop: 20,
-                borderRadius: 14,
-                background: "#cdebf3",
-                display: "grid",
-                placeItems: "center",
-                color: "var(--brand)",
-              }}
-            >
-              <MapPin size={32} /> Ver ubicación en el mapa
-            </div>
+            {site.maps_embed_url ? (
+              <iframe
+                src={site.maps_embed_url}
+                title={`Mapa de ${site.name}`}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                style={{ width: "100%", height: 190, marginTop: 20, border: 0, borderRadius: 14 }}
+              />
+            ) : (
+              <div
+                style={{
+                  height: 190,
+                  marginTop: 20,
+                  borderRadius: 14,
+                  background: "#cdebf3",
+                  display: "grid",
+                  placeItems: "center",
+                  color: "var(--brand)",
+                }}
+              >
+                <MapPin size={32} /> Ubicación en {site.province_id ?? "Panamá"}
+              </div>
+            )}
             <div style={{ marginTop: 12, padding: 14, borderRadius: 12, background: "#eef5fa" }}>
               <h3 style={{ color: "var(--brand)" }}>
                 <Navigation size={17} /> Cómo llegar

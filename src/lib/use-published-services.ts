@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { CatalogService } from "@/data/catalog";
+import { publicMediaUrl } from "@/lib/storage";
 
 type ServiceRow = {
   id: string;
@@ -9,11 +10,13 @@ type ServiceRow = {
   name: string;
   search_description: string;
   associated_site_names?: string[];
-  tourist_sites?: { name: string } | null;
+  tourist_sites?: { name: string; province_id?: string } | null;
   cached_price_from_cents: number | null;
   base_price_cents: number | null;
   rating_avg: number | null;
-  cities: { name?: string; provinces?: { id?: string } } | null;
+  destination_province_id: string | null;
+  hospedaje_types: { label: string } | null;
+  service_amenities: Array<{ amenities: { label: string } | null }> | null;
   service_photos: Array<{
     storage_path: string;
     is_cover: boolean;
@@ -44,7 +47,9 @@ export function usePublishedServices(category: string) {
         const photos = [...(service.service_photos ?? [])].sort((a, b) => {
           return Number(b.is_cover) - Number(a.is_cover) || a.position - b.position;
         });
-        const image = photos[0]?.storage_path ?? "";
+        const image = publicMediaUrl(photos[0]?.storage_path);
+        const province =
+          service.destination_province_id ?? service.tourist_sites?.province_id ?? "";
 
         return {
           id: service.id,
@@ -57,14 +62,16 @@ export function usePublishedServices(category: string) {
           ]
             .filter(Boolean)
             .join(" "),
-          location: service.cities?.name ?? "",
-          province: service.cities?.provinces?.id ?? "",
+          // El sitio turístico principal y su provincia sustituyen a la antigua ciudad.
+          location: [service.tourist_sites?.name, province].filter(Boolean).join(", "),
+          province,
           price: Number(service.cached_price_from_cents ?? service.base_price_cents ?? 0) / 100,
           rating: Number(service.rating_avg ?? 0).toFixed(1),
           image,
           imagePath: image,
-          type: "",
-          amenities: [],
+          type: service.hospedaje_types?.label ?? "",
+          amenities: (service.service_amenities ?? []).flatMap((entry) =>
+            entry.amenities ? [entry.amenities.label] : []),
           environment: "",
         };
       });

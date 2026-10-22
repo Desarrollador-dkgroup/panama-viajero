@@ -13,9 +13,11 @@ export async function GET(request: Request) {
       .select(
         `
         id, slug, name, search_description, description, base_price_cents,
-        cached_price_from_cents, currency, rating_avg, rating_count, area_label,
-        cities(name, provinces(id)), categories!inner(id, label), tourist_sites(name),
-        service_photos(storage_path, is_cover, alt_text, position)
+        cached_price_from_cents, currency, rating_avg, rating_count, destination_province_id,
+        categories!inner(id, label), hospedaje_types(label),
+        tourist_sites!services_tourist_site_id_fkey(name, province_id),
+        service_photos(storage_path, is_cover, alt_text, position),
+        service_amenities(amenities(label))
       `,
       )
       .eq("status", "published")

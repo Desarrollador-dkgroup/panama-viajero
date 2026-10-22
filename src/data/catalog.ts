@@ -9,7 +9,11 @@ export const catalogConfig = {
     unit: "noche",
     subtitle: "Playas, montañas, cultura y experiencias inolvidables.",
     typeLabel: "Tipo de alojamiento",
-    types: ["Hotel", "Cabaña", "Apartamento", "Resort"],
+    // Coinciden con hospedaje_types en Supabase, que es lo que elige el panel.
+    types: [
+      "Hoteles", "Resorts", "Cabañas", "Apartamentos", "Campings", "Casas rurales",
+      "Eco lodges", "Casas de playa",
+    ],
     amenities: ["Wi-Fi", "Desayuno incluido", "Piscina", "Pet friendly"],
   },
   restaurantes: {

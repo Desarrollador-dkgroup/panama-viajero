@@ -40,3 +40,12 @@
 .reviewGrid span { display: block; margin: 8px 0; color: #f3ab00; }
 .reviewGrid p { margin: 0; color: #5f6675; }
 @media (max-width: 760px) { .cover > div, .content { width: calc(100% - 32px); } .header, .intro { align-items: start; flex-direction: column; } .gallery { height: 240px; } .bookingGrid, .infoColumns { grid-template-columns: 1fr; } .rooms article { grid-template-columns: 1fr auto; } .rooms button { grid-column: 1 / -1; } .amenities, .reviewGrid { grid-template-columns: 1fr; } }
+/* Una sola foto ocupa todo el ancho de la galería. */
+.gallerySingle { position: relative; height: 300px; border-radius: 14px; overflow: hidden; }
+.gallerySingle > img { object-fit: cover; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 0; }
+.facts div { padding: 12px; border-radius: 8px; background: #f0f2fc; }
+.facts dt { color: #697083; font-size: .8rem; }
+.facts dd { margin: 4px 0 0; color: var(--brand); font-weight: 700; }
+.infoColumns a { display: inline-flex; align-items: center; gap: 6px; color: var(--brand); }
+.mapFrame { width: 100%; min-height: 240px; border: 0; border-radius: 9px; }

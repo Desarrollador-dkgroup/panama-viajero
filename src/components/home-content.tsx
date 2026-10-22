@@ -164,7 +164,9 @@ function CatalogCard({
           {item.location}
         </p>
         <p className="price">
-          Desde <strong>${item.price}</strong> / {unit}
+          {item.price > 0
+            ? <>Desde <strong>${item.price}</strong> / {unit}</>
+            : "Consultar precio"}
         </p>
       </div>
     </article>
