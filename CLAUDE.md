@@ -43,7 +43,11 @@ Ambos deben estar siempre iguales. Reglas estrictas:
 - No escribir claves en el código ni en el chat. `.env.local` no se sube.
 - Commits en español, bien explicados pero breves: un título claro y, si hace falta,
   2 a 4 líneas de qué cambia y por qué. Sin listas largas ni detalles de más.
-- No modificar la base de producción sin confirmación explícita del usuario.
+- Base de producción: Claude aplica migraciones y SQL sin preguntar (decisión del usuario,
+  2026-10-22). Solo pide confirmación para lo destructivo o irreversible: borrar tablas,
+  columnas o funciones en uso; DELETE, UPDATE o TRUNCATE de datos reales; cambios en
+  `auth` o en cuentas; quitar permisos o políticas RLS. Cada cambio va primero a una
+  migración del repo y, si se puede, se prueba antes en una transacción con ROLLBACK.
 
 ## Proyecto
 
