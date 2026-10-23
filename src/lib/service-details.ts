@@ -33,6 +33,8 @@ export type ServiceDetailData = {
   facts: Array<{ label: string; value: string }>;
   policies: string[];
   contact: { phone: string; email: string; website: string; menuUrl: string };
+  // Restaurantes publicados que funcionan dentro del hospedaje.
+  restaurants: Array<{ id: string; slug: string; name: string; image: string }>;
   menu: Array<{
     section: string;
     dishes: Array<{ name: string; description: string; price: number }>;
@@ -98,6 +100,7 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
   const facts: ServiceDetailData["facts"] = [];
   const policies: string[] = [];
   const contact = { phone: "", email: "", website: "", menuUrl: "" };
+  const restaurants: ServiceDetailData["restaurants"] = [];
 
   const mealPlan = service.meal_plans as { label?: string } | null;
   pushFact(facts, "Plan de comidas", text(mealPlan?.label));
@@ -159,6 +162,28 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
       contact.phone = text(profile.contact_phone);
       contact.email = text(profile.contact_email);
       contact.website = text(profile.website_url);
+
+      // Solo aparecen los restaurantes vinculados que estén publicados.
+      const linkedIds = Array.isArray(details.linked_restaurant_ids)
+        ? details.linked_restaurant_ids.map(String)
+        : [];
+      if (linkedIds.length) {
+        const { data: linked } = await supabase
+          .from("services")
+          .select("id, slug, name, service_photos(storage_path, is_cover, position)")
+          .in("id", linkedIds)
+          .eq("status", "published");
+        for (const item of linked ?? []) {
+          const cover = [...(item.service_photos ?? [])].sort((a, b) =>
+            Number(b.is_cover) - Number(a.is_cover) || a.position - b.position)[0];
+          restaurants.push({
+            id: item.id,
+            slug: item.slug ?? item.id,
+            name: item.name,
+            image: publicMediaUrl(cover?.storage_path),
+          });
+        }
+      }
     }
   }
 
@@ -242,6 +267,7 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
     facts,
     policies,
     contact,
+    restaurants,
     menu,
   };
 }

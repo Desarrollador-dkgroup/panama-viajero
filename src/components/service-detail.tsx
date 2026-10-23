@@ -169,6 +169,21 @@ export function ServiceDetail({ service }: { service: ServiceDetailData | null }
             </dl>
           </section>
         )}
+        {service.restaurants.length > 0 && (
+          <section className={styles.infoSection}>
+            <h3>Restaurantes en el hospedaje</h3>
+            <div className={styles.linkedRestaurants}>
+              {service.restaurants.map((item) => (
+                <Link key={item.id} href={`/servicios/${item.id}`}>
+                  <div className={styles.linkedPhoto}>
+                    <Image src={item.image || "/P-Principal/Banner.png"} alt={item.name} fill />
+                  </div>
+                  <span>{item.name}</span>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
         {service.amenities.length > 0 && (
           <section className={styles.infoSection}>
             <h3>Servicios y comodidades</h3>
