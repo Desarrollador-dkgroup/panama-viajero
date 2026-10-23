@@ -6,61 +6,9 @@ import { useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ChevronRight, Heart, ImageIcon, MapPin, Star } from "lucide-react";
 import type { CatalogService } from "@/data/catalog";
 import { usePublishedServices } from "@/lib/use-published-services";
+import { useDestinations } from "@/lib/use-destinations";
 import { CategoryNavigation } from "@/components/category-navigation";
 import { SiteBanner } from "@/components/site-banner";
-
-const homeProvinces = [
-  {
-    slug: "bocas",
-    name: "Bocas del Toro",
-    subtitle: "Playas y vida caribeña",
-    image: "bocas-del-toro.jpg",
-  },
-  { slug: "cocle", name: "Coclé", subtitle: "Playas, cultura y naturaleza", image: "el-valle.jpg" },
-  {
-    slug: "colon",
-    name: "Colón",
-    subtitle: "Historia y costas del Caribe",
-    image: "portobelo.jpg",
-  },
-  {
-    slug: "chiriqui",
-    name: "Chiriquí",
-    subtitle: "Montañas, café y aventura",
-    image: "boquete.jpg",
-  },
-  {
-    slug: "darien",
-    name: "Darién",
-    subtitle: "Naturaleza y biodiversidad",
-    image: "tierras-altas.jpg",
-  },
-  { slug: "herrera", name: "Herrera", subtitle: "Tradición y folclore", image: "pedasi.jpg" },
-  {
-    slug: "los-santos",
-    name: "Los Santos",
-    subtitle: "Cultura y playas del Pacífico",
-    image: "santa-catalina.jpg",
-  },
-  {
-    slug: "panama",
-    name: "Panamá",
-    subtitle: "Ciudad, historia y modernidad",
-    image: "ciudad-de-panama.jpg",
-  },
-  {
-    slug: "panama-oeste",
-    name: "Panamá Oeste",
-    subtitle: "Escapadas cerca de la ciudad",
-    image: "isla-taboga.jpg",
-  },
-  {
-    slug: "veraguas",
-    name: "Veraguas",
-    subtitle: "Islas, montañas y aventura",
-    image: "san-blas.jpg",
-  },
-];
 
 type CatalogItem = CatalogService;
 type Collection = "destinos" | "alojamientos" | "restaurantes" | "actividades";
@@ -230,6 +178,7 @@ export function HomeContent({ collection }: { collection?: Collection }) {
   const [search, setSearch] = useState("");
   const [favorites, setFavorites] = useState<string[]>([]);
   // Carga las colecciones reales sin registros de demostración.
+  const destinations = useDestinations();
   const staysResult = usePublishedServices("hospedaje");
   const restaurantsResult = usePublishedServices("restaurantes");
   const activitiesResult = usePublishedServices("actividades");
@@ -302,12 +251,12 @@ export function HomeContent({ collection }: { collection?: Collection }) {
 
         {(!collection || collection === "destinos") && (
           <CatalogSection id="destinos" title="Destinos populares" showMore={!collection}>
-            {homeProvinces
+            {destinations.items
               .filter((item) => matches(item.name))
               .map((item) => (
                 <article key={item.slug} className="destination-card">
                   <Link className="service-image-button" href={`/destinos/${item.slug}`}>
-                    <CatalogImage src={`/P-Principal/Destinos/${item.image}`} alt={item.name} />
+                    <CatalogImage src={item.cardImage} alt={item.name} />
                   </Link>
                   <div className="destination-caption">
                     <h3>{item.name}</h3>
@@ -315,7 +264,8 @@ export function HomeContent({ collection }: { collection?: Collection }) {
                   </div>
                 </article>
               ))}
-            {!homeProvinces.some((item) => matches(item.name)) && (
+            {destinations.status === "ready" &&
+              !destinations.items.some((item) => matches(item.name)) && (
               <p>No hay destinos coincidentes.</p>
             )}
           </CatalogSection>

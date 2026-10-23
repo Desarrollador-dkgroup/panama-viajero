@@ -5,63 +5,11 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, MapPin } from "lucide-react";
 import type { CatalogService } from "@/data/catalog";
 import { usePublishedServices } from "@/lib/use-published-services";
+import { useDestinations } from "@/lib/use-destinations";
 import { CatalogImage } from "@/components/home-content";
 import { CategoryNavigation } from "@/components/category-navigation";
 import { SiteBanner } from "@/components/site-banner";
 import styles from "./destinations-page.module.css";
-
-const provinces = [
-  {
-    slug: "bocas",
-    name: "Bocas del Toro",
-    subtitle: "Playas y vida caribeña",
-    image: "bocas-del-toro.jpg",
-  },
-  { slug: "cocle", name: "Coclé", subtitle: "Playas, cultura y naturaleza", image: "el-valle.jpg" },
-  {
-    slug: "colon",
-    name: "Colón",
-    subtitle: "Historia y costas del Caribe",
-    image: "portobelo.jpg",
-  },
-  {
-    slug: "chiriqui",
-    name: "Chiriquí",
-    subtitle: "Montañas, café y aventura",
-    image: "boquete.jpg",
-  },
-  {
-    slug: "darien",
-    name: "Darién",
-    subtitle: "Naturaleza y biodiversidad",
-    image: "tierras-altas.jpg",
-  },
-  { slug: "herrera", name: "Herrera", subtitle: "Tradición y folclore", image: "pedasi.jpg" },
-  {
-    slug: "los-santos",
-    name: "Los Santos",
-    subtitle: "Cultura y playas del Pacífico",
-    image: "santa-catalina.jpg",
-  },
-  {
-    slug: "panama",
-    name: "Panamá",
-    subtitle: "Ciudad, historia y modernidad",
-    image: "ciudad-de-panama.jpg",
-  },
-  {
-    slug: "panama-oeste",
-    name: "Panamá Oeste",
-    subtitle: "Escapadas cerca de la ciudad",
-    image: "isla-taboga.jpg",
-  },
-  {
-    slug: "veraguas",
-    name: "Veraguas",
-    subtitle: "Islas, montañas y aventura",
-    image: "san-blas.jpg",
-  },
-];
 
 type RecommendationItem = CatalogService;
 
@@ -102,20 +50,27 @@ export function DestinationsPage() {
     { title: "Actividades", href: "/actividades", ...activities },
   ];
 
+  // Los destinos, sus textos e imágenes vienen del panel (tabla destinations).
+  const destinations = useDestinations();
   const [featuredIndex, setFeaturedIndex] = useState(0);
   const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLowerCase();
+  const provinces = destinations.items.filter((item) =>
+    !normalizedQuery ||
+    `${item.name} ${item.subtitle}`.toLowerCase().includes(normalizedQuery));
 
-  // Selecciona una provincia destacada cuando la página ya está montada.
+  // Selecciona un destino destacado cuando ya se cargaron.
   useEffect(() => {
+    if (!destinations.items.length) return;
     const timer = window.setTimeout(() => {
-      setFeaturedIndex(Math.floor(Math.random() * provinces.length));
+      setFeaturedIndex(Math.floor(Math.random() * destinations.items.length));
     }, 0);
 
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [destinations.items.length]);
 
-  const featured = provinces[featuredIndex];
-  const visibleProvinces = provinces.filter((_, index) => index !== featuredIndex).slice(0, 8);
+  const featured = provinces[featuredIndex] ?? provinces[0];
+  const visibleProvinces = provinces.filter((item) => item !== featured);
 
   return (
     <main className={styles.page}>
@@ -133,27 +88,37 @@ export function DestinationsPage() {
         <div className={styles.sectionHeading}>
           <h2>Destinos populares</h2>
         </div>
-        <div className={styles.destinationGrid}>
-          <Link href={`/destinos/${featured.slug}`} className={styles.featuredDestination}>
-            <CatalogImage src={`/P-Principal/Destinos/${featured.image}`} alt={featured.name} />
-            <div>
-              <strong>{featured.name}</strong>
-              <span>{featured.subtitle}</span>
-            </div>
-          </Link>
-          {visibleProvinces.map((item) => (
-            <Link
-              key={item.name}
-              href={`/destinos/${item.slug}`}
-              className={styles.destinationCard}
-            >
-              <CatalogImage src={`/P-Principal/Destinos/${item.image}`} alt={item.name} />
+        {featured ? (
+          <div className={styles.destinationGrid}>
+            <Link href={`/destinos/${featured.slug}`} className={styles.featuredDestination}>
+              <CatalogImage src={featured.cardImage} alt={featured.name} />
               <div>
-                <strong>{item.name}</strong>
+                <strong>{featured.name}</strong>
+                <span>{featured.subtitle}</span>
               </div>
             </Link>
-          ))}
-        </div>
+            {visibleProvinces.map((item) => (
+              <Link
+                key={item.slug}
+                href={`/destinos/${item.slug}`}
+                className={styles.destinationCard}
+              >
+                <CatalogImage src={item.cardImage} alt={item.name} />
+                <div>
+                  <strong>{item.name}</strong>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p>
+            {destinations.status === "loading"
+              ? "Cargando destinos..."
+              : destinations.status === "error"
+                ? "No se pudieron cargar los destinos."
+                : "No hay destinos que coincidan con tu búsqueda."}
+          </p>
+        )}
 
         {sections.map((section) => (
           <section key={section.title} className={styles.recommendationSection}>

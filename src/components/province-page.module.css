@@ -24,3 +24,5 @@
 .siteBody a { color: var(--accent); font-weight: 700; }
 @media (max-width: 900px) { .siteGrid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 760px) { .hero { min-height: 390px; } .heroContent, .content { width: calc(100% - 32px); } .heroContent { padding-top: 38px; } .heroContent p { margin-top: 52px; } .content { margin-top: -32px; } .content :global(.categories) { padding: 10px; } .siteGrid { grid-template-columns: 1fr; } .heading { align-items: start; flex-direction: column; } .siteCard :global(.catalog-image) { height: 240px; } }
+.siteBody h3 a { color: inherit; }
+.map { width: 100%; min-height: 320px; border: 0; border-radius: 16px; }

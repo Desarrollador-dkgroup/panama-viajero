@@ -4,6 +4,7 @@ import { CatalogImage } from "@/components/home-content";
 import { TouristSiteServices } from "@/components/tourist-site-services";
 import { getSiteServices } from "@/lib/tourist-site-services";
 import { getSupabaseServerClient } from "@/lib/supabase";
+import { getDestinationSlug } from "@/lib/destinations";
 
 // Presenta el detalle de un sitio turístico almacenado en Supabase.
 export default async function TouristSitePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -24,7 +25,10 @@ export default async function TouristSitePage({ params }: { params: Promise<{ sl
       </main>
     );
 
-  const services = await getSiteServices(site.id);
+  const [services, destinationSlug] = await Promise.all([
+    getSiteServices(site.id),
+    getDestinationSlug(site.province_id),
+  ]);
 
   const image = site.photo_storage_path ?? "/P-Principal/Banner.png";
   return (
@@ -50,9 +54,12 @@ export default async function TouristSitePage({ params }: { params: Promise<{ sl
             background: "linear-gradient(90deg, rgb(0 0 0 / 65%), transparent)",
           }}
         >
-          <Link className="tourist-back-link" href="/destinos">
+          <Link
+            className="tourist-back-link"
+            href={destinationSlug ? `/destinos/${destinationSlug}` : "/destinos"}
+          >
             <ArrowLeft size={17} />
-            <span>Volver a destinos</span>
+            <span>Volver a {destinationSlug ? site.province_id : "destinos"}</span>
           </Link>
           <h1 style={{ marginTop: 44, fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>{site.name}</h1>
           <p className="tourist-hero-description">{site.description}</p>
