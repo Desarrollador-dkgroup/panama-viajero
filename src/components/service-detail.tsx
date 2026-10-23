@@ -139,9 +139,12 @@ export function ServiceDetail({ service }: { service: ServiceDetailData | null }
                         <h4>{room.name}</h4>
                         <p>{room.description}</p>
                         <small>
-                          {[room.beds && `${room.beds} camas`, room.capacity]
+                          {[room.beds, room.capacity, room.features]
                             .filter(Boolean).join(" · ")}
                         </small>
+                        {room.amenities.length > 0 && (
+                          <small>{room.amenities.join(" · ")}</small>
+                        )}
                       </div>
                       <strong>
                         ${room.price}

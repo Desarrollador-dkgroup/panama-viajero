@@ -24,6 +24,9 @@ export type ServiceDetailData = {
     capacity: string;
     price: number;
     image: string;
+    // Dormitorios, baños y área, ya formateados.
+    features: string;
+    amenities: string[];
   }>;
   amenities: string[];
   // Datos de operación en pares etiqueta/valor (check-in, recepción, horario, etc.).
@@ -104,7 +107,8 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
       supabase
         .from("room_types")
         .select(`
-          name, description, capacity, beds_label, price_cents,
+          name, description, capacity, beds_label, price_cents, bedroom_count,
+          bathroom_count, area_m2, details,
           room_type_photos(storage_path, is_cover, position)
         `)
         .eq("service_id", serviceId)
@@ -122,6 +126,13 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
         capacity: `${room.capacity} personas`,
         price: room.price_cents / 100,
         image: publicMediaUrl(roomPhotos[0]?.storage_path),
+        features: [
+          room.bedroom_count ? `${room.bedroom_count} dormitorios` : "",
+          room.bathroom_count ? `${room.bathroom_count} baños` : "",
+          room.area_m2 ? `${room.area_m2} m²` : "",
+        ].filter(Boolean).join(" · "),
+        amenities: text((room.details as Record<string, unknown> | null)?.amenities)
+          .split(",").map((item) => item.trim()).filter(Boolean),
       });
     }
 
