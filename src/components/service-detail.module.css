@@ -49,3 +49,11 @@
 .facts dd { margin: 4px 0 0; color: var(--brand); font-weight: 700; }
 .infoColumns a { display: inline-flex; align-items: center; gap: 6px; color: var(--brand); }
 .mapFrame { width: 100%; min-height: 240px; border: 0; border-radius: 9px; }
+/* Foto de portada de cada habitación. */
+.rooms article:has(.roomPhoto) { grid-template-columns: 120px 1fr auto auto; }
+.roomPhoto { position: relative; width: 120px; height: 90px; overflow: hidden; border-radius: 8px; }
+.roomPhoto img { object-fit: cover; }
+@media (max-width: 760px) {
+  .rooms article:has(.roomPhoto) { grid-template-columns: 1fr auto; }
+  .roomPhoto { grid-column: 1 / -1; width: 100%; height: 160px; }
+}

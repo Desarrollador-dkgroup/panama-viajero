@@ -130,6 +130,11 @@ export function ServiceDetail({ service }: { service: ServiceDetailData | null }
                   ))
                 : service.rooms.map((room) => (
                     <article key={room.name}>
+                      {room.image && (
+                        <div className={styles.roomPhoto}>
+                          <Image src={room.image} alt={`Foto de ${room.name}`} fill />
+                        </div>
+                      )}
                       <div>
                         <h4>{room.name}</h4>
                         <p>{room.description}</p>
