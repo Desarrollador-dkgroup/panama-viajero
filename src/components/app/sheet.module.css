@@ -1,0 +1,187 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgb(0 0 0 / 35%);
+}
+
+.sheet {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  animation: slideUp 0.25s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: calc(env(safe-area-inset-top) + 16px) 20px 16px;
+  border-bottom: 0.5px solid var(--line);
+}
+
+.title {
+  color: var(--text-strong);
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.subtitle {
+  margin-top: 2px;
+  color: var(--indigo);
+  font-size: 13px;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #F0F0F0;
+}
+
+.body {
+  flex: 1;
+  padding: 20px 20px 32px;
+  overflow-y: auto;
+}
+
+.footer {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px calc(env(safe-area-inset-bottom) + 16px);
+  border-top: 0.5px solid var(--line);
+}
+
+.sectionHeading {
+  margin-bottom: 12px;
+  color: var(--text-strong);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.radioList {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.radioRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+
+.radioLabel {
+  color: var(--text-strong);
+  font-size: 15px;
+}
+
+.radioOuter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid #D0D0D0;
+  border-radius: 50%;
+}
+
+.radioInner {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--indigo);
+}
+
+.divider {
+  height: 0.5px;
+  margin: 24px 0;
+  background: var(--line);
+}
+
+.chipWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  padding: 8px 16px;
+  border: 1px solid #D0D0D0;
+  border-radius: 999px;
+  background: none;
+  color: var(--text-strong);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.chipSelected {
+  border-color: var(--indigo);
+  color: var(--indigo);
+  font-weight: 700;
+}
+
+.note {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.clearButton {
+  padding: 0 20px;
+  border: 0;
+  border-radius: 999px;
+  background: #EFEFEF;
+  color: var(--text-strong);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.applyButton {
+  flex: 1;
+  padding: 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--indigo);
+  color: var(--surface);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.applyButton:disabled {
+  opacity: 0.5;
+}
+
+/* Tableta y escritorio: panel a la derecha sobre la página. */
+@media (min-width: 768px) {
+  .sheet {
+    inset: 0 0 0 auto;
+    width: 440px;
+    box-shadow: -8px 0 30px rgb(0 0 0 / 12%);
+    animation-name: slideIn;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+    }
+  }
+}

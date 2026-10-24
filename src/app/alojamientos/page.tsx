@@ -1,6 +1,6 @@
-import { ExploreCatalog } from "@/components/explore-catalog";
+import { permanentRedirect } from "next/navigation";
 
-// Presenta el catálogo filtrable de alojamientos
-export default function Page() {
-  return <ExploreCatalog key="alojamientos" category="alojamientos" />;
+// Dirección anterior: las categorías viven ahora en /categoria/[id], como en la app.
+export default function LegacyCategoryPage() {
+  permanentRedirect("/categoria/hospedaje");
 }

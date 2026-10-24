@@ -1,0 +1,55 @@
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 70dvh;
+  padding: 24px;
+  background: var(--surface);
+  text-align: center;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--pill);
+  border-top-color: var(--indigo);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingText {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.errorTitle {
+  color: var(--text-strong);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.errorBody {
+  max-width: 420px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.retryButton {
+  margin-top: 6px;
+  padding: 10px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--indigo);
+  color: var(--surface);
+  font-size: 14px;
+  font-weight: 700;
+}

@@ -1,6 +1,6 @@
-import { ExploreCatalog } from "@/components/explore-catalog";
+import { permanentRedirect } from "next/navigation";
 
-// Presenta el catálogo filtrable de actividades
-export default function Page() {
-  return <ExploreCatalog key="actividades" category="actividades" />;
+// Dirección anterior: las categorías viven ahora en /categoria/[id], como en la app.
+export default function LegacyCategoryPage() {
+  permanentRedirect("/categoria/actividades");
 }

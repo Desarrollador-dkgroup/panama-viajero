@@ -1,6 +1,6 @@
-import { ExploreCatalog } from "@/components/explore-catalog";
+import { permanentRedirect } from "next/navigation";
 
-// Presenta el catálogo filtrable de restaurantes
-export default function Page() {
-  return <ExploreCatalog key="restaurantes" category="restaurantes" />;
+// Dirección anterior: las categorías viven ahora en /categoria/[id], como en la app.
+export default function LegacyCategoryPage() {
+  permanentRedirect("/categoria/restaurantes");
 }

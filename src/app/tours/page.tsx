@@ -1,6 +1,6 @@
-import { ExploreCatalog } from "@/components/explore-catalog";
+import { permanentRedirect } from "next/navigation";
 
-// Presenta el catálogo filtrable de tours
-export default function Page() {
-  return <ExploreCatalog key="tours" category="tours" />;
+// Dirección anterior: las categorías viven ahora en /categoria/[id], como en la app.
+export default function LegacyCategoryPage() {
+  permanentRedirect("/categoria/tour-operador");
 }

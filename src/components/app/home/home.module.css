@@ -1,0 +1,615 @@
+/* Medidas tomadas de la app (src/components/home/*). Celular primero. */
+
+.page {
+  padding-bottom: 32px;
+  background: var(--surface);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 16px var(--page-padding) 0;
+}
+
+/* Cabecera con foto */
+.header {
+  position: relative;
+  height: calc(248px + env(safe-area-inset-top));
+  overflow: hidden;
+}
+
+.headerPhoto {
+  object-fit: cover;
+}
+
+.headerScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgb(0 0 0 / 38%) 0%, rgb(0 0 0 / 12%) 45%, rgb(0 0 0 / 30%) 100%);
+}
+
+.headerFade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgb(255 255 255 / 0%) 62%, var(--surface) 100%);
+}
+
+.headerContent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: calc(env(safe-area-inset-top) + 10px) var(--page-padding) 0;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.accountRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.greeting {
+  overflow: hidden;
+  color: #FFFFFF;
+  font-family: var(--font-rounded);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.bell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.titleBlock {
+  position: relative;
+  margin-top: auto;
+  margin-bottom: 10px;
+}
+
+.titleScrim {
+  position: absolute;
+  inset: -44px calc(-1 * var(--page-padding)) -50px;
+  background: linear-gradient(rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 62%) 30%, rgb(0 0 0 / 62%) 75%,
+    rgb(0 0 0 / 0%) 100%);
+  pointer-events: none;
+}
+
+.title {
+  position: relative;
+  color: #FFFFFF;
+  font-family: var(--font-rounded);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 30px;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 50%);
+}
+
+.searchBar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 50px;
+  margin-top: 8px;
+  padding: 0 16px;
+  border: 1px solid var(--search-border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 2px 12px rgb(var(--shadow-ink) / 16%);
+  color: var(--placeholder);
+  font-family: var(--font-rounded);
+  font-size: 14px;
+}
+
+.searchBar span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Categorías: 3 columnas y 2 filas, versión compacta de la portada */
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px 12px;
+}
+
+.categoryTile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 84px;
+  padding: 0 4px;
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 1px 3px rgb(var(--shadow-ink) / 4%);
+}
+
+.categoryTile:active {
+  opacity: 0.6;
+}
+
+.categoryIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--pill);
+}
+
+.categoryLabel {
+  overflow: hidden;
+  max-width: 100%;
+  color: var(--text-dark);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Destinos populares */
+.destinationGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.destinationCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 124px;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.destinationCard:active,
+.tourCard:active,
+.featuredCard:active {
+  opacity: 0.88;
+}
+
+.desktopOnly {
+  display: none;
+}
+
+.destinationShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgb(0 0 0 / 0%) 40%, rgb(0 0 0 / 75%) 100%);
+}
+
+.destinationText {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px;
+}
+
+.destinationName {
+  overflow: hidden;
+  color: var(--surface);
+  font-size: 17px;
+  font-weight: 800;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.destinationDescription {
+  overflow: hidden;
+  color: rgb(255 255 255 / 92%);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Carruseles horizontales */
+.carousel {
+  display: flex;
+  gap: 12px;
+  margin: 0 calc(-1 * var(--page-padding));
+  padding: 0 var(--page-padding);
+  overflow-x: auto;
+  scroll-padding-inline: var(--page-padding);
+  scroll-snap-type: x proximity;
+}
+
+.carousel > * {
+  flex: none;
+  scroll-snap-align: start;
+}
+
+.tourCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 280px;
+  height: 160px;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.tourScrim {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 35%);
+}
+
+.tourBody {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+}
+
+.tourName,
+.featuredTitle {
+  overflow: hidden;
+  color: var(--surface);
+  font-size: 17px;
+  font-weight: 800;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tourDescription {
+  overflow: hidden;
+  color: rgb(255 255 255 / 92%);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tourFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.pricePill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-strong);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pricePill strong {
+  font-weight: 800;
+}
+
+.arrowButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+.featuredCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 300px;
+  height: 140px;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.featuredScrim {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 40%);
+}
+
+.featuredContent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+}
+
+.featuredTitle {
+  display: -webkit-box;
+  font-weight: 700;
+  white-space: normal;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.eyebrow {
+  color: var(--surface);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+.cta {
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-strong);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Tarjetas de hospedaje y restaurante */
+.stayCard,
+.restaurantCard {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.stayCard {
+  width: 220px;
+}
+
+.restaurantCard {
+  width: 200px;
+}
+
+.cardLink {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.stayPhoto,
+.restaurantPhoto {
+  position: relative;
+  width: 100%;
+  height: 140px;
+}
+
+.restaurantPhoto {
+  height: 130px;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.stayName,
+.restaurantName {
+  flex: 1;
+  overflow: hidden;
+  color: var(--text-strong);
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.restaurantName {
+  font-size: 14px;
+}
+
+.ratingRow,
+.locationRow {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.locationRow {
+  gap: 4px;
+  min-width: 0;
+}
+
+.ratingText {
+  color: var(--text-strong);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.location {
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.divider {
+  height: 0.5px;
+  margin: 6px 0;
+  background: var(--line);
+}
+
+.priceLine {
+  color: var(--text-dark);
+  font-size: 12px;
+}
+
+.priceLine strong {
+  color: var(--text-strong);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+/* Tableta: el mismo diseño con más aire y más tarjetas visibles. */
+@media (min-width: 768px) {
+  .header {
+    height: calc(300px + env(safe-area-inset-top));
+  }
+
+  .headerContent,
+  .body {
+    max-width: 760px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .title {
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  .categoryTile {
+    height: 96px;
+  }
+
+  .destinationCard {
+    height: 160px;
+  }
+}
+
+/* Escritorio: misma estructura, una sola fila de categorías y cuatro destinos. */
+@media (min-width: 1024px) {
+  .header {
+    height: 420px;
+  }
+
+  .headerContent,
+  .body {
+    max-width: var(--content-max);
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .headerContent {
+    padding-bottom: 40px;
+  }
+
+  .topRow {
+    display: none;
+  }
+
+  .title {
+    font-size: 40px;
+    line-height: 48px;
+  }
+
+  .searchBar {
+    max-width: 640px;
+    height: 56px;
+    font-size: 16px;
+  }
+
+  .body {
+    gap: 40px;
+    padding-top: 32px;
+  }
+
+  .categoryGrid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+  }
+
+  .categoryTile {
+    height: 112px;
+  }
+
+  .categoryIcon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .categoryLabel {
+    font-size: 14px;
+  }
+
+  .destinationGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .desktopOnly {
+    display: flex;
+  }
+
+  .destinationCard {
+    height: 200px;
+  }
+
+  .carousel {
+    gap: 16px;
+    margin: 0;
+    padding: 0 0 4px;
+  }
+
+  .tourCard {
+    width: 340px;
+    height: 200px;
+  }
+
+  .featuredCard {
+    width: 380px;
+    height: 180px;
+  }
+
+  .stayCard {
+    width: 270px;
+  }
+
+  .restaurantCard {
+    width: 250px;
+  }
+
+  .stayPhoto {
+    height: 170px;
+  }
+
+  .restaurantPhoto {
+    height: 160px;
+  }
+}
