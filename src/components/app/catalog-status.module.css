@@ -53,3 +53,12 @@
   font-size: 14px;
   font-weight: 700;
 }
+
+.notFound {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 16px) var(--page-padding);
+}

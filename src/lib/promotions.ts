@@ -19,6 +19,9 @@ export type PromotionRecord = {
   validTo: string;
   isActive: boolean;
   destinationKind: string;
+  destinationServiceSlug: string | null;
+  destinationProvinceId: string | null;
+  destinationCategoryId: string | null;
   offerType: string;
   description: string | null;
   conditions: string | null;
@@ -47,7 +50,8 @@ type PromotionRow = Partial<PromotionDatabaseContent> & {
   valid_to: string;
   destination_kind: string;
   destination_category_id: string | null;
-  services?: { category_id: string } | null;
+  destination_province_id?: string | null;
+  services?: { category_id: string; slug?: string | null } | null;
 };
 
 // Convierte las etiquetas almacenadas como texto en una lista reutilizable.
@@ -65,7 +69,7 @@ export async function getPromotions(): Promise<PromotionRecord[]> {
   const { data, error } = await supabase
     .from("promotions")
     // Incluye los nuevos campos cuando existan y mantiene la lectura previa a la migración.
-    .select("*, services:destination_service_id(category_id)")
+    .select("*, services:destination_service_id(category_id, slug)")
     .eq("is_published", true)
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
@@ -110,6 +114,9 @@ export function mapPromotion(promotion: PromotionRow, now: number): PromotionRec
     discountPercent: promotion.discount_percent == null ? null : Number(promotion.discount_percent),
     currency: promotion.currency ?? "USD",
     destinationKind: promotion.destination_kind,
+    destinationServiceSlug: promotion.services?.slug ?? null,
+    destinationProvinceId: promotion.destination_province_id ?? null,
+    destinationCategoryId: promotion.destination_category_id ?? null,
     offerType:
       category === "restaurantes"
         ? "restaurantes"

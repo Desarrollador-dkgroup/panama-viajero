@@ -1,134 +1,91 @@
-import Link from "next/link";
-import { ArrowLeft, MapPin, Navigation } from "lucide-react";
-import { CatalogImage } from "@/components/home-content";
-import { TouristSiteServices } from "@/components/tourist-site-services";
-import { getSiteServices } from "@/lib/tourist-site-services";
-import { getSupabaseServerClient } from "@/lib/supabase";
-import { getDestinationSlug } from "@/lib/destinations";
-import { catalogPhotoUrl } from "@/lib/storage";
+import type { Metadata } from "next";
+import { BackButton } from "@/components/app/back-button";
+import { CatalogError } from "@/components/app/catalog-status";
+import { ResultCard } from "@/components/app/category/result-card";
+import categoryStyles from "@/components/app/category/category.module.css";
+import { NotFoundScreen } from "@/components/app/not-found-screen";
+import { ExploreGrid } from "@/components/app/places/places";
+import styles from "@/components/app/places/places.module.css";
+import { CoverPhoto } from "@/components/app/ui";
+import { attempt } from "@/lib/attempt";
+import { getServices, getTouristSites } from "@/lib/catalog";
 
-// Presenta el detalle de un sitio turístico almacenado en Supabase.
-export default async function TouristSitePage({ params }: { params: Promise<{ slug: string }> }) {
+export const dynamic = "force-dynamic";
+
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string | undefined>>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = getSupabaseServerClient();
-  const { data: site } = await supabase
-    .from("tourist_sites")
-    .select(
-      "id, name, description, short_description, photo_storage_path, province_id, maps_embed_url",
-    )
-    .eq("slug", slug)
-    .maybeSingle();
+  const result = await attempt(getTouristSites);
+  const site = result.data?.find((item) => item.slug === slug);
+  return {
+    title: site ? `${site.name} | Panamá Viajero` : "Panamá Viajero",
+    description: site?.shortDescription || undefined,
+  };
+}
 
-  if (!site)
-    return (
-      <main className="container">
-        <h1>Sitio no encontrado</h1>
-      </main>
-    );
+// Sitio turístico (src/app/destination/[siteId].tsx) con sus servicios publicados.
+export default async function TouristSitePage({ params, searchParams }: Props) {
+  const [{ slug }, search] = await Promise.all([params, searchParams]);
+  const result = await attempt(() => Promise.all([getTouristSites(), getServices()]));
+  if (result.error !== null) return <CatalogError message={result.error} />;
+  const [sites, services] = result.data;
+  const site = sites.find((item) => item.slug === slug || item.id === slug);
+  if (!site) return <NotFoundScreen message="No encontramos este destino." />;
 
-  const [services, destinationSlug] = await Promise.all([
-    getSiteServices(site.id),
-    getDestinationSlug(site.province_id),
-  ]);
+  const forward = new URLSearchParams();
+  for (const key of ["checkIn", "checkOut", "guests"]) {
+    if (search[key]) forward.set(key, search[key] as string);
+  }
+  const explore = new URLSearchParams(forward);
+  explore.set("region", site.provinceId ?? site.regionId);
+  explore.set("touristSite", site.id);
+  const here = services.filter((item) => item.siteIds.includes(site.id));
 
-  const image = catalogPhotoUrl(site.photo_storage_path) || "/P-Principal/Banner.png";
   return (
-    <main>
-      <section
-        className="tourist-hero"
-        style={{
-          position: "relative",
-          minHeight: 470,
-          overflow: "hidden",
-          background: "var(--brand)",
-        }}
-      >
-        <div className="tourist-hero-image" style={{ position: "absolute", inset: 0 }}>
-          <CatalogImage src={image} alt={site.name} />
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            padding: "42px max(24px, 8vw)",
-            color: "#fff",
-            background: "linear-gradient(90deg, rgb(0 0 0 / 65%), transparent)",
-          }}
-        >
-          <Link
-            className="tourist-back-link"
-            href={destinationSlug ? `/destinos/${destinationSlug}` : "/destinos"}
-          >
-            <ArrowLeft size={17} />
-            <span>Volver a {destinationSlug ? site.province_id : "destinos"}</span>
-          </Link>
-          <h1 style={{ marginTop: 44, fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>{site.name}</h1>
-          <p className="tourist-hero-description">{site.description}</p>
-        </div>
-      </section>
-      <div className="container" style={{ marginTop: -42, position: "relative", zIndex: 2 }}>
-        <div>
-          <TouristSiteServices
-            siteName={site.name}
-            services={(services ?? []).map((service) => ({
-              id: service.id,
-              slug: service.slug,
-              name: service.name,
-              category: (service.categories as { id?: string } | null)?.id ?? "otros",
-              categoryLabel: (service.categories as { label?: string } | null)?.label ?? "Servicio",
-              city: service.destination_province_id ?? site.province_id ?? site.name,
-            }))}
-          />
-        </div>
-        <div
-          className="tourist-content-grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 2fr) minmax(280px, 1fr)",
-            gap: 28,
-            padding: "18px 0 72px",
-          }}
-        >
-          <section />
-          <aside style={{ border: "1px solid var(--border)", borderRadius: 16, padding: 20 }}>
-            <h2>Sobre {site.name}</h2>
-            <p style={{ marginTop: 12, color: "var(--brand)", fontWeight: 700 }}>
-              <MapPin size={16} /> {site.province_id ?? "Panamá"}
-            </p>
-            {site.maps_embed_url ? (
-              <iframe
-                src={site.maps_embed_url}
-                title={`Mapa de ${site.name}`}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                style={{ width: "100%", height: 190, marginTop: 20, border: 0, borderRadius: 14 }}
-              />
-            ) : (
-              <div
-                style={{
-                  height: 190,
-                  marginTop: 20,
-                  borderRadius: 14,
-                  background: "#cdebf3",
-                  display: "grid",
-                  placeItems: "center",
-                  color: "var(--brand)",
-                }}
-              >
-                <MapPin size={32} /> Ubicación en {site.province_id ?? "Panamá"}
-              </div>
-            )}
-            <div style={{ marginTop: 12, padding: 14, borderRadius: 12, background: "#eef5fa" }}>
-              <h3 style={{ color: "var(--brand)" }}>
-                <Navigation size={17} /> Cómo llegar
-              </h3>
-              <p style={{ marginTop: 7, color: "var(--muted)" }}>
-                Consulta la ruta disponible desde la ciudad más cercana.
-              </p>
-            </div>
-          </aside>
-        </div>
+    <div className={styles.siteScreen}>
+      <div className={styles.siteHero}>
+        <CoverPhoto src={site.photo} alt={site.name} />
+        {site.photo && site.photoIsIllustrative && (
+          <span className={styles.siteHeroTag}>Imagen ilustrativa · no verificada</span>
+        )}
+        <div className={styles.fixedBack}><BackButton onPhoto /></div>
       </div>
-    </main>
+      <div className={styles.siteSheet}>
+        <h1 className={styles.siteTitle}>{site.name}</h1>
+        <p className={styles.siteText}>{site.shortDescription}</p>
+        {site.description && site.description !== site.shortDescription && (
+          <p className={styles.siteText}>{site.description}</p>
+        )}
+        <div className={styles.divider} />
+        <h2 className={styles.heading}>¿Qué quieres explorar en {site.name}?</h2>
+        <ExploreGrid query={explore} />
+
+        {here.length > 0 && (
+          <>
+            <div className={styles.divider} />
+            <h2 className={styles.heading}>Lugares en {site.name}</h2>
+            <div className={categoryStyles.list}>
+              {here.map((item) => (
+                <ResultCard key={item.id} item={item}
+                  href={`/servicios/${item.slug}${forward.size ? `?${forward}` : ""}`} />
+              ))}
+            </div>
+          </>
+        )}
+
+        {site.mapsEmbedUrl && (
+          <>
+            <div className={styles.divider} />
+            <h2 className={styles.heading}>Ubicación</h2>
+            <iframe title={`Mapa de ${site.name}`} src={site.mapsEmbedUrl} className={styles.map}
+              loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+          </>
+        )}
+      </div>
+    </div>
   );
 }

@@ -1,12 +1,32 @@
-import { ServiceDetail } from "@/components/service-detail";
-import { getServiceDetails } from "@/lib/service-details";
+import type { Metadata } from "next";
+import { CatalogError } from "@/components/app/catalog-status";
+import { NotFoundScreen } from "@/components/app/not-found-screen";
+import { ServiceScreen } from "@/components/app/service/service-screen";
+import { attempt } from "@/lib/attempt";
+import { getServiceDetail } from "@/lib/service-detail";
 
-// Presenta el detalle de un servicio seleccionado desde el catálogo.
-export default async function ServicePage({ params }: {
+export const dynamic = "force-dynamic";
+
+type Props = {
   params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const service = await getServiceDetails(slug);
+  searchParams: Promise<{ checkIn?: string; checkOut?: string; guests?: string }>;
+};
 
-  return <ServiceDetail service={service} />;
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const result = await attempt(() => getServiceDetail(slug));
+  const name = result.data?.item.name;
+  return {
+    title: name ? `${name} | Panamá Viajero` : "Panamá Viajero",
+    description: result.data?.item.searchDescription || undefined,
+  };
+}
+
+// Ficha de un servicio publicado, copiada de la app.
+export default async function ServicePage({ params, searchParams }: Props) {
+  const [{ slug }, search] = await Promise.all([params, searchParams]);
+  const result = await attempt(() => getServiceDetail(slug));
+  if (result.error !== null) return <CatalogError message={result.error} />;
+  if (!result.data) return <NotFoundScreen message="No encontramos este servicio." />;
+  return <ServiceScreen detail={result.data} search={search} />;
 }
