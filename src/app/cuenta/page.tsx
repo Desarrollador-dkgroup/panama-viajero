@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  IoBusinessOutline,
   IoCalendarOutline,
+  IoTrashOutline,
   IoChevronForward,
   IoHeartOutline,
   IoPerson,
@@ -11,13 +13,22 @@ import {
   IoPricetagsOutline,
 } from "react-icons/io5";
 import styles from "@/components/app/account.module.css";
-import { signOut } from "@/lib/auth-actions";
+import { deleteOwnAccount, signOut } from "@/lib/auth-actions";
+import { fetchBusinessMemberships, type BusinessMembership } from "@/lib/booking";
 import { useAuthSession } from "@/lib/auth-session";
 
 // Pestaña Cuenta (src/app/(tabs)/profile.tsx de la app).
 export default function AccountPage() {
   const { status, email, profile } = useAuthSession();
   const [signingOut, setSigningOut] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [fetched, setFetched] = useState<BusinessMembership[]>([]);
+  const memberships = status === "signedIn" ? fetched : [];
+
+  useEffect(() => {
+    if (status !== "signedIn") return;
+    fetchBusinessMemberships().then(setFetched).catch(() => setFetched([]));
+  }, [status]);
 
   return (
     <div className={styles.screen}>
@@ -65,11 +76,40 @@ export default function AccountPage() {
         <span className={styles.rowLabel}>Favoritos</span>
         <IoChevronForward size={18} color="#C0C0C0" />
       </Link>
+      {memberships.length > 0 && (
+        <Link href="/negocio/reservas" className={styles.row}>
+          <span className={styles.rowIcon}><IoBusinessOutline size={18} color="var(--indigo)" /></span>
+          <span className={styles.rowLabel}>
+            Panel del hotel
+            <span className={styles.rowSub}>{memberships.map((m) => m.businessName).join(", ")}</span>
+          </span>
+          <IoChevronForward size={18} color="#C0C0C0" />
+        </Link>
+      )}
       <Link href="/promociones" className={styles.row}>
         <span className={styles.rowIcon}><IoPricetagsOutline size={18} color="var(--indigo)" /></span>
         <span className={styles.rowLabel}>Promociones</span>
         <IoChevronForward size={18} color="#C0C0C0" />
       </Link>
+
+      {status === "signedIn" && (
+        <button type="button" className={styles.dangerRow} disabled={deleting}
+          onClick={async () => {
+            if (!window.confirm("Esta acción es permanente. Si tienes reservas o reseñas, tu " +
+              "perfil se anonimiza; si no tienes ninguna, tu cuenta se borra por completo.")) return;
+            setDeleting(true);
+            try {
+              await deleteOwnAccount();
+              await signOut();
+            } catch {
+              window.alert("No se pudo eliminar la cuenta. Intenta de nuevo más tarde.");
+            } finally {
+              setDeleting(false);
+            }
+          }}>
+          <IoTrashOutline size={16} color="#C0392B" aria-hidden /> Eliminar cuenta
+        </button>
+      )}
     </div>
   );
 }

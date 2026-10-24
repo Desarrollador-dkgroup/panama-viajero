@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { AppShell } from "@/components/app/app-shell";
 import "./globals.css";
-import "./legacy.css";
 
 // Define los datos de la pestaña y los buscadores
 export const metadata: Metadata = {

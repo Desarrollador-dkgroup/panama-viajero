@@ -1,0 +1,366 @@
+/* Flujos de reserva (src/app/reserve/[id].tsx y booking/[id].tsx) */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding-top: env(safe-area-inset-top);
+  background: var(--surface);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px var(--page-padding);
+}
+
+.header > button:first-child {
+  width: 40px;
+  height: 40px;
+  background: #F0F0F0;
+  box-shadow: none;
+}
+
+.headerText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.eyebrow {
+  color: var(--indigo);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.headerTitle {
+  color: var(--text-strong);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 20px 32px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.blockTitle {
+  color: var(--text-strong);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.blockHint {
+  margin-top: -6px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.noteText {
+  color: #6B6B6B;
+  font-size: 12.5px;
+  line-height: 18px;
+}
+
+.dateField {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--pill);
+}
+
+.dateInput {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--text-strong);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.slot {
+  padding: 9px 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-dark);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.slotSelected {
+  border-color: var(--indigo);
+  background: var(--pill);
+  color: var(--indigo);
+  font-weight: 800;
+}
+
+.stepperRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stepperLabel {
+  flex: 1;
+  color: var(--text-dark);
+  font-size: 14px;
+}
+
+.stepperHint {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stepButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--pill);
+}
+
+.stepButton:disabled {
+  background: #F0F0F0;
+}
+
+.count {
+  min-width: 18px;
+  color: var(--text-strong);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.priceCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--pill);
+}
+
+.priceCardTitle {
+  color: var(--text-strong);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.priceCardText {
+  color: #6B6B6B;
+  font-size: 12px;
+  line-height: 17px;
+}
+
+.optionCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  border: 1.5px solid var(--line-soft);
+  border-radius: 16px;
+  background: var(--surface);
+  text-align: left;
+}
+
+.optionSelected {
+  border-color: var(--indigo);
+  background: var(--pill);
+}
+
+.optionTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.optionTotal {
+  color: var(--indigo);
+  font-size: 16px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.textField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--text-dark);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.textField input {
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  outline: 0;
+  color: var(--text-strong);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.textField input:focus {
+  border-color: var(--indigo);
+}
+
+.bar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px var(--page-padding) calc(env(safe-area-inset-bottom) + 12px);
+  border-top: 0.5px solid var(--line);
+  background: var(--surface);
+}
+
+.barHint {
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.errorText {
+  color: #C24444;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.primaryButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--indigo);
+  color: var(--surface);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.primaryButton:disabled {
+  background: #B9BEDC;
+}
+
+.secondaryButton {
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  border: 0;
+  background: none;
+  color: var(--indigo);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.doneIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--indigo);
+}
+
+.doneTitle {
+  color: var(--text-strong);
+  font-size: 22px;
+  font-weight: 800;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .header,
+  .content,
+  .bar > * {
+    width: 100%;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .bar {
+    align-items: center;
+  }
+}
+
+@media (min-width: 1024px) {
+  .root {
+    min-height: calc(100dvh - 68px);
+  }
+
+  .header {
+    padding-top: 24px;
+  }
+
+  .headerTitle {
+    font-size: 26px;
+  }
+
+  .bar {
+    position: static;
+    border-top: 0;
+  }
+}
+
+.headerBack {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #F0F0F0;
+}
+
+.linkButton {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--indigo);
+  font-size: 13px;
+  font-weight: 700;
+}

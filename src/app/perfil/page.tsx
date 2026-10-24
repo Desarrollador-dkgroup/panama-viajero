@@ -1,6 +1,6 @@
-import { AccountPage } from "@/components/account-page";
+import { permanentRedirect } from "next/navigation";
 
-// Presenta la sección de cuenta correspondiente
-export default function Page() {
-  return <AccountPage title="Mi perfil" />;
+// Dirección anterior: la cuenta vive ahora en /cuenta, como la pestaña de la app.
+export default function LegacyAccountPage() {
+  permanentRedirect("/cuenta");
 }
