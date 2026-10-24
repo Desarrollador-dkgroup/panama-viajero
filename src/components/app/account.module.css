@@ -1,0 +1,112 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 100%;
+  padding: calc(env(safe-area-inset-top) + 16px) var(--page-padding) 24px;
+  background: var(--page-gray);
+}
+
+.title {
+  color: var(--text-strong);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.identityCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 4px;
+  border-radius: 50%;
+  background: var(--pill);
+}
+
+.identityTitle {
+  color: var(--text-strong);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.identityEmail,
+.identityBody {
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.identityBody {
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.authButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.primaryButton,
+.secondaryButton {
+  display: flex;
+  justify-content: center;
+  padding: 14px;
+  border: 1.5px solid var(--indigo);
+  border-radius: 999px;
+  background: var(--indigo);
+  color: var(--surface);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.secondaryButton {
+  background: none;
+  color: var(--indigo);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.rowIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--pill);
+}
+
+.rowLabel {
+  flex: 1;
+  color: var(--text-strong);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .screen {
+    padding-left: calc(50% - 360px);
+    padding-right: calc(50% - 360px);
+  }
+}
