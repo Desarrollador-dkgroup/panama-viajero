@@ -8,3 +8,9 @@ export function publicMediaUrl(path: string | null | undefined, bucket = "servic
   if (!base) return "";
   return `${base}/storage/v1/object/public/${bucket}/${path}`;
 }
+
+// Fotos de sitios turísticos y promociones: las que sube el panel llegan como URL completa;
+// las del catálogo inicial son rutas de `catalog-photos`.
+export function catalogPhotoUrl(path: string | null | undefined) {
+  return publicMediaUrl(path, "catalog-photos");
+}

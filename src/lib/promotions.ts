@@ -1,5 +1,6 @@
 import { formatPromotionDiscount, formatPromotionPrice } from "@/types/content";
 import type { PromotionDatabaseContent } from "@/types/content";
+import { catalogPhotoUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase";
 
 export type PromotionRecord = {
@@ -95,7 +96,7 @@ export function mapPromotion(promotion: PromotionRow, now: number): PromotionRec
       promotion.promotional_price_cents != null
         ? formatPromotionPrice(promotion.promotional_price_cents)
         : (promotion.price_line ?? "Consulta la oferta"),
-    photoPath: promotion.photo_storage_path,
+    photoPath: catalogPhotoUrl(promotion.photo_storage_path),
     validFrom: promotion.valid_from,
     validTo: promotion.valid_to,
     isActive: now >= Date.parse(promotion.valid_from) && now <= Date.parse(promotion.valid_to),

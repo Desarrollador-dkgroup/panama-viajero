@@ -5,6 +5,7 @@ import { TouristSiteServices } from "@/components/tourist-site-services";
 import { getSiteServices } from "@/lib/tourist-site-services";
 import { getSupabaseServerClient } from "@/lib/supabase";
 import { getDestinationSlug } from "@/lib/destinations";
+import { catalogPhotoUrl } from "@/lib/storage";
 
 // Presenta el detalle de un sitio turístico almacenado en Supabase.
 export default async function TouristSitePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -30,7 +31,7 @@ export default async function TouristSitePage({ params }: { params: Promise<{ sl
     getDestinationSlug(site.province_id),
   ]);
 
-  const image = site.photo_storage_path ?? "/P-Principal/Banner.png";
+  const image = catalogPhotoUrl(site.photo_storage_path) || "/P-Principal/Banner.png";
   return (
     <main>
       <section

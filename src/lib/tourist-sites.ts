@@ -1,3 +1,4 @@
+import { catalogPhotoUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase";
 
 export type TouristSiteRecord = {
@@ -42,7 +43,7 @@ export async function getTouristSites(provinceId: string): Promise<TouristSiteRe
     name: site.name,
     description: site.description,
     shortDescription: site.short_description ?? site.description,
-    photoPath: site.photo_storage_path ?? "/P-Principal/Banner.png",
+    photoPath: catalogPhotoUrl(site.photo_storage_path) || "/P-Principal/Banner.png",
     // Las ciudades ya no existen: el sitio se ubica por su provincia.
     cityName: site.province_id ?? "Panamá",
   }));
