@@ -540,6 +540,12 @@
     display: none;
   }
 
+  /* Sombra más sutil en escritorio */
+  .titleScrim {
+    background: linear-gradient(rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 30%) 30%, rgb(0 0 0 / 30%) 75%,
+      rgb(0 0 0 / 0%) 100%);
+  }
+
   .title {
     font-size: 40px;
     line-height: 48px;
