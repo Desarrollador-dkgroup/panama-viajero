@@ -504,6 +504,12 @@
     line-height: 36px;
   }
 
+  /* El contenido tiene un ancho máximo, pero la sombra del título cubre toda la foto. */
+  .titleScrim {
+    left: calc(50% - 50vw);
+    right: calc(50% - 50vw);
+  }
+
   .categoryTile {
     height: 96px;
   }
