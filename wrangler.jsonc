@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Worker del sitio público. Debe coincidir con el panel de Cloudflare.
+  "name": "panama-viajero",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-12",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  // Valores públicos de Supabase (la clave publishable es pública por diseño). Las
+  // variables NEXT_PUBLIC_ también deben estar en las variables de compilación.
+  "vars": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://qqhcsacdffdxcbkzgulk.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_wYVKGoDrTCBnG06wNSPOgg_4CPVPiES"
+  }
+}

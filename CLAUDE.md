@@ -52,8 +52,15 @@ Ambos deben estar siempre iguales. Reglas estrictas:
 
 - Sitio público. Next.js 16 (App Router; `params` y `searchParams` son Promises),
   React 19, Supabase (solo lectura con la clave anónima), Tailwind 4.
-- Despliegue en Cloudflare. El repo no tiene `wrangler` ni OpenNext: el despliegue se
-  configura desde el panel de Cloudflare (confirmar con el usuario antes de tocarlo).
+- Despliegue: Cloudflare Workers con OpenNext, igual que el panel (`wrangler.jsonc`, worker
+  `panama-viajero`, `@opennextjs/cloudflare` fijo en 1.20.10 por compatibilidad con Next
+  16.3.8). Compilación: `npx opennextjs-cloudflare build`; despliegue: `npx wrangler deploy`.
+  Las variables públicas de Supabase están en `wrangler.jsonc` (`vars`) y deben estar también
+  como variables de compilación en Cloudflare. Cambios en el despliegue: confirmar con el
+  usuario.
+- En esta computadora (8 GB) la compilación completa puede quedarse sin memoria; para
+  probarla: `NEXT_PRIVATE_STANDALONE=true npx next build --webpack` y luego
+  `npx opennextjs-cloudflare build --skipNextBuild`.
 - Comparte la base de Supabase con `pv_admin` (proyecto `qqhcsacdffdxcbkzgulk`).
 - Las migraciones y `src/types/content.ts` vienen de `pv_admin` (`npm run sync:content`
   allí). No editar esas copias aquí directamente.
