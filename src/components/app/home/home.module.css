@@ -92,7 +92,7 @@
 .titleScrim {
   position: absolute;
   inset: -44px calc(-1 * var(--page-padding)) -50px;
-  background: linear-gradient(rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 62%) 30%, rgb(0 0 0 / 62%) 75%,
+  background: linear-gradient(rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 35%) 30%, rgb(0 0 0 / 35%) 75%,
     rgb(0 0 0 / 0%) 100%);
   pointer-events: none;
 }
