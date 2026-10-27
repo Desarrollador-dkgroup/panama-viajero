@@ -74,7 +74,7 @@ export type ActivityHour = {
 };
 
 export type ActivityInfo = {
-  schedule: Record<string, { from: string; to: string }>;
+  schedule: Record<string, string>; // Hora de inicio por día (ej: "09:00")
   minAge: number | null;
   whatIncludes: string[];
   attractions: ActivityAttraction[];
@@ -288,11 +288,11 @@ export const getServiceDetail = cache(async (slug: string): Promise<ServiceDetai
           const activityDetails = (activityRow?.details ?? {}) as Row;
           return {
             schedule: typeof activityDetails.schedule === "object" && activityDetails.schedule !== null
-              ? (activityDetails.schedule as Record<string, { from: string; to: string }>)
+              ? (activityDetails.schedule as Record<string, string>)
               : {},
-            minAge: typeof activityDetails.min_age === "number" ? activityDetails.min_age : null,
-            whatIncludes: Array.isArray(activityDetails.what_includes)
-              ? (activityDetails.what_includes as string[])
+            minAge: typeof activityDetails.minAge === "number" ? activityDetails.minAge : null,
+            whatIncludes: Array.isArray(activityDetails.whatIncludes)
+              ? (activityDetails.whatIncludes as string[])
               : [],
             attractions: Array.isArray(activityDetails.attractions)
               ? (activityDetails.attractions as ActivityAttraction[])

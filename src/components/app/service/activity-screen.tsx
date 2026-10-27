@@ -106,16 +106,12 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
                 </p>
                 <div className={styles.scheduleGrid}>
                   {DAYS.map((day, idx) => {
-                    const dayHours = activity.hours.filter((h) => h.day === idx);
-                    if (dayHours.length === 0) return null;
+                    const dayStart = activity.schedule[day.toLowerCase()];
+                    if (!dayStart) return null;
                     return (
                       <div key={idx} className={styles.scheduleItem}>
                         <strong>{day}</strong>
-                        {dayHours.map((h, hIdx) => (
-                          <span key={hIdx}>
-                            {h.opens} a {h.closes}
-                          </span>
-                        ))}
+                        <span>Inicia a las {dayStart}</span>
                       </div>
                     );
                   })}
