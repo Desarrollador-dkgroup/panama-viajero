@@ -13,8 +13,8 @@ export async function GET(request: Request) {
       .select(
         `
         id, slug, name, search_description, description, base_price_cents,
-        cached_price_from_cents, currency, rating_avg, rating_count, area_label,
-        cities(name, provinces(id)), categories!inner(id, label), tourist_sites(name),
+        cached_price_from_cents, currency, rating_avg, rating_count,
+        destination_province_id, categories!inner(id, label), tourist_sites(name),
         service_photos(storage_path, is_cover, alt_text, position)
       `,
       )

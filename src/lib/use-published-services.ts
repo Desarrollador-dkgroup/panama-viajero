@@ -13,7 +13,7 @@ type ServiceRow = {
   cached_price_from_cents: number | null;
   base_price_cents: number | null;
   rating_avg: number | null;
-  cities: { name?: string; provinces?: { id?: string } } | null;
+  destination_province_id: string | null;
   service_photos: Array<{
     storage_path: string;
     is_cover: boolean;
@@ -57,8 +57,8 @@ export function usePublishedServices(category: string) {
           ]
             .filter(Boolean)
             .join(" "),
-          location: service.cities?.name ?? "",
-          province: service.cities?.provinces?.id ?? "",
+          location: service.destination_province_id ?? "",
+          province: service.destination_province_id ?? "",
           price: Number(service.cached_price_from_cents ?? service.base_price_cents ?? 0) / 100,
           rating: Number(service.rating_avg ?? 0).toFixed(1),
           image,

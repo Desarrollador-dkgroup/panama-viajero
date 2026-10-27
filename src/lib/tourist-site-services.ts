@@ -5,7 +5,7 @@ export type SiteServiceRecord = {
   slug: string;
   name: string;
   categories: { id: string; label: string } | null;
-  cities: { name: string } | null;
+  destination_province_id: string | null;
 };
 
 // Combina el sitio principal con las asociaciones adicionales sin duplicar servicios.
@@ -14,7 +14,7 @@ export async function getSiteServices(siteId: string): Promise<SiteServiceRecord
   const [primary, additional] = await Promise.all([
     supabase
       .from("services")
-      .select("id, slug, name, categories(id, label), cities(name)")
+      .select("id, slug, name, categories(id, label), destination_province_id")
       .eq("tourist_site_id", siteId)
       .eq("status", "published"),
     supabase.from("service_tourist_sites").select("service_id").eq("tourist_site_id", siteId),
@@ -35,7 +35,7 @@ export async function getSiteServices(siteId: string): Promise<SiteServiceRecord
   if (ids.length > 0) {
     const linked = await supabase
       .from("services")
-      .select("id, slug, name, categories(id, label), cities(name)")
+      .select("id, slug, name, categories(id, label), destination_province_id")
       .in("id", ids)
       .eq("status", "published");
     if (linked.error) throw new Error(linked.error.message);

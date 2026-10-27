@@ -30,7 +30,7 @@ export async function getTouristSites(provinceId: string): Promise<TouristSiteRe
   const databaseProvinceId = provinceIds[provinceId] ?? provinceId;
   const { data, error } = await supabase
     .from("tourist_sites")
-    .select("id, slug, name, description, short_description, photo_storage_path, cities(name)")
+    .select("id, slug, name, description, short_description, photo_storage_path, province_id")
     .eq("province_id", databaseProvinceId)
     .order("sort_order", { ascending: true });
 
@@ -43,6 +43,6 @@ export async function getTouristSites(provinceId: string): Promise<TouristSiteRe
     description: site.description,
     shortDescription: site.short_description ?? site.description,
     photoPath: site.photo_storage_path ?? "/P-Principal/Banner.png",
-    cityName: (site.cities as { name?: string } | null)?.name ?? "Panamá",
+    cityName: String(site.province_id ?? "Panamá"),
   }));
 }

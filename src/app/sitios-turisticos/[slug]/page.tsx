@@ -12,7 +12,7 @@ export default async function TouristSitePage({ params }: { params: Promise<{ sl
   const { data: site } = await supabase
     .from("tourist_sites")
     .select(
-      "id, name, description, short_description, photo_storage_path, cities(name), provinces(id)",
+      "id, name, description, short_description, photo_storage_path, province_id",
     )
     .eq("slug", slug)
     .maybeSingle();
@@ -68,7 +68,7 @@ export default async function TouristSitePage({ params }: { params: Promise<{ sl
               name: service.name,
               category: (service.categories as { id?: string } | null)?.id ?? "otros",
               categoryLabel: (service.categories as { label?: string } | null)?.label ?? "Servicio",
-              city: (service.cities as { name?: string } | null)?.name ?? site.name,
+              city: site.name,
             }))}
           />
         </div>
@@ -85,7 +85,7 @@ export default async function TouristSitePage({ params }: { params: Promise<{ sl
           <aside style={{ border: "1px solid var(--border)", borderRadius: 16, padding: 20 }}>
             <h2>Sobre {site.name}</h2>
             <p style={{ marginTop: 12, color: "var(--brand)", fontWeight: 700 }}>
-              <MapPin size={16} /> {(site.cities as { name?: string } | null)?.name ?? "Panamá"}
+              <MapPin size={16} /> {String(site.province_id ?? "Panamá")}
             </p>
             <div
               style={{

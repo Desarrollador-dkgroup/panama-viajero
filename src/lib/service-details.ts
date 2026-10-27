@@ -32,8 +32,8 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
   const supabase = getSupabaseServerClient();
   const query = supabase.from("services").select(`
     id, slug, category_id, name, description, cached_price_from_cents,
-    base_price_cents, rating_avg, rating_count, area_label,
-    cities(name), service_photos(storage_path, is_cover, position),
+    base_price_cents, rating_avg, rating_count, destination_province_id,
+    service_photos(storage_path, is_cover, position),
     service_amenities(amenities(label))
   `);
 
@@ -47,7 +47,7 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
   const service = serviceResult.data as Record<string, unknown> | null;
   if (serviceResult.error || !service) return null;
 
-  const city = service.cities as { name?: string } | null;
+  const province = String(service.destination_province_id ?? "Panamá");
   const photos = service.service_photos as Array<{
     storage_path?: string;
     is_cover?: boolean;
@@ -103,7 +103,7 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
     slug: String(service.slug),
     category,
     name: String(service.name),
-    location: city?.name ?? String(service.area_label ?? "Panamá"),
+    location: province,
     description: String(service.description ?? "Información del servicio."),
     image: cover?.storage_path?.startsWith("http") ? cover.storage_path : "/P-Principal/Banner.png",
     // Conserva todas las imágenes y su orden para la futura galería.
