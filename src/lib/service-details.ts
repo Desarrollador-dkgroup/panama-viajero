@@ -25,6 +25,12 @@ export type ServiceDetailData = {
     section: string;
     dishes: Array<{ name: string; description: string; price: number }>;
   }>;
+  attractions: Array<{
+    id: string;
+    name: string;
+    description: string;
+    photos: Array<{ storage_path?: string; position: number; alt_text?: string }>;
+  }>;
 };
 
 // Obtiene un servicio y sus relaciones desde Supabase.
@@ -58,6 +64,7 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
   const category = String(service.category_id);
   const rooms: ServiceDetailData["rooms"] = [];
   const menu: ServiceDetailData["menu"] = [];
+  const attractions: ServiceDetailData["attractions"] = [];
 
   if (category === "hospedaje") {
     const { data } = await supabase
@@ -98,6 +105,40 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
     }
   }
 
+  if (category === "actividades") {
+    const { data: profile } = await supabase
+      .from("activity_profiles")
+      .select("details")
+      .eq("service_id", String(service.id))
+      .maybeSingle();
+
+    if (profile && typeof profile.details === "object" && profile.details !== null) {
+      const details = profile.details as Record<string, unknown>;
+      if (Array.isArray(details.attractions)) {
+        for (const attr of details.attractions) {
+          if (typeof attr === "object" && attr !== null) {
+            const attraction = attr as Record<string, unknown>;
+            attractions.push({
+              id: String(attraction.id ?? ""),
+              name: String(attraction.name ?? ""),
+              description: String(attraction.description ?? ""),
+              photos: Array.isArray(attraction.photos)
+                ? (attraction.photos as Array<unknown>).map((p) => {
+                    const photo = p as Record<string, unknown>;
+                    return {
+                      storage_path: photo.storage_path as string | undefined,
+                      position: Number(photo.position ?? 0),
+                      alt_text: photo.alt_text as string | undefined,
+                    };
+                  })
+                : [],
+            });
+          }
+        }
+      }
+    }
+  }
+
   return {
     id: String(service.id),
     slug: String(service.slug),
@@ -122,5 +163,6 @@ export async function getServiceDetails(identifier: string): Promise<ServiceDeta
     }> | null ?? []).flatMap((entry) => entry.amenities ? [entry.amenities.label] : []),
     policies: [],
     menu,
+    attractions,
   };
 }
