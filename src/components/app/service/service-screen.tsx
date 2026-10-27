@@ -11,6 +11,7 @@ import type { ServiceDetail } from "@/lib/service-detail";
 import { BookingBar, ReserveBar } from "./bottom-bars";
 import { PhotoGallery } from "./gallery";
 import { HeroButtons } from "./hero-buttons";
+import { ActivityScreen } from "./activity-screen";
 import {
   ContactList,
   FeatureGrid,
@@ -37,6 +38,10 @@ export function ServiceScreen({ detail, search }: {
   search: { checkIn?: string; checkOut?: string; guests?: string };
 }) {
   const { item } = detail;
+
+  if (item.categoryId === "actividades") {
+    return <ActivityScreen detail={detail} />;
+  }
   const query = new URLSearchParams(
     Object.entries(search).filter((entry): entry is [string, string] => Boolean(entry[1])),
   ).toString();

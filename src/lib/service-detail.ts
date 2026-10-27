@@ -61,6 +61,19 @@ export type LodgingInfo = Record<string, string | null> & { languages: string };
 
 export type LinkedRestaurant = { id: string; slug: string; name: string; photo: string | null };
 
+export type ActivityAttraction = {
+  name: string;
+  description: string;
+  options: string[];
+};
+
+export type ActivityInfo = {
+  schedule: Record<string, { from: string; to: string }>;
+  minAge: number | null;
+  whatIncludes: string[];
+  attractions: ActivityAttraction[];
+};
+
 export type ServiceDetail = {
   item: CatalogItem;
   categoryLabel: string;
@@ -74,6 +87,7 @@ export type ServiceDetail = {
   lodging: LodgingInfo | null;
   linkedRestaurants: LinkedRestaurant[];
   restaurant: RestaurantInfo | null;
+  activity: ActivityInfo | null;
   reviews: Review[];
 };
 
@@ -245,6 +259,14 @@ export const getServiceDetail = cache(async (slug: string): Promise<ServiceDetai
       maxPartySize: restaurantRow.reservation_max_party_size == null
         ? null : Number(restaurantRow.reservation_max_party_size),
     } : null,
+    activity: item.categoryId === "actividades"
+      ? {
+          schedule: {},
+          minAge: null,
+          whatIncludes: [],
+          attractions: [],
+        }
+      : null,
     reviews: reviewRows.map((row) => ({
       id: String(row.id),
       author: authors[String(row.customer_id)] ?? "Cliente verificado",
