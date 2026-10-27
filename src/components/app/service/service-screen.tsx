@@ -97,16 +97,16 @@ export function ServiceScreen({ detail, search }: {
             <div className={styles.band} />
             <FeatureGrid title="Contamos para tu experiencia" items={restaurant.features} tiled />
 
-            {(restaurant.menu.length > 0 || restaurant.menuUrl) && (
+            {restaurant.menuUrl && (
               <>
                 <div className={styles.band} />
                 <section className={styles.section}>
                   <h2 className={styles.headingLarge}>Carta</h2>
                   <Link
-                    href={restaurant.menu.length > 0
-                      ? `/servicios/${item.slug}/menu` : restaurant.menuUrl ?? "#"}
+                    href={restaurant.menuUrl}
                     className={styles.menuCard}
-                    target={restaurant.menu.length > 0 ? undefined : "_blank"}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {menuPhoto
                       // eslint-disable-next-line @next/next/no-img-element
