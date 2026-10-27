@@ -106,12 +106,12 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
                 </p>
                 <div className={styles.scheduleGrid}>
                   {DAYS.map((day, idx) => {
-                    const dayStart = activity.schedule[day.toLowerCase()];
-                    if (!dayStart) return null;
+                    const daySchedule = activity.schedule[day.toLowerCase()];
+                    if (!daySchedule || !daySchedule.start) return null;
                     return (
                       <div key={idx} className={styles.scheduleItem}>
                         <strong>{day}</strong>
-                        <span>Inicia a las {dayStart}</span>
+                        <span>{daySchedule.start} a {daySchedule.end}</span>
                       </div>
                     );
                   })}
@@ -150,6 +150,20 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
                 <h2 className={styles.headingLarge}>Atracciones</h2>
                 {activity.attractions.map((attraction, idx) => (
                   <div key={idx} className={styles.attractionCard}>
+                    {attraction.photos && attraction.photos.length > 0 && (
+                      <div style={{ marginBottom: 16, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 12 }}>
+                        {attraction.photos.map((photo) => (
+                          photo.storage_path && (
+                            <img
+                              key={photo.position}
+                              src={photo.storage_path}
+                              alt={photo.alt_text || attraction.name}
+                              style={{ width: "100%", height: "150px", objectFit: "cover", borderRadius: 8 }}
+                            />
+                          )
+                        ))}
+                      </div>
+                    )}
                     <h3>{attraction.name}</h3>
                     {attraction.description && (
                       <p>{attraction.description}</p>

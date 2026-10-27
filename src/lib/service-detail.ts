@@ -65,6 +65,11 @@ export type ActivityAttraction = {
   name: string;
   description: string;
   options: string[];
+  photos?: Array<{
+    storage_path?: string;
+    position: number;
+    alt_text?: string;
+  }>;
 };
 
 export type ActivityHour = {
@@ -74,7 +79,7 @@ export type ActivityHour = {
 };
 
 export type ActivityInfo = {
-  schedule: Record<string, string>; // Hora de inicio por día (ej: "09:00")
+  schedule: Record<string, { start: string; end: string }>; // Ej: { start: "09:00", end: "17:00" }
   minAge: number | null;
   whatIncludes: string[];
   attractions: ActivityAttraction[];
@@ -288,7 +293,7 @@ export const getServiceDetail = cache(async (slug: string): Promise<ServiceDetai
           const activityDetails = (activityRow?.details ?? {}) as Row;
           return {
             schedule: typeof activityDetails.schedule === "object" && activityDetails.schedule !== null
-              ? (activityDetails.schedule as Record<string, string>)
+              ? (activityDetails.schedule as Record<string, { start: string; end: string }>)
               : {},
             minAge: typeof activityDetails.minAge === "number" ? activityDetails.minAge : null,
             whatIncludes: Array.isArray(activityDetails.whatIncludes)
