@@ -67,11 +67,20 @@ export type ActivityAttraction = {
   options: string[];
 };
 
+export type ActivityHour = {
+  day: number;
+  opens: string;
+  closes: string;
+};
+
 export type ActivityInfo = {
   schedule: Record<string, { from: string; to: string }>;
   minAge: number | null;
   whatIncludes: string[];
   attractions: ActivityAttraction[];
+  hasMultipleShifts: boolean;
+  hours: ActivityHour[];
+  locationAddressDetails: string | null;
 };
 
 export type ServiceDetail = {
@@ -127,7 +136,17 @@ export const getServiceDetail = cache(async (slug: string): Promise<ServiceDetai
   if (!item) return null;
 
   const supabase = getSupabaseServerClient();
-  const [base, rooms, lodging, menu, restaurant, hours, reviews] = await Promise.all([
+  const [
+    base,
+    rooms,
+    lodging,
+    menu,
+    restaurant,
+    hours,
+    reviews,
+    activity,
+    activityHours,
+  ] = await Promise.all([
     supabase.from("services").select(`address, maps_embed_url, categories(label), meal_plans(label),
       service_photos(storage_path, is_cover, position, lodging_area_id),
       service_amenities(amenities(id, label, icon_name)),
@@ -148,6 +167,9 @@ export const getServiceDetail = cache(async (slug: string): Promise<ServiceDetai
       .eq("service_id", item.id).order("day_of_week").order("position"),
     supabase.from("reviews").select("id, rating, comment, customer_id")
       .eq("service_id", item.id).eq("status", "published").order("created_at", { ascending: false }),
+    supabase.from("activity_profiles").select("*").eq("service_id", item.id).maybeSingle(),
+    supabase.from("activity_hours").select("day_of_week, opens_at, closes_at, position")
+      .eq("service_id", item.id).order("day_of_week").order("position"),
   ]);
 
   const service = (base.data ?? {}) as Row;
@@ -260,12 +282,30 @@ export const getServiceDetail = cache(async (slug: string): Promise<ServiceDetai
         ? null : Number(restaurantRow.reservation_max_party_size),
     } : null,
     activity: item.categoryId === "actividades"
-      ? {
-          schedule: {},
-          minAge: null,
-          whatIncludes: [],
-          attractions: [],
-        }
+      ? (() => {
+          const activityRow = activity.data as Row | null;
+          const activityHoursRows = (activityHours.data ?? []) as Row[];
+          const activityDetails = (activityRow?.details ?? {}) as Row;
+          return {
+            schedule: typeof activityDetails.schedule === "object" && activityDetails.schedule !== null
+              ? (activityDetails.schedule as Record<string, { from: string; to: string }>)
+              : {},
+            minAge: typeof activityDetails.min_age === "number" ? activityDetails.min_age : null,
+            whatIncludes: Array.isArray(activityDetails.what_includes)
+              ? (activityDetails.what_includes as string[])
+              : [],
+            attractions: Array.isArray(activityDetails.attractions)
+              ? (activityDetails.attractions as ActivityAttraction[])
+              : [],
+            hasMultipleShifts: activityRow?.has_multiple_shifts === true,
+            hours: activityHoursRows.map((row) => ({
+              day: Number(row.day_of_week),
+              opens: String(row.opens_at).slice(0, 5),
+              closes: String(row.closes_at).slice(0, 5),
+            })),
+            locationAddressDetails: text(activityRow?.location_address_details),
+          };
+        })()
       : null,
     reviews: reviewRows.map((row) => ({
       id: String(row.id),
