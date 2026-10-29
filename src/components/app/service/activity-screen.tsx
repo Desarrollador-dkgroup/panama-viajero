@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { IoLocationOutline } from "react-icons/io5";
 import type { ServiceDetail } from "@/lib/service-detail";
 import { formatPlace } from "@/lib/catalog";
@@ -149,7 +150,11 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
               <section className={styles.section}>
                 <h2 className={styles.headingLarge}>Atracciones</h2>
                 {activity.attractions.map((attraction, idx) => (
-                  <div key={idx} className={styles.attractionCard}>
+                  <Link
+                    key={attraction.id ?? idx}
+                    href={`/servicios/${item.slug}/atracciones/${attraction.id ?? idx}`}
+                    className={styles.attractionCard}
+                  >
                     {attraction.photos && attraction.photos.length > 0 && (
                       <div style={{ marginBottom: 16, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 12 }}>
                         {attraction.photos.map((photo) => (
@@ -175,7 +180,7 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
                         ))}
                       </ul>
                     )}
-                  </div>
+                  </Link>
                 ))}
               </section>
             </>

@@ -62,6 +62,7 @@ export type LodgingInfo = Record<string, string | null> & { languages: string };
 export type LinkedRestaurant = { id: string; slug: string; name: string; photo: string | null };
 
 export type ActivityAttraction = {
+  id?: string;
   name: string;
   description: string;
   options: string[];
