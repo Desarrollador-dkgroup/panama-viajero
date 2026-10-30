@@ -21,6 +21,14 @@ const DAYS = [
   "Sábado",
 ];
 
+function formatTime12(time: string) {
+  const [hourText, minute] = time.split(":");
+  const hour = Number(hourText);
+  const suffix = hour >= 12 ? "pm" : "am";
+  const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+  return minute === "00" ? `${hour12} ${suffix}` : `${hour12}:${minute} ${suffix}`;
+}
+
 function getActivityStatus(hours: { day: number; opens: string; closes: string }[]) {
   const now = new Date();
   const dayOfWeek = now.getDay();
@@ -111,7 +119,7 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
                     return (
                       <div key={idx} className={styles.scheduleItem}>
                         <strong>{day}</strong>
-                        <span>{daySchedule.start} a {daySchedule.end}</span>
+                        <span>{formatTime12(daySchedule.start)} a {formatTime12(daySchedule.end)}</span>
                       </div>
                     );
                   })}

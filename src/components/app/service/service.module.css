@@ -716,6 +716,19 @@
   font-weight: 800;
 }
 
+.scheduleGrid {
+  display: grid;
+  gap: 10px;
+}
+
+.scheduleItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--text-dark);
+  font-size: 14px;
+}
+
 .roomAmenities {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
