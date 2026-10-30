@@ -1,3 +1,4 @@
+import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import { CatalogError } from "@/components/app/catalog-status";
 import { NotFoundScreen } from "@/components/app/not-found-screen";
 import { BookingBar } from "@/components/app/service/bottom-bars";
@@ -45,11 +46,14 @@ export default async function AttractionPage({ params }: {
               <div className={styles.divider} />
               <section className={styles.section}>
                 <h2 className={styles.headingLarge}>Qué verás</h2>
-                <ul className={styles.list}>
-                  {attraction.options.map((option, idx) => (
-                    <li key={idx}>{option}</li>
+                <div className={styles.roomAmenities}>
+                  {attraction.options.map((option) => (
+                    <span key={option} className={styles.roomAmenity}>
+                      <IoCheckmarkCircleOutline size={18} color="var(--indigo)" aria-hidden />
+                      {option}
+                    </span>
                   ))}
-                </ul>
+                </div>
               </section>
             </>
           )}

@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { IoLocationOutline } from "react-icons/io5";
 import type { ServiceDetail } from "@/lib/service-detail";
 import { formatPlace } from "@/lib/catalog";
 import { PhotoGallery } from "./gallery";
 import { HeroButtons } from "./hero-buttons";
 import {
+  AttractionList,
   LocationMap,
   ReviewsList,
 } from "./service-sections";
@@ -147,42 +147,11 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
           {activity.attractions.length > 0 && (
             <>
               <div className={styles.divider} />
-              <section className={styles.section}>
-                <h2 className={styles.headingLarge}>Atracciones</h2>
-                {activity.attractions.map((attraction, idx) => (
-                  <Link
-                    key={attraction.id ?? idx}
-                    href={`/servicios/${item.slug}/atracciones/${attraction.id ?? idx}`}
-                    className={styles.attractionCard}
-                  >
-                    {attraction.photos && attraction.photos.length > 0 && (
-                      <div style={{ marginBottom: 16, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 12 }}>
-                        {attraction.photos.map((photo) => (
-                          photo.storage_path && (
-                            <img
-                              key={photo.position}
-                              src={photo.storage_path}
-                              alt={photo.alt_text || attraction.name}
-                              style={{ width: "100%", height: "150px", objectFit: "cover", borderRadius: 8 }}
-                            />
-                          )
-                        ))}
-                      </div>
-                    )}
-                    <h3>{attraction.name}</h3>
-                    {attraction.description && (
-                      <p>{attraction.description}</p>
-                    )}
-                    {attraction.options.length > 0 && (
-                      <ul>
-                        {attraction.options.map((option, oIdx) => (
-                          <li key={oIdx}>{option}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </Link>
-                ))}
-              </section>
+              <AttractionList
+                attractions={activity.attractions}
+                hrefFor={(attraction, idx) =>
+                  `/servicios/${item.slug}/atracciones/${attraction.id ?? idx}`}
+              />
             </>
           )}
 

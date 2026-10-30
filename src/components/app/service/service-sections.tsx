@@ -14,7 +14,14 @@ import {
 import { IonIcon } from "@/components/app/ion-icon";
 import { CoverPhoto, PhotoPlaceholder } from "@/components/app/ui";
 import { formatSlot, PRICE_MEANING } from "@/lib/reservation-config";
-import type { Feature, LinkedRestaurant, Review, Room, ServiceDetail } from "@/lib/service-detail";
+import type {
+  ActivityAttraction,
+  Feature,
+  LinkedRestaurant,
+  Review,
+  Room,
+  ServiceDetail,
+} from "@/lib/service-detail";
 import { formatPlace } from "@/lib/catalog";
 import styles from "./service.module.css";
 
@@ -139,6 +146,40 @@ export function RoomList({ rooms, hrefFor }: { rooms: Room[]; hrefFor: (room: Ro
             <IoChevronForward size={18} color="var(--text-muted)" aria-hidden />
           </Link>
         ))}
+      </div>
+    </section>
+  );
+}
+
+export function AttractionList({ attractions, hrefFor }: {
+  attractions: ActivityAttraction[];
+  hrefFor: (attraction: ActivityAttraction, idx: number) => string;
+}) {
+  return (
+    <section className={styles.section}>
+      <h2 className={styles.heading}>Atracciones</h2>
+      <div className={styles.roomList}>
+        {attractions.map((attraction, idx) => {
+          const cover = attraction.photos?.find((photo) => photo.storage_path)?.storage_path;
+          return (
+            <Link key={attraction.id ?? idx} href={hrefFor(attraction, idx)}
+              className={styles.roomCard}>
+              <span className={styles.roomThumb}>
+                {cover ? <CoverPhoto src={cover} /> : <PhotoPlaceholder className={styles.fill} />}
+              </span>
+              <span className={styles.roomInfo}>
+                <span className={styles.roomName}>{attraction.name}</span>
+                {attraction.options.length > 0 && (
+                  <span className={styles.roomCapacity}>{attraction.options.join(" · ")}</span>
+                )}
+                {attraction.description && (
+                  <span className={styles.roomDescription}>{attraction.description}</span>
+                )}
+              </span>
+              <IoChevronForward size={18} color="var(--text-muted)" aria-hidden />
+            </Link>
+          );
+        })}
       </div>
     </section>
   );
