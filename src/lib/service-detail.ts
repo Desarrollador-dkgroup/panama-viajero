@@ -89,6 +89,16 @@ export type ActivityHour = {
   closes: string;
 };
 
+export type TourInfo = {
+  duration: string | null;
+  language: string | null;
+  meetingPointLabel: string | null;
+  meetingPointUrl: string | null;
+  departureMode: "weekly" | "dates" | "both";
+  departures: Array<{ date: string; time: string }>;
+  maxGroupSize: number | null;
+};
+
 export type ActivityInfo = {
   schedule: Record<string, { start: string; end: string }>; // Ej: { start: "09:00", end: "17:00" }
   minAge: number | null;
@@ -97,7 +107,29 @@ export type ActivityInfo = {
   hasMultipleShifts: boolean;
   hours: ActivityHour[];
   locationAddressDetails: string | null;
+  tour: TourInfo | null;
 };
+
+function parseTour(raw: unknown): TourInfo {
+  const tour = (raw ?? {}) as Row;
+  const departures = Array.isArray(tour.departures)
+    ? (tour.departures as Array<{ date?: unknown; time?: unknown }>).flatMap((departure) =>
+      typeof departure.date === "string" && departure.date
+        ? [{ date: departure.date, time: typeof departure.time === "string" ? departure.time : "" }]
+        : [])
+    : [];
+  return {
+    duration: text(tour.duration),
+    language: text(tour.language),
+    meetingPointLabel: text(tour.meetingPointLabel),
+    meetingPointUrl: text(tour.meetingPointUrl),
+    departureMode: tour.departureMode === "dates" || tour.departureMode === "both"
+      ? tour.departureMode : "weekly",
+    departures,
+    maxGroupSize: typeof tour.maxGroupSize === "number" && tour.maxGroupSize > 0
+      ? tour.maxGroupSize : null,
+  };
+}
 
 export type ServiceDetail = {
   item: CatalogItem;
@@ -297,7 +329,7 @@ export const getServiceDetail = cache(async (slug: string): Promise<ServiceDetai
       maxPartySize: restaurantRow.reservation_max_party_size == null
         ? null : Number(restaurantRow.reservation_max_party_size),
     } : null,
-    activity: item.categoryId === "actividades"
+    activity: item.categoryId === "actividades" || item.categoryId === "tour-operador"
       ? (() => {
           const activityRow = activity.data as Row | null;
           const activityHoursRows = (activityHours.data ?? []) as Row[];
@@ -327,6 +359,7 @@ export const getServiceDetail = cache(async (slug: string): Promise<ServiceDetai
               }))
               : scheduleHours,
             locationAddressDetails: text(activityRow?.location_address_details),
+            tour: item.categoryId === "tour-operador" ? parseTour(activityDetails.tour) : null,
           };
         })()
       : null,

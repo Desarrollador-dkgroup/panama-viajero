@@ -151,13 +151,14 @@ export function RoomList({ rooms, hrefFor }: { rooms: Room[]; hrefFor: (room: Ro
   );
 }
 
-export function AttractionList({ attractions, hrefFor }: {
+export function AttractionList({ attractions, hrefFor, heading = "Atracciones" }: {
   attractions: ActivityAttraction[];
   hrefFor: (attraction: ActivityAttraction, idx: number) => string;
+  heading?: string;
 }) {
   return (
     <section className={styles.section}>
-      <h2 className={styles.heading}>Atracciones</h2>
+      <h2 className={styles.heading}>{heading}</h2>
       <div className={styles.roomList}>
         {attractions.map((attraction, idx) => {
           const cover = attraction.photos?.find((photo) => photo.storage_path)?.storage_path;

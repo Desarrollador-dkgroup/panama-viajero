@@ -716,6 +716,13 @@
   font-weight: 800;
 }
 
+.infoItem {
+  color: var(--text-dark);
+  font-size: 14px;
+  line-height: 21px;
+  overflow-wrap: anywhere;
+}
+
 .scheduleGrid {
   display: grid;
   gap: 10px;

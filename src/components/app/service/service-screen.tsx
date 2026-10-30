@@ -39,7 +39,7 @@ export function ServiceScreen({ detail, search }: {
 }) {
   const { item } = detail;
 
-  if (item.categoryId === "actividades") {
+  if (item.categoryId === "actividades" || item.categoryId === "tour-operador") {
     return <ActivityScreen detail={detail} />;
   }
   const query = new URLSearchParams(

@@ -1,4 +1,4 @@
-import { IoLocationOutline } from "react-icons/io5";
+import { IoLocationOutline, IoNavigateOutline } from "react-icons/io5";
 import type { ServiceDetail } from "@/lib/service-detail";
 import { formatPlace } from "@/lib/catalog";
 import { PhotoGallery } from "./gallery";
@@ -65,6 +65,17 @@ function getActivityStatus(hours: { day: number; opens: string; closes: string }
   return { status: "Cerrado", closesAt: null };
 }
 
+function formatDeparture(date: string, time: string) {
+  const [year, month, day] = date.split("-").map(Number);
+  const label = new Date(Date.UTC(year, month - 1, day)).toLocaleDateString("es-PA", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone: "UTC",
+  });
+  return time ? `${label} · ${formatTime12(time)}` : label;
+}
+
 export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
   const { item, activity } = detail;
 
@@ -76,6 +87,8 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
   const placeQuery = [detail.address, item.siteName, item.provinceId, "Panamá"]
     .filter(Boolean).join(", ");
   const reserveHref = `/servicios/${item.slug}/solicitar`;
+  const tour = activity.tour;
+  const isTour = tour !== null;
 
   return (
     <div className={styles.screen}>
@@ -87,6 +100,7 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
         <div className={styles.sheet}>
           <div className={styles.titleRow}>
             <h1 className={styles.name}>{item.name}</h1>
+            {isTour && <span className={styles.pricePill}>${item.price}/persona</span>}
           </div>
           <p className={styles.locationRow}>
             <IoLocationOutline size={16} color="var(--text-muted)" aria-hidden />
@@ -100,11 +114,58 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
             </>
           )}
 
+          {tour && (
+            <>
+              <div className={styles.divider} />
+              <section className={styles.section}>
+                <h2 className={styles.heading}>Detalles del tour</h2>
+                {tour.duration && (
+                  <p className={styles.infoItem}><strong>Duración:</strong> {tour.duration}</p>
+                )}
+                {tour.language && (
+                  <p className={styles.infoItem}><strong>Idioma del guía:</strong> {tour.language}</p>
+                )}
+                {tour.maxGroupSize && (
+                  <p className={styles.infoItem}>
+                    <strong>Cupo máximo por salida:</strong> {tour.maxGroupSize} personas
+                  </p>
+                )}
+              </section>
+              {(tour.meetingPointLabel || tour.meetingPointUrl) && (
+                <section className={styles.section}>
+                  <h2 className={styles.heading}>Punto de encuentro</h2>
+                  {tour.meetingPointLabel && (
+                    <p className={styles.infoItem}>{tour.meetingPointLabel}</p>
+                  )}
+                  {tour.meetingPointUrl && (
+                    <a href={tour.meetingPointUrl} target="_blank" rel="noreferrer"
+                      className={styles.mapsButton}>
+                      <IoNavigateOutline size={16} color="var(--indigo)" aria-hidden />
+                      Abrir punto de encuentro en Google Maps
+                    </a>
+                  )}
+                </section>
+              )}
+              {tour.departureMode !== "weekly" && tour.departures.length > 0 && (
+                <section className={styles.section}>
+                  <h2 className={styles.heading}>Fechas de salida</h2>
+                  {tour.departures.map((departure, idx) => (
+                    <p key={idx} className={styles.infoItem}>
+                      {formatDeparture(departure.date, departure.time)}
+                    </p>
+                  ))}
+                </section>
+              )}
+            </>
+          )}
+
           {activity.hours.length > 0 && (
             <>
               <div className={styles.divider} />
               <section className={styles.section}>
-                <h2 className={styles.headingLarge}>Horario semanal</h2>
+                <h2 className={styles.headingLarge}>
+                  {isTour ? "Horario semanal de salidas" : "Horario semanal"}
+                </h2>
                 <p className={styles.statusBadge} style={{
                   color: activityStatus.status === "Abierto" ? "var(--success)" :
                          activityStatus.status.startsWith("Pronto a cerrar") ? "var(--warning)" :
@@ -155,6 +216,7 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
             <>
               <div className={styles.divider} />
               <AttractionList
+                heading={isTour ? "Paradas del recorrido" : "Atracciones"}
                 attractions={activity.attractions}
                 hrefFor={(attraction, idx) =>
                   `/servicios/${item.slug}/atracciones/${attraction.id ?? idx}`}
@@ -187,7 +249,7 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
           )}
         </div>
         <aside className={styles.barSlot}>
-          <ReserveBar href={reserveHref} label="Reservar" />
+          <ReserveBar href={reserveHref} label={isTour ? "Reservar tour" : "Reservar"} />
         </aside>
       </div>
     </div>
