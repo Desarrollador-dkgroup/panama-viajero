@@ -61,6 +61,16 @@ export type LodgingInfo = Record<string, string | null> & { languages: string };
 
 export type LinkedRestaurant = { id: string; slug: string; name: string; photo: string | null };
 
+const DAY_INDEX: Record<string, number> = {
+  domingo: 0,
+  lunes: 1,
+  martes: 2,
+  miércoles: 3,
+  jueves: 4,
+  viernes: 5,
+  sábado: 6,
+};
+
 export type ActivityAttraction = {
   id?: string;
   name: string;
@@ -292,10 +302,15 @@ export const getServiceDetail = cache(async (slug: string): Promise<ServiceDetai
           const activityRow = activity.data as Row | null;
           const activityHoursRows = (activityHours.data ?? []) as Row[];
           const activityDetails = (activityRow?.details ?? {}) as Row;
+          const schedule = typeof activityDetails.schedule === "object" && activityDetails.schedule !== null
+            ? (activityDetails.schedule as Record<string, { start: string; end: string }>)
+            : {};
+          const scheduleHours = Object.entries(schedule).flatMap(([day, range]) =>
+            range?.start && range.end && DAY_INDEX[day] !== undefined
+              ? [{ day: DAY_INDEX[day], opens: range.start.slice(0, 5), closes: range.end.slice(0, 5) }]
+              : []);
           return {
-            schedule: typeof activityDetails.schedule === "object" && activityDetails.schedule !== null
-              ? (activityDetails.schedule as Record<string, { start: string; end: string }>)
-              : {},
+            schedule,
             minAge: typeof activityDetails.minAge === "number" ? activityDetails.minAge : null,
             whatIncludes: Array.isArray(activityDetails.whatIncludes)
               ? (activityDetails.whatIncludes as string[])
@@ -304,11 +319,13 @@ export const getServiceDetail = cache(async (slug: string): Promise<ServiceDetai
               ? (activityDetails.attractions as ActivityAttraction[])
               : [],
             hasMultipleShifts: activityRow?.has_multiple_shifts === true,
-            hours: activityHoursRows.map((row) => ({
-              day: Number(row.day_of_week),
-              opens: String(row.opens_at).slice(0, 5),
-              closes: String(row.closes_at).slice(0, 5),
-            })),
+            hours: activityHoursRows.length > 0
+              ? activityHoursRows.map((row) => ({
+                day: Number(row.day_of_week),
+                opens: String(row.opens_at).slice(0, 5),
+                closes: String(row.closes_at).slice(0, 5),
+              }))
+              : scheduleHours,
             locationAddressDetails: text(activityRow?.location_address_details),
           };
         })()
