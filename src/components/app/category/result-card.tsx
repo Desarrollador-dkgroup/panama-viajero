@@ -17,6 +17,7 @@ import styles from "./category.module.css";
 export function ResultCard({ item, href }: { item: CatalogItem; href: string }) {
   const isFavorite = useIsFavorite(item.id);
   const isLodging = item.categoryId === "hospedaje";
+  const isActivity = item.categoryId === "actividades";
 
   return (
     <div className={styles.card}>
@@ -54,10 +55,12 @@ export function ResultCard({ item, href }: { item: CatalogItem; href: string }) 
         </span>
         <span className={styles.description}>{item.searchDescription}</span>
         <span className={styles.priceRow}>
-          <span className={styles.price}>
-            {isLodging ? "Desde " : ""}${item.price}
-            {isLodging && <span className={styles.priceUnit}> / noche</span>}
-          </span>
+          {!isActivity && (
+            <span className={styles.price}>
+              {isLodging ? "Desde " : ""}${item.price}
+              {isLodging && <span className={styles.priceUnit}> / noche</span>}
+            </span>
+          )}
           <span className={styles.chevronButton}>
             <IoChevronForward size={14} color="var(--indigo)" aria-hidden />
           </span>

@@ -59,8 +59,7 @@ export default async function AttractionPage({ params }: {
           )}
         </div>
         <aside className={styles.barSlot}>
-          <BookingBar href={`/servicios/${result.data.item.slug}/solicitar`}
-            priceLine={`$${result.data.item.price} / persona`} />
+          <BookingBar href={`/servicios/${result.data.item.slug}/solicitar`} />
         </aside>
       </div>
     </div>

@@ -131,9 +131,11 @@
 
 .name {
   flex: 1;
+  min-width: 0;
   color: var(--text-strong);
   font-size: 22px;
   font-weight: 800;
+  overflow-wrap: anywhere;
 }
 
 .pricePill {
@@ -220,6 +222,7 @@
   font-size: 14px;
   line-height: 21px;
   white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .section {
@@ -715,7 +718,7 @@
 
 .roomAmenities {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -723,8 +726,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
   color: var(--text-dark);
   font-size: 13px;
+  overflow-wrap: anywhere;
 }
 
 @media (min-width: 1024px) {

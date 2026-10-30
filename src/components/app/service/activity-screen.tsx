@@ -79,7 +79,6 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
         <div className={styles.sheet}>
           <div className={styles.titleRow}>
             <h1 className={styles.name}>{item.name}</h1>
-            <span className={styles.pricePill}>${item.price}/persona</span>
           </div>
           <p className={styles.locationRow}>
             <IoLocationOutline size={16} color="var(--text-muted)" aria-hidden />
