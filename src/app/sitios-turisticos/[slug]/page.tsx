@@ -8,7 +8,10 @@ import { ExploreGrid } from "@/components/app/places/places";
 import styles from "@/components/app/places/places.module.css";
 import { CoverPhoto } from "@/components/app/ui";
 import { attempt } from "@/lib/attempt";
+import { PromoCard } from "@/components/app/promotions/promo-card";
+import promoStyles from "@/components/app/promotions/promotions.module.css";
 import { getServices, getTouristSites } from "@/lib/catalog";
+import { getActiveServicePromotions } from "@/lib/service-promotions";
 
 export const dynamic = "force-dynamic";
 
@@ -44,6 +47,7 @@ export default async function TouristSitePage({ params, searchParams }: Props) {
   explore.set("region", site.provinceId ?? site.regionId);
   explore.set("touristSite", site.id);
   const here = services.filter((item) => item.siteIds.includes(site.id));
+  const promos = (await getActiveServicePromotions()).filter((promo) => promo.siteIds.includes(site.id));
 
   return (
     <div className={styles.siteScreen}>
@@ -56,6 +60,14 @@ export default async function TouristSitePage({ params, searchParams }: Props) {
       </div>
       <div className={styles.siteSheet}>
         <h1 className={styles.siteTitle}>{site.name}</h1>
+        {promos.length > 0 && (
+          <section>
+            <h2 className={promoStyles.sectionLabel}>Promociones</h2>
+            <div className={promoStyles.grid}>
+              {promos.map((promo) => <PromoCard key={promo.id} promo={promo} />)}
+            </div>
+          </section>
+        )}
         <p className={styles.siteText}>{site.shortDescription}</p>
         {site.description && site.description !== site.shortDescription && (
           <p className={styles.siteText}>{site.description}</p>

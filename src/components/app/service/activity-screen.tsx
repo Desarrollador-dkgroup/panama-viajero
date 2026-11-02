@@ -6,6 +6,7 @@ import { HeroButtons } from "./hero-buttons";
 import {
   AttractionList,
   LocationMap,
+  PromoNotice,
   ReviewsList,
 } from "./service-sections";
 import { ReserveBar } from "./bottom-bars";
@@ -113,6 +114,8 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
               <p className={styles.description}>{item.description}</p>
             </>
           )}
+
+          <PromoNotice promotions={detail.promotions} />
 
           {tour && (
             <>

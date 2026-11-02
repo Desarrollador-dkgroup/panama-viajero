@@ -22,6 +22,7 @@ import {
   ReviewsList,
   RoomList,
   ServiceDetails,
+  PromoNotice,
 } from "./service-sections";
 import styles from "./service.module.css";
 
@@ -233,11 +234,14 @@ export function ServiceScreen({ detail, search }: {
           <div className={styles.divider} />
           <LocationMap embedUrl={detail.mapsEmbedUrl} address={detail.address} query={placeQuery} />
 
+          <PromoNotice promotions={detail.promotions.filter((promo) => !promo.roomId)} />
+
           {hasRooms && (
             <>
               <div className={styles.divider} />
               <RoomList
                 rooms={detail.rooms}
+                promotions={detail.promotions}
                 hrefFor={(room) => withQuery(`/servicios/${item.slug}/habitaciones/${room.slug}`)}
               />
             </>

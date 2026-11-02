@@ -1,3 +1,4 @@
+import { getActiveServicePromotions, type ServicePromotion } from "@/lib/service-promotions";
 import { cache } from "react";
 import { coverPath, formatPlace, getServices, type CatalogItem } from "@/lib/catalog";
 import { publicMediaUrl } from "@/lib/storage";
@@ -133,6 +134,7 @@ function parseTour(raw: unknown): TourInfo {
 
 export type ServiceDetail = {
   item: CatalogItem;
+  promotions: ServicePromotion[];
   categoryLabel: string;
   address: string | null;
   mapsEmbedUrl: string | null;
@@ -238,9 +240,11 @@ export const getServiceDetail = cache(async (slug: string): Promise<ServiceDetai
   const restaurantRow = restaurant.data as Row | null;
   const reviewRows = (reviews.data ?? []) as Row[];
   const authors = await reviewAuthors(reviewRows.map((row) => String(row.customer_id)));
+  const promotions = await getActiveServicePromotions(new Date(), item.id);
 
   return {
     item,
+    promotions,
     categoryLabel: String((service.categories as Row | null)?.label ?? item.categoryId),
     address: text(service.address),
     mapsEmbedUrl: text(service.maps_embed_url),

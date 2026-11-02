@@ -23,6 +23,8 @@ import type {
   ServiceDetail,
 } from "@/lib/service-detail";
 import { formatPlace } from "@/lib/catalog";
+import type { ServicePromotion } from "@/lib/service-promotions";
+import { formatMoney } from "@/lib/booking";
 import styles from "./service.module.css";
 
 // Secciones de la ficha (src/components/service-detail/*), con los datos del panel.
@@ -124,7 +126,28 @@ export function roomCapacityLabel(room: Room) {
     .filter(Boolean).join(" · ");
 }
 
-export function RoomList({ rooms, hrefFor }: { rooms: Room[]; hrefFor: (room: Room) => string }) {
+export function PromoNotice({ promotions }: { promotions: ServicePromotion[] }) {
+  if (promotions.length === 0) return null;
+  return (
+    <section className={styles.section}>
+      <h2 className={styles.heading}>Promociones</h2>
+      {promotions.map((promo) => (
+        <p key={promo.id} className={styles.infoItem}>
+          <b>{promo.title}</b> · -{promo.discountPct}% · {promo.scheduleLabel}
+          {promo.finalCents !== null && promo.regularCents !== null && (
+            <> · <s>{formatMoney(promo.regularCents)}</s> {formatMoney(promo.finalCents)}</>
+          )}
+        </p>
+      ))}
+    </section>
+  );
+}
+
+export function RoomList({ rooms, hrefFor, promotions = [] }: {
+  rooms: Room[];
+  hrefFor: (room: Room) => string;
+  promotions?: ServicePromotion[];
+}) {
   return (
     <section className={styles.section}>
       <h2 className={styles.heading}>Habitaciones</h2>
@@ -141,7 +164,19 @@ export function RoomList({ rooms, hrefFor }: { rooms: Room[]; hrefFor: (room: Ro
               {room.description && (
                 <span className={styles.roomDescription}>{room.description}</span>
               )}
-              <span className={styles.roomPrice}>${room.price} <small>/ noche</small></span>
+              <span className={styles.roomPrice}>
+                {(() => {
+                  const promo = promotions.find((item) => item.roomId === room.id);
+                  return promo?.finalCents != null ? (
+                    <>
+                      <s>${room.price}</s> {formatMoney(promo.finalCents)}{" "}
+                      <small>/ noche · -{promo.discountPct}%</small>
+                    </>
+                  ) : (
+                    <>${room.price} <small>/ noche</small></>
+                  );
+                })()}
+              </span>
             </span>
             <IoChevronForward size={18} color="var(--text-muted)" aria-hidden />
           </Link>

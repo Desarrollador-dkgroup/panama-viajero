@@ -1,3 +1,4 @@
+import { AdsBanner, type AdItem } from "@/components/app/ads/ads-banner";
 import { CatalogError } from "@/components/app/catalog-status";
 import { HomeHeader } from "@/components/app/home/home-header";
 import {
@@ -11,6 +12,7 @@ import {
 import styles from "@/components/app/home/home.module.css";
 import { attempt } from "@/lib/attempt";
 import { getDestinations, getServices } from "@/lib/catalog";
+import { getActiveAds } from "@/lib/ads";
 
 export const dynamic = "force-dynamic";
 
@@ -20,11 +22,13 @@ export default async function HomePage() {
   if (result.error !== null) return <CatalogError message={result.error} />;
 
   const [services, destinations] = result.data;
+  const ads = await getActiveAds().catch(() => [] as AdItem[]);
   const byCategory = (id: string) => services.filter((item) => item.categoryId === id);
   const recommended = services.filter((item) => item.isRecommended);
 
   return (
     <div className={styles.page}>
+      <AdsBanner ads={ads} />
       <HomeHeader />
       <div className={styles.body}>
         <CategoryGrid />
