@@ -80,9 +80,11 @@ type PromotionRow = {
     name: string;
     slug: string;
     category_id: string;
-    province_id: string | null;
+    destination_province_id: string | null;
     base_price_cents: number | null;
-    service_tourist_sites: Array<{ tourist_sites: { id: string; name: string } | null }>;
+    service_tourist_sites: Array<{
+      tourist_sites: { id: string; name: string; province_id: string | null } | null;
+    }>;
     service_photos: Array<{ storage_path: string; is_cover: boolean; position: number }>;
   } | null;
   room_types: { id: string; name: string; price_cents: number | null } | null;
@@ -98,8 +100,8 @@ export async function getActiveServicePromotions(
     .from("service_promotions")
     .select(`id, title, description, discount_pct, schedule_mode, starts_on, ends_on, weekdays,
       room_type_id,
-      services!inner(id, name, slug, category_id, province_id, base_price_cents,
-        service_tourist_sites(tourist_sites(id, name)),
+      services!inner(id, name, slug, category_id, destination_province_id, base_price_cents,
+        service_tourist_sites(tourist_sites(id, name, province_id)),
         service_photos(storage_path, is_cover, position)),
       room_types(id, name, price_cents)`)
     .eq("is_active", true)
@@ -119,7 +121,7 @@ export async function getActiveServicePromotions(
       Number(b.is_cover) - Number(a.is_cover) || a.position - b.position)[0];
     const sites = service.service_tourist_sites
       .map((link) => link.tourist_sites)
-      .filter((site): site is { id: string; name: string } => Boolean(site));
+      .filter((site): site is { id: string; name: string; province_id: string | null } => Boolean(site));
     return [{
       id: row.id,
       title: row.title,
@@ -130,7 +132,7 @@ export async function getActiveServicePromotions(
       serviceName: service.name,
       serviceSlug: service.slug,
       categoryId: service.category_id,
-      provinceId: service.province_id,
+      provinceId: service.destination_province_id ?? sites[0]?.province_id ?? null,
       siteIds: sites.map((site) => site.id),
       siteNames: sites.map((site) => site.name),
       roomId: room?.id ?? null,
