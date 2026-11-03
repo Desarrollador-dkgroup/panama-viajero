@@ -5,10 +5,7 @@ import { NotFoundScreen } from "@/components/app/not-found-screen";
 import { ExploreGrid, TouristSiteCard } from "@/components/app/places/places";
 import styles from "@/components/app/places/places.module.css";
 import { attempt } from "@/lib/attempt";
-import { PromoCard } from "@/components/app/promotions/promo-card";
-import promoStyles from "@/components/app/promotions/promotions.module.css";
 import { getDestinations, getTouristSites } from "@/lib/catalog";
-import { getActiveServicePromotions } from "@/lib/service-promotions";
 
 export const dynamic = "force-dynamic";
 
@@ -43,8 +40,6 @@ export default async function DestinationPage({ params, searchParams }: Props) {
   const explore = new URLSearchParams(forward);
   explore.set("region", destination.provinceId);
   const photo = destination.bannerImage ?? destination.cardImage;
-  const promos = (await getActiveServicePromotions()).filter((promo) =>
-    promo.provinceId === destination.provinceId);
 
   return (
     <div>
@@ -63,14 +58,6 @@ export default async function DestinationPage({ params, searchParams }: Props) {
       </div>
 
       <div className={styles.sheet}>
-        {promos.length > 0 && (
-          <section>
-            <h2 className={promoStyles.sectionLabel}>Promociones en {destination.name}</h2>
-            <div className={promoStyles.grid}>
-              {promos.map((promo) => <PromoCard key={promo.id} promo={promo} />)}
-            </div>
-          </section>
-        )}
         {destination.description && <p className={styles.sheetText}>{destination.description}</p>}
         <h2 className={styles.sectionHeading}>Sitios turísticos</h2>
         {sites.length === 0 ? (
