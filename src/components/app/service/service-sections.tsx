@@ -136,7 +136,9 @@ export function PromoNotice({ promotions }: { promotions: ServicePromotion[] }) 
           <b className={styles.promoTitle}>{promo.title}</b>
           <span className={styles.infoItem}>Descuento: -{promo.discountPct}%</span>
           {promo.regularCents !== null && promo.finalCents !== null && (
-            <PriceTag price={promo.regularCents / 100} promoPrice={promo.finalCents / 100} />
+            <div className={styles.infoItem}>
+              Precio: <PriceTag price={promo.regularCents / 100} promoPrice={promo.finalCents / 100} />
+            </div>
           )}
           <span className={styles.infoItem}>{promo.scheduleLabel}</span>
         </div>
