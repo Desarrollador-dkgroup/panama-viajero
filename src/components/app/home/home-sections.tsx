@@ -12,6 +12,7 @@ import {
 } from "react-icons/io5";
 import { CoverPhoto, FavoriteButton, SectionHeader } from "@/components/app/ui";
 import { formatPlace, type CatalogDestination, type CatalogItem } from "@/lib/catalog";
+import type { ServicePromotion } from "@/lib/service-promotions";
 import styles from "./home.module.css";
 import { PriceTag } from "@/components/app/price-tag";
 
@@ -54,6 +55,9 @@ export function DestinationsCarousel({ destinations }: { destinations: CatalogDe
   return (
     <section>
       <SectionHeader title="Destinos Populares" href="/destinos" />
+      <p className={styles.sectionIntro}>
+        Explora provincias y sitios turísticos de Panamá, desde la ciudad hasta la playa.
+      </p>
       <div className={styles.destinationGrid}>
         {destinations.slice(0, 4).map((destination, index) => (
           <Link
@@ -203,6 +207,69 @@ export function RestaurantsCarousel({ restaurants }: { restaurants: CatalogItem[
                 <Rating value={item.rating} />
               </div>
               <Place item={item} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export function ActivitiesCarousel({ activities }: { activities: CatalogItem[] }) {
+  if (activities.length === 0) return null;
+  return (
+    <section>
+      <SectionHeader title="Actividades para vivir" href="/categoria/actividades" />
+      <div className={`${styles.carousel} no-scrollbar`}>
+        {activities.map((item) => (
+          <div key={item.id} className={styles.restaurantCard}>
+            <Link
+              href={`/servicios/${item.slug}`}
+              className={styles.cardLink}
+              aria-label={`${item.name}, ${formatPlace(item)}`}
+            />
+            <div className={styles.restaurantPhoto}>
+              <CoverPhoto src={item.photo} alt="" />
+            </div>
+            <FavoriteButton serviceId={item.id} />
+            <div className={styles.cardBody}>
+              <div className={styles.titleRow}>
+                <span className={styles.restaurantName}>{item.name}</span>
+                <Rating value={item.rating} />
+              </div>
+              <Place item={item} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export function PromotionsCarousel({ promotions }: { promotions: ServicePromotion[] }) {
+  if (promotions.length === 0) return null;
+  return (
+    <section>
+      <SectionHeader title="Promociones" href="/promociones" />
+      <div className={`${styles.carousel} no-scrollbar`}>
+        {promotions.map((promo) => (
+          <div key={promo.id} className={styles.stayCard}>
+            <Link
+              href={`/promociones#promo-${promo.id}`}
+              className={styles.cardLink}
+              aria-label={promo.title}
+            />
+            <div className={styles.stayPhoto}>
+              <CoverPhoto src={promo.photoUrl || null} alt="" />
+            </div>
+            <div className={styles.cardBody}>
+              <span className={styles.stayName}>{promo.title}</span>
+              <span className={styles.priceLine}>-{promo.discountPct}% · {promo.serviceName}</span>
+              {promo.regularCents !== null && promo.finalCents !== null && (
+                <span className={styles.priceLine}>
+                  <PriceTag price={promo.regularCents / 100} promoPrice={promo.finalCents / 100} />
+                </span>
+              )}
             </div>
           </div>
         ))}

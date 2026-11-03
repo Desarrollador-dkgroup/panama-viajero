@@ -2,9 +2,11 @@ import { AdsBanner, type AdItem } from "@/components/app/ads/ads-banner";
 import { CatalogError } from "@/components/app/catalog-status";
 import { HomeHeader } from "@/components/app/home/home-header";
 import {
+  ActivitiesCarousel,
   CategoryGrid,
   DestinationsCarousel,
   FeaturedServices,
+  PromotionsCarousel,
   RestaurantsCarousel,
   StaysCarousel,
   ToursCarousel,
@@ -13,6 +15,7 @@ import styles from "@/components/app/home/home.module.css";
 import { attempt } from "@/lib/attempt";
 import { getDestinations, getServices } from "@/lib/catalog";
 import { getActiveAds } from "@/lib/ads";
+import { getActiveServicePromotions } from "@/lib/service-promotions";
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +26,7 @@ export default async function HomePage() {
 
   const [services, destinations] = result.data;
   const ads = await getActiveAds().catch(() => [] as AdItem[]);
+  const promotions = await getActiveServicePromotions();
   const byCategory = (id: string) => services.filter((item) => item.categoryId === id);
   const recommended = services.filter((item) => item.isRecommended);
 
@@ -33,10 +37,12 @@ export default async function HomePage() {
       <div className={styles.body}>
         <CategoryGrid />
         <DestinationsCarousel destinations={destinations} />
-        <ToursCarousel tours={byCategory("tour-operador").slice(0, 8)} />
+        <PromotionsCarousel promotions={promotions} />
         <FeaturedServices services={recommended.length ? recommended : services.slice(0, 6)} />
         <StaysCarousel stays={byCategory("hospedaje").slice(0, 10)} />
         <RestaurantsCarousel restaurants={byCategory("restaurantes").slice(0, 10)} />
+        <ActivitiesCarousel activities={byCategory("actividades").slice(0, 10)} />
+        <ToursCarousel tours={byCategory("tour-operador").slice(0, 8)} />
       </div>
     </div>
   );
