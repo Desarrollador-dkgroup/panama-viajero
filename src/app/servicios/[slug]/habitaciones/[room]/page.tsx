@@ -14,7 +14,7 @@ import { PolicyList } from "@/components/app/service/service-sections";
 import styles from "@/components/app/service/service.module.css";
 import { attempt } from "@/lib/attempt";
 import { getServiceDetail } from "@/lib/service-detail";
-import { formatMoney } from "@/lib/money";
+import { PriceTag } from "@/components/app/price-tag";
 
 export const dynamic = "force-dynamic";
 
@@ -82,12 +82,11 @@ export default async function RoomPage({ params, searchParams }: {
           </div>
           {(() => {
             const promo = result.data.promotions.find((item) => item.roomId === room.id);
-            return promo?.finalCents != null ? (
+            return (
               <p className={styles.roomPriceLarge}>
-                <s>${room.price}</s> {formatMoney(promo.finalCents)} / noche · -{promo.discountPct}%
+                <PriceTag price={room.price} promoPrice={promo?.finalCents != null
+                  ? promo.finalCents / 100 : null} /> / noche
               </p>
-            ) : (
-              <p className={styles.roomPriceLarge}>${room.price} / noche</p>
             );
           })()}
           {room.description && <p className={styles.description}>{room.description}</p>}

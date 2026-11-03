@@ -12,6 +12,7 @@ import { CoverPhoto } from "@/components/app/ui";
 import { formatPlace, type CatalogItem } from "@/lib/catalog";
 import { toggleFavorite, useIsFavorite } from "@/lib/favorites";
 import styles from "./category.module.css";
+import { PriceTag } from "@/components/app/price-tag";
 
 // Tarjeta horizontal de resultados (src/components/category-results/result-card.tsx).
 export function ResultCard({ item, href }: { item: CatalogItem; href: string }) {
@@ -57,7 +58,7 @@ export function ResultCard({ item, href }: { item: CatalogItem; href: string }) 
         <span className={styles.priceRow}>
           {!isActivity && (
             <span className={styles.price}>
-              {isLodging ? "Desde " : ""}${item.price}
+              {isLodging ? "Desde " : ""}<PriceTag price={item.price} promoPrice={item.promoPrice} />
               {isLodging && <span className={styles.priceUnit}> / noche</span>}
             </span>
           )}

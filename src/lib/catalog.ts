@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { catalogPhotoUrl, publicMediaUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase";
+import { getActiveServicePromotions } from "@/lib/service-promotions";
 
 // Catálogo público con la forma que usan las pantallas copiadas de la app móvil.
 // Los precios llegan en centavos y aquí se pasan a dólares una sola vez.
@@ -23,6 +24,8 @@ export type CatalogItem = {
   isRecommended: boolean;
   photo: string | null;
   price: number;
+  promoPrice: number | null;
+  promoDiscountPct: number | null;
   rating: number;
   ratingCount: number;
   provinceId: string | null;
@@ -115,6 +118,8 @@ function adaptService(row: ServiceRow): CatalogItem {
     isRecommended: row.is_recommended,
     photo: cover ? publicMediaUrl(cover.storage_path) || null : null,
     price: priceCents / 100,
+    promoPrice: null,
+    promoDiscountPct: null,
     rating: Number(row.rating_avg ?? 0),
     ratingCount: row.rating_count ?? 0,
     provinceId: row.destination_province_id ?? row.tourist_sites?.province_id ?? null,
@@ -164,7 +169,19 @@ export const getServices = cache(async (): Promise<CatalogItem[]> => {
     .order("is_recommended", { ascending: false })
     .order("rating_avg", { ascending: false });
   if (error) throw new Error(error.message);
-  return ((data ?? []) as unknown as ServiceRow[]).map(adaptService);
+  const promotions = await getActiveServicePromotions();
+  const promoByService = new Map(
+    promotions
+      .filter((promo) => !promo.roomId && promo.finalCents !== null)
+      .map((promo) => [promo.serviceId, promo] as const),
+  );
+  return ((data ?? []) as unknown as ServiceRow[]).map((row) => {
+    const item = adaptService(row);
+    const promo = promoByService.get(item.id);
+    return promo?.finalCents != null
+      ? { ...item, promoPrice: promo.finalCents / 100, promoDiscountPct: promo.discountPct }
+      : item;
+  });
 });
 
 export const getTouristSites = cache(async (): Promise<CatalogSite[]> => {

@@ -25,6 +25,7 @@ import {
   PromoNotice,
 } from "./service-sections";
 import styles from "./service.module.css";
+import { PriceTag } from "@/components/app/price-tag";
 
 const DAYS = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
@@ -182,7 +183,9 @@ export function ServiceScreen({ detail, search }: {
         <div className={styles.sheet}>
           <div className={styles.titleRow}>
             <h1 className={styles.name}>{item.name}</h1>
-            <span className={styles.pricePill}>${item.price}</span>
+            <span className={styles.pricePill}>
+              <PriceTag price={item.price} promoPrice={item.promoPrice} />
+            </span>
           </div>
           <p className={styles.locationRow}>
             <IoLocationOutline size={16} color="var(--text-muted)" aria-hidden />

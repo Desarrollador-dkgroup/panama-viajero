@@ -26,6 +26,7 @@ import { formatPlace } from "@/lib/catalog";
 import type { ServicePromotion } from "@/lib/service-promotions";
 import { formatMoney } from "@/lib/money";
 import styles from "./service.module.css";
+import { PriceTag } from "@/components/app/price-tag";
 
 // Secciones de la ficha (src/components/service-detail/*), con los datos del panel.
 
@@ -167,13 +168,12 @@ export function RoomList({ rooms, hrefFor, promotions = [] }: {
               <span className={styles.roomPrice}>
                 {(() => {
                   const promo = promotions.find((item) => item.roomId === room.id);
-                  return promo?.finalCents != null ? (
+                  return (
                     <>
-                      <s>${room.price}</s> {formatMoney(promo.finalCents)}{" "}
-                      <small>/ noche · -{promo.discountPct}%</small>
+                      <PriceTag price={room.price} promoPrice={promo?.finalCents != null
+                        ? promo.finalCents / 100 : null} />{" "}
+                      <small>/ noche</small>
                     </>
-                  ) : (
-                    <>${room.price} <small>/ noche</small></>
                   );
                 })()}
               </span>

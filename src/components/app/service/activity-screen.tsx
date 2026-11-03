@@ -11,6 +11,7 @@ import {
 } from "./service-sections";
 import { ReserveBar } from "./bottom-bars";
 import styles from "./service.module.css";
+import { PriceTag } from "@/components/app/price-tag";
 
 const DAYS = [
   "Domingo",
@@ -101,7 +102,11 @@ export function ActivityScreen({ detail }: { detail: ServiceDetail }) {
         <div className={styles.sheet}>
           <div className={styles.titleRow}>
             <h1 className={styles.name}>{item.name}</h1>
-            {isTour && <span className={styles.pricePill}>${item.price}/persona</span>}
+            {isTour && (
+              <span className={styles.pricePill}>
+                <PriceTag price={item.price} promoPrice={item.promoPrice} />/persona
+              </span>
+            )}
           </div>
           <p className={styles.locationRow}>
             <IoLocationOutline size={16} color="var(--text-muted)" aria-hidden />

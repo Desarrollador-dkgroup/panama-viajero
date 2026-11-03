@@ -13,6 +13,7 @@ import {
 import { CoverPhoto, FavoriteButton, SectionHeader } from "@/components/app/ui";
 import { formatPlace, type CatalogDestination, type CatalogItem } from "@/lib/catalog";
 import styles from "./home.module.css";
+import { PriceTag } from "@/components/app/price-tag";
 
 // Secciones de la portada de la app (src/components/home/*), con datos del panel.
 
@@ -90,7 +91,7 @@ export function ToursCarousel({ tours }: { tours: CatalogItem[] }) {
               <span className={styles.tourDescription}>{item.searchDescription}</span>
               <div className={styles.tourFooter}>
                 <span className={styles.pricePill}>
-                  Desde <strong>${item.price}</strong> / persona
+                  Desde <strong><PriceTag price={item.price} promoPrice={item.promoPrice} /></strong> / persona
                 </span>
                 <span className={styles.arrowButton}>
                   <IoArrowForward size={16} color="#1A1A1A" aria-hidden />
@@ -169,7 +170,7 @@ export function StaysCarousel({ stays }: { stays: CatalogItem[] }) {
               <Place item={item} />
               <div className={styles.divider} />
               <span className={styles.priceLine}>
-                Desde <strong>${item.price}</strong> / noche
+                Desde <strong><PriceTag price={item.price} promoPrice={item.promoPrice} /></strong> / noche
               </span>
             </div>
           </div>
