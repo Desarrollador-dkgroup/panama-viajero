@@ -37,9 +37,15 @@ export function panamaToday(now: Date = new Date()) {
   return { date, weekday };
 }
 
-function shortDate(value: string) {
-  const [, month, day] = value.split("-");
-  return `${Number(day)}/${Number(month)}`;
+const MONTH_NAMES = [
+  "enero", "febrero", "marzo", "abril", "mayo", "junio",
+  "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
+];
+
+// "2026-12-01" -> "1/diciembre/2026"
+function readableDate(value: string) {
+  const [year, month, day] = value.split("-");
+  return `${Number(day)}/${MONTH_NAMES[Number(month) - 1]}/${year}`;
 }
 
 function scheduleText(row: {
@@ -49,7 +55,7 @@ function scheduleText(row: {
   weekdays: number[];
 }) {
   if (row.schedule_mode === "range") {
-    return `Del ${shortDate(row.starts_on ?? "")} al ${shortDate(row.ends_on ?? "")}`;
+    return `Del ${readableDate(row.starts_on ?? "")} al ${readableDate(row.ends_on ?? "")}`;
   }
   return [...row.weekdays].sort((a, b) => a - b).map((day) => WEEKDAY_NAMES[day]).join(", ");
 }
