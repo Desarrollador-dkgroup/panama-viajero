@@ -24,7 +24,6 @@ import type {
 } from "@/lib/service-detail";
 import { formatPlace } from "@/lib/catalog";
 import type { ServicePromotion } from "@/lib/service-promotions";
-import { formatMoney } from "@/lib/money";
 import styles from "./service.module.css";
 import { PriceTag } from "@/components/app/price-tag";
 
@@ -133,12 +132,14 @@ export function PromoNotice({ promotions }: { promotions: ServicePromotion[] }) 
     <section className={styles.section}>
       <h2 className={styles.heading}>Promociones</h2>
       {promotions.map((promo) => (
-        <p key={promo.id} className={styles.infoItem}>
-          <b>{promo.title}</b> · -{promo.discountPct}% · {promo.scheduleLabel}
-          {promo.finalCents !== null && promo.regularCents !== null && (
-            <> · <s>{formatMoney(promo.regularCents)}</s> {formatMoney(promo.finalCents)}</>
+        <div key={promo.id} className={styles.promoBlock}>
+          <b className={styles.promoTitle}>{promo.title}</b>
+          <span className={styles.infoItem}>Descuento: -{promo.discountPct}%</span>
+          {promo.regularCents !== null && promo.finalCents !== null && (
+            <PriceTag price={promo.regularCents / 100} promoPrice={promo.finalCents / 100} />
           )}
-        </p>
+          <span className={styles.infoItem}>{promo.scheduleLabel}</span>
+        </div>
       ))}
     </section>
   );
