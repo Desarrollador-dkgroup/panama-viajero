@@ -66,9 +66,6 @@ export function DestinationsCarousel({ destinations }: { destinations: CatalogDe
             <div className={styles.destinationShade} aria-hidden />
             <div className={styles.destinationText}>
               <span className={styles.destinationName}>{destination.name}</span>
-              {destination.subtitle && (
-                <span className={styles.destinationDescription}>{destination.subtitle}</span>
-              )}
             </div>
           </Link>
         ))}

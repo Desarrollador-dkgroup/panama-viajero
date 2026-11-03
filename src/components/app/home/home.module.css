@@ -182,7 +182,7 @@
 .destinationSlide {
   position: relative;
   display: flex;
-  flex: 0 0 190px;
+  flex: 0 0 calc((100% - 12px) / 2);
   flex-direction: column;
   justify-content: flex-end;
   height: 124px;
@@ -220,14 +220,6 @@
   text-overflow: ellipsis;
 }
 
-.destinationDescription {
-  overflow: hidden;
-  color: rgb(255 255 255 / 92%);
-  font-size: 13px;
-  font-weight: 500;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
 
 /* Carruseles horizontales */
 .carousel {
