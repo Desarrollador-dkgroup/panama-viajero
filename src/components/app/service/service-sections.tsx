@@ -24,7 +24,7 @@ import type {
 } from "@/lib/service-detail";
 import { formatPlace } from "@/lib/catalog";
 import type { ServicePromotion } from "@/lib/service-promotions";
-import { formatMoney } from "@/lib/booking";
+import { formatMoney } from "@/lib/money";
 import styles from "./service.module.css";
 
 // Secciones de la ficha (src/components/service-detail/*), con los datos del panel.

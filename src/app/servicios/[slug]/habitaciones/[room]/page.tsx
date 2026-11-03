@@ -14,7 +14,7 @@ import { PolicyList } from "@/components/app/service/service-sections";
 import styles from "@/components/app/service/service.module.css";
 import { attempt } from "@/lib/attempt";
 import { getServiceDetail } from "@/lib/service-detail";
-import { formatMoney } from "@/lib/booking";
+import { formatMoney } from "@/lib/money";
 
 export const dynamic = "force-dynamic";
 

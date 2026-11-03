@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { IoArrowForward, IoCalendarOutline, IoLocation } from "react-icons/io5";
 import type { ServicePromotion } from "@/lib/service-promotions";
-import { formatMoney } from "@/lib/booking";
+import { formatMoney } from "@/lib/money";
 import styles from "./promotions.module.css";
 
 // Tarjeta de una promoción de servicio. Lleva a la ficha del servicio donde aplica.
