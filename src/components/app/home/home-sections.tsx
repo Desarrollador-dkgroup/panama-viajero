@@ -55,15 +55,12 @@ export function DestinationsCarousel({ destinations }: { destinations: CatalogDe
   return (
     <section>
       <SectionHeader title="Destinos Populares" href="/destinos" />
-      <p className={styles.sectionIntro}>
-        Explora provincias y sitios turísticos de Panamá, desde la ciudad hasta la playa.
-      </p>
-      <div className={styles.destinationGrid}>
-        {destinations.slice(0, 4).map((destination, index) => (
+      <div className={`${styles.carousel} no-scrollbar`}>
+        {destinations.map((destination) => (
           <Link
             key={destination.id}
             href={`/destinos/${destination.slug}`}
-            className={`${styles.destinationCard} ${index >= 2 ? styles.desktopOnly : ""}`}
+            className={styles.destinationSlide}
           >
             <CoverPhoto src={destination.cardImage} />
             <div className={styles.destinationShade} aria-hidden />
