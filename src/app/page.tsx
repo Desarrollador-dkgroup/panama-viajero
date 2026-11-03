@@ -34,7 +34,7 @@ export default async function HomePage() {
         <CategoryGrid />
         <DestinationsCarousel destinations={destinations} />
         <ToursCarousel tours={byCategory("tour-operador").slice(0, 8)} />
-        <FeaturedServices services={(recommended.length ? recommended : services).slice(0, 6)} />
+        <FeaturedServices services={recommended.length ? recommended : services.slice(0, 6)} />
         <StaysCarousel stays={byCategory("hospedaje").slice(0, 10)} />
         <RestaurantsCarousel restaurants={byCategory("restaurantes").slice(0, 10)} />
       </div>
