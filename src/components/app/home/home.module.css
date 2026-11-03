@@ -571,12 +571,6 @@
     font-size: 14px;
   }
 
-  .destinationGrid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-  }
-
-
   .carousel {
     gap: 16px;
     margin: 0;
