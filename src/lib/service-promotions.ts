@@ -1,3 +1,4 @@
+import { formatPromotionSchedule } from "@/lib/promotion-schedule";
 import { publicMediaUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase";
 
@@ -21,8 +22,6 @@ export type ServicePromotion = {
   photoUrl: string;
 };
 
-const WEEKDAY_NAMES = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-
 // Fecha y día de la semana en Panamá (UTC-5 sin horario de verano).
 export function panamaToday(now: Date = new Date()) {
   const parts = new Intl.DateTimeFormat("en-CA", {
@@ -35,29 +34,6 @@ export function panamaToday(now: Date = new Date()) {
   const date = `${get("year")}-${get("month")}-${get("day")}`;
   const weekday = new Date(`${date}T12:00:00Z`).getUTCDay();
   return { date, weekday };
-}
-
-const MONTH_NAMES = [
-  "enero", "febrero", "marzo", "abril", "mayo", "junio",
-  "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
-];
-
-// "2026-12-01" -> "1/diciembre/2026"
-function readableDate(value: string) {
-  const [year, month, day] = value.split("-");
-  return `${Number(day)}/${MONTH_NAMES[Number(month) - 1]}/${year}`;
-}
-
-function scheduleText(row: {
-  schedule_mode: string;
-  starts_on: string | null;
-  ends_on: string | null;
-  weekdays: number[];
-}) {
-  if (row.schedule_mode === "range") {
-    return `Del ${readableDate(row.starts_on ?? "")} al ${readableDate(row.ends_on ?? "")}`;
-  }
-  return [...row.weekdays].sort((a, b) => a - b).map((day) => WEEKDAY_NAMES[day]).join(", ");
 }
 
 export function isPromotionActiveOn(
@@ -133,7 +109,7 @@ export async function getActiveServicePromotions(
       title: row.title,
       description: row.description,
       discountPct: discount,
-      scheduleLabel: scheduleText(row),
+      scheduleLabel: formatPromotionSchedule(row),
       serviceId: service.id,
       serviceName: service.name,
       serviceSlug: service.slug,
