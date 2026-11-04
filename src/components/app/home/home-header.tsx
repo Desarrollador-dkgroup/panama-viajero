@@ -25,7 +25,6 @@ export function HomeHeader() {
         className={styles.headerPhoto}
       />
       <div className={styles.headerScrim} aria-hidden />
-      <div className={styles.headerFade} aria-hidden />
 
       <div className={styles.headerContent}>
         <div className={styles.topRow}>
