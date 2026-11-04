@@ -29,7 +29,7 @@ import styles from "./auth.module.css";
 export type AuthMode = "login" | "register" | "forgot" | "recovery" | "change-password";
 
 const COPY: Record<AuthMode, { title: string; subtitle: string; button: string }> = {
-  login: { title: "Bienvenido de nuevo", subtitle: "Inicia sesión para continuar explorando",
+  login: { title: "Bienvenido", subtitle: "Inicia sesión para continuar explorando",
     button: "Iniciar sesión" },
   register: { title: "Crear cuenta", subtitle: "Guarda tu información y tus solicitudes de reserva",
     button: "Crear cuenta" },
@@ -188,6 +188,13 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
           </button>
 
           {(mode === "login" || mode === "register") && (
+            <button type="button" className={styles.guestButton}
+              onClick={() => { continueAsGuest(); router.replace(next); }}>
+              Continuar sin iniciar sesión
+            </button>
+          )}
+
+          {(mode === "login" || mode === "register") && (
             <>
               <div className={styles.separatorRow}>
                 <span className={styles.separatorLine} />
@@ -210,12 +217,6 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
           <Link href="/cuenta/registro" className={styles.footerLink}>
             ¿No tienes cuenta? <strong>Regístrate</strong>
           </Link>
-        )}
-        {(mode === "login" || mode === "register") && (
-          <button type="button" className={styles.guestButton}
-            onClick={() => { continueAsGuest(); router.replace(next); }}>
-            Continuar sin iniciar sesión
-          </button>
         )}
         {mode === "register" && (
           <Link href="/cuenta/ingresar" className={styles.footerLink}>
