@@ -151,19 +151,16 @@ export function SearchScreen({ catalog, initialQuery = "" }: {
                 Ver todo <IoChevronForward size={14} aria-hidden />
               </Link>
             </div>
-            <div className={styles.cityGrid}>
-              {catalog.destinations.slice(0, 4).map((destination, index) => (
+            <div className={`${styles.cityCarousel} no-scrollbar`}>
+              {catalog.destinations.map((destination) => (
                 <Link
                   key={destination.id}
                   href={`/destinos/${destination.slug}`}
-                  className={`${styles.cityCard} ${index >= 2 ? styles.wideOnly : ""}`}
+                  className={styles.citySlide}
                 >
                   <CoverPhoto src={destination.cardImage} />
                   <span className={styles.cityScrim} aria-hidden />
                   <span className={styles.cityName}>{destination.name}</span>
-                  {destination.subtitle && (
-                    <span className={styles.cityDescription}>{destination.subtitle}</span>
-                  )}
                 </Link>
               ))}
             </div>
