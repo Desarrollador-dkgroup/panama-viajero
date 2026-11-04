@@ -183,6 +183,9 @@
   position: relative;
   display: flex;
   flex: 0 0 calc((100% - 12px) / 2);
+  width: calc((100% - 12px) / 2);
+  min-width: calc((100% - 12px) / 2);
+  max-width: calc((100% - 12px) / 2);
   flex-direction: column;
   justify-content: flex-end;
   height: 124px;
