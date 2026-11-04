@@ -7,7 +7,11 @@
 }
 
 .photo {
-  object-fit: cover;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
 }
 
 
@@ -38,7 +42,10 @@
 }
 
 .brandLogo {
-  height: auto;
+  display: flex;
+  padding: 8px 14px;
+  border-radius: 14px;
+  background: #FFFFFF;
 }
 
 .iconButton {

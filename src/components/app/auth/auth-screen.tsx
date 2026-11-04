@@ -135,8 +135,8 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
 
   return (
     <div className={styles.background}>
-      <Image src="/app/themes/montana-valle.jpg" alt="" fill priority sizes="100vw"
-        className={styles.photo} />
+      <div className={styles.photo} aria-hidden
+        style={{ backgroundImage: "url(/app/themes/montana-valle.jpg)" }} />
       <div className={styles.bottomTint} aria-hidden />
 
       <form className={styles.scroll} onSubmit={handleSubmit} noValidate>
@@ -147,8 +147,10 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
               <IoArrowBack size={22} color="#FFFFFF" aria-hidden />
             </button>
           ) : null}
-          <Image src="/app/brand/logotype-negativo.png" alt="Panamá Viajero" width={190}
-            height={71} className={styles.brandLogo} priority />
+          <span className={styles.brandLogo}>
+            <Image src="/app/brand/logo-rectangular.svg" alt="Panamá Viajero" width={151}
+              height={50} unoptimized priority />
+          </span>
         </div>
 
         <div className={styles.titleBlock}>
