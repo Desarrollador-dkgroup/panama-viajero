@@ -37,6 +37,13 @@ export async function signInWithEmail(email: string, password: string) {
   return client().auth.signInWithPassword({ email: email.trim(), password });
 }
 
+export async function signInWithGoogle(next: string) {
+  return client().auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: callbackUrl(next) },
+  });
+}
+
 export async function signOut() {
   return client().auth.signOut();
 }

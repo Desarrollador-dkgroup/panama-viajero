@@ -18,6 +18,7 @@ import {
   isValidEmail,
   isValidPassword,
   resendSignUpConfirmation,
+  signInWithGoogle,
   sendPasswordResetEmail,
   signInWithEmail,
   signUpWithEmail,
@@ -125,11 +126,17 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
     }
   }
 
-  function social(provider: "Google" | "Apple") {
+  async function social(provider: "Google" | "Apple") {
+    if (provider === "Google") {
+      const { error } = await signInWithGoogle(next).catch((failure: unknown) => ({
+        error: failure instanceof Error ? failure : new Error("No se pudo conectar con Google."),
+      }));
+      if (error) setNotice({ title: "No se pudo continuar con Google", body: error.message });
+      return;
+    }
     setNotice({
-      title: `Continuar con ${provider}`,
-      body: `Iniciar sesión con ${provider} todavía no está configurado: el proyecto de Supabase ` +
-        `no tiene credenciales de ${provider} registradas.`,
+      title: "Continuar con Apple",
+      body: "Iniciar sesión con Apple todavía no está configurado en el proyecto.",
     });
   }
 
