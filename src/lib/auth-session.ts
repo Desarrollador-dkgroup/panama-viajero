@@ -55,6 +55,14 @@ async function setFromSession(userId: string | null, email: string | null) {
   notify();
 }
 
+// Vuelve a leer la sesión y el perfil, por ejemplo después de cambiar la foto.
+export async function refreshAuthSession() {
+  const supabase = getSupabaseBrowserClient();
+  if (!supabase) return;
+  const { data } = await supabase.auth.getSession();
+  await setFromSession(data.session?.user.id ?? null, data.session?.user.email ?? null);
+}
+
 function start() {
   if (started) return;
   started = true;

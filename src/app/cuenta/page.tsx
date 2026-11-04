@@ -8,7 +8,7 @@ import {
   IoTrashOutline,
   IoChevronForward,
   IoHeartOutline,
-  IoPerson,
+  IoPersonCircleOutline,
   IoPersonOutline,
   IoPricetagsOutline,
 } from "react-icons/io5";
@@ -16,6 +16,7 @@ import styles from "@/components/app/account.module.css";
 import { deleteOwnAccount, signOut } from "@/lib/auth-actions";
 import { fetchBusinessMemberships, type BusinessMembership } from "@/lib/booking";
 import { useAuthSession } from "@/lib/auth-session";
+import { AvatarPicker } from "@/components/app/account/avatar-picker";
 
 // Pestaña Cuenta (src/app/(tabs)/profile.tsx de la app).
 export default function AccountPage() {
@@ -35,7 +36,7 @@ export default function AccountPage() {
       <h1 className={styles.title}>Perfil</h1>
       {status === "signedIn" ? (
         <div className={styles.identityCard}>
-          <span className={styles.avatar}><IoPerson size={32} color="var(--indigo)" /></span>
+          <AvatarPicker avatarPath={profile?.avatarStoragePath ?? null} />
           <span className={styles.identityTitle}>{profile?.displayName ?? "Tu cuenta"}</span>
           {email && <span className={styles.identityEmail}>{email}</span>}
           <div className={styles.authButtons}>
@@ -66,6 +67,13 @@ export default function AccountPage() {
         </div>
       )}
 
+      {status === "signedIn" && (
+        <Link href="/cuenta/perfil" className={styles.row}>
+          <span className={styles.rowIcon}><IoPersonCircleOutline size={18} color="var(--indigo)" /></span>
+          <span className={styles.rowLabel}>Información personal</span>
+          <IoChevronForward size={18} color="#C0C0C0" />
+        </Link>
+      )}
       <Link href="/mis-viajes" className={styles.row}>
         <span className={styles.rowIcon}><IoCalendarOutline size={18} color="var(--indigo)" /></span>
         <span className={styles.rowLabel}>Mis reservas</span>

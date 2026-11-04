@@ -130,3 +130,43 @@
   font-size: 14px;
   font-weight: 700;
 }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.fieldLabel {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-strong);
+  font-size: 15px;
+}
+
+.readonlyValue {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--pill);
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.okText {
+  color: var(--success);
+  font-size: 14px;
+}
+
+.errorText {
+  color: #C0392B;
+  font-size: 14px;
+}
