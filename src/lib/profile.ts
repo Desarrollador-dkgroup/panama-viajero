@@ -4,6 +4,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 
 export type OwnProfile = {
   displayName: string;
+  lastName: string;
   phone: string;
   email: string | null;
   avatarPath: string | null;
@@ -34,12 +35,13 @@ export async function loadOwnProfile(): Promise<OwnProfile> {
   const userId = user.id;
   const { data, error } = await supabase
     .from("profiles")
-    .select("display_name, phone, avatar_storage_path")
+    .select("display_name, last_name, phone, avatar_storage_path")
     .eq("id", userId)
     .maybeSingle();
   if (error) throw new Error("No pudimos cargar tu información.");
   return {
     displayName: data?.display_name ?? "",
+    lastName: data?.last_name ?? "",
     phone: data?.phone ?? "",
     email: user.email ?? null,
     avatarPath: data?.avatar_storage_path ?? null,
@@ -48,10 +50,13 @@ export async function loadOwnProfile(): Promise<OwnProfile> {
 
 export async function saveOwnProfile(input: {
   displayName: string;
+  lastName: string;
   phone: string;
   email: string;
 }): Promise<{ emailPending: boolean }> {
   const name = input.displayName.trim();
+  const lastName = input.lastName.trim();
+  if (lastName.length > 80) throw new Error("El apellido no puede tener más de 80 caracteres.");
   const phone = input.phone.trim();
   const email = input.email.trim().toLowerCase();
   if (name.length < 2 || name.length > 80) {
@@ -66,6 +71,7 @@ export async function saveOwnProfile(input: {
     .from("profiles")
     .update({
       display_name: name,
+      last_name: lastName || null,
       phone: phone || null,
       updated_at: new Date().toISOString(),
     })

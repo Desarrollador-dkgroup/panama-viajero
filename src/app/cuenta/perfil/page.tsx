@@ -14,6 +14,7 @@ export default function PersonalInfoPage() {
   const [displayName, setDisplayName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [lastName, setLastName] = useState("");
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -25,6 +26,7 @@ export default function PersonalInfoPage() {
         setDisplayName(loaded.displayName);
         setPhone(loaded.phone);
         setEmail(loaded.email ?? "");
+        setLastName(loaded.lastName);
       })
       .catch((failure: unknown) =>
         setMessage({ ok: false, text: failure instanceof Error ? failure.message : "Intenta de nuevo." }));
@@ -53,7 +55,7 @@ export default function PersonalInfoPage() {
         setSaving(true);
         setMessage(null);
         try {
-          const result = await saveOwnProfile({ displayName, phone, email });
+          const result = await saveOwnProfile({ displayName, lastName, phone, email });
           await refreshAuthSession();
           setMessage({
             ok: true,
@@ -71,6 +73,11 @@ export default function PersonalInfoPage() {
           <span className={styles.fieldLabel}>Nombre</span>
           <input className={styles.input} value={displayName} maxLength={80} required
             onChange={(event) => setDisplayName(event.target.value)} />
+        </label>
+        <label className={styles.field}>
+          <span className={styles.fieldLabel}>Apellido</span>
+          <input className={styles.input} value={lastName} maxLength={80}
+            onChange={(event) => setLastName(event.target.value)} />
         </label>
         <label className={styles.field}>
           <span className={styles.fieldLabel}>Teléfono</span>
