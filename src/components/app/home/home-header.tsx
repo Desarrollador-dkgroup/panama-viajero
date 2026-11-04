@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import Link from "next/link";
 import { IoNotificationsOutline, IoSearch } from "react-icons/io5";
 import { useAuthSession } from "@/lib/auth-session";
+import { InlineDialog } from "@/components/app/inline-dialog";
 import styles from "./home.module.css";
 
 export const SEARCH_PLACEHOLDER = "Busca destinos, hospedajes o experiencias";
@@ -13,8 +15,10 @@ export const SEARCH_PLACEHOLDER = "Busca destinos, hospedajes o experiencias";
 export function HomeHeader() {
   const session = useAuthSession();
   const name = session.status === "signedIn" ? session.profile?.displayName : undefined;
+  const [noticeOpen, setNoticeOpen] = useState(false);
 
   return (
+    <>
     <section className={styles.header}>
       <Image
         src="/app/home/header-beach.jpg"
@@ -44,7 +48,7 @@ export function HomeHeader() {
               type="button"
               className={styles.bell}
               aria-label="Notificaciones"
-              onClick={() => window.alert("No tienes notificaciones por el momento.")}
+              onClick={() => setNoticeOpen(true)}
             >
               <IoNotificationsOutline size={20} color="#FFFFFF" aria-hidden />
             </button>
@@ -66,5 +70,15 @@ export function HomeHeader() {
         </Link>
       </div>
     </section>
+  {noticeOpen && (
+        <InlineDialog
+          title="Notificaciones"
+          message="No tienes notificaciones por el momento."
+          confirmLabel="Entendido"
+          onConfirm={() => setNoticeOpen(false)}
+          onCancel={() => setNoticeOpen(false)}
+        />
+      )}
+    </>
   );
 }

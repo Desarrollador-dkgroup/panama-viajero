@@ -149,7 +149,7 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
       <form className={styles.scroll} onSubmit={handleSubmit} noValidate>
         <div className={styles.headerRow}>
           {mode !== "login" && mode !== "register" ? (
-            <button type="button" className={styles.iconButton} aria-label="Volver"
+            <button type="button" className={styles.backButton} aria-label="Volver"
               onClick={() => (window.history.length > 1 ? router.back() : router.push("/cuenta"))}>
               <IoArrowBack size={22} color="#FFFFFF" aria-hidden />
             </button>

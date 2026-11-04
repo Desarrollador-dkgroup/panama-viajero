@@ -17,6 +17,7 @@ import styles from "@/components/app/account.module.css";
 import { deleteOwnAccount, signOut } from "@/lib/auth-actions";
 import { fetchBusinessMemberships, type BusinessMembership } from "@/lib/booking";
 import { useAuthSession } from "@/lib/auth-session";
+import { InlineDialog } from "@/components/app/inline-dialog";
 import { AvatarPicker } from "@/components/app/account/avatar-picker";
 
 // Pestaña Cuenta (src/app/(tabs)/profile.tsx de la app).
@@ -24,6 +25,8 @@ export default function AccountPage() {
   const { status, email, profile } = useAuthSession();
   const [signingOut, setSigningOut] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
   const [fetched, setFetched] = useState<BusinessMembership[]>([]);
   const memberships = status === "signedIn" ? fetched : [];
 
@@ -108,21 +111,43 @@ export default function AccountPage() {
 
       {status === "signedIn" && (
         <button type="button" className={styles.dangerRow} disabled={deleting}
-          onClick={async () => {
-            if (!window.confirm("Esta acción es permanente. Si tienes reservas o reseñas, tu " +
-              "perfil se anonimiza; si no tienes ninguna, tu cuenta se borra por completo.")) return;
+          onClick={() => setConfirmingDelete(true)}>
+          <IoTrashOutline size={16} color="#C0392B" aria-hidden /> Eliminar cuenta
+        </button>
+      )}
+      {confirmingDelete && (
+        <InlineDialog
+          title="Eliminar cuenta"
+          message="Esta acción es permanente. Si tienes reservas o reseñas, tu perfil se anonimiza; si no tienes ninguna, tu cuenta se borra por completo."
+          confirmLabel="Eliminar mi cuenta"
+          cancelLabel="Cancelar"
+          danger
+          requireText={email ?? undefined}
+          busy={deleting}
+          onCancel={() => setConfirmingDelete(false)}
+          onConfirm={async () => {
             setDeleting(true);
             try {
               await deleteOwnAccount();
               await signOut();
+              setConfirmingDelete(false);
             } catch {
-              window.alert("No se pudo eliminar la cuenta. Intenta de nuevo más tarde.");
+              setConfirmingDelete(false);
+              setNotice("No se pudo eliminar la cuenta. Intenta de nuevo más tarde.");
             } finally {
               setDeleting(false);
             }
-          }}>
-          <IoTrashOutline size={16} color="#C0392B" aria-hidden /> Eliminar cuenta
-        </button>
+          }}
+        />
+      )}
+      {notice && (
+        <InlineDialog
+          title="Aviso"
+          message={notice}
+          confirmLabel="Entendido"
+          onConfirm={() => setNotice(null)}
+          onCancel={() => setNotice(null)}
+        />
       )}
     </div>
   );
