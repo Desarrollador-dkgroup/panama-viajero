@@ -13,6 +13,7 @@ export default function PersonalInfoPage() {
   const [profile, setProfile] = useState<OwnProfile | null>(null);
   const [displayName, setDisplayName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -23,6 +24,7 @@ export default function PersonalInfoPage() {
         setProfile(loaded);
         setDisplayName(loaded.displayName);
         setPhone(loaded.phone);
+        setEmail(loaded.email ?? "");
       })
       .catch((failure: unknown) =>
         setMessage({ ok: false, text: failure instanceof Error ? failure.message : "Intenta de nuevo." }));
@@ -44,16 +46,21 @@ export default function PersonalInfoPage() {
     <div className={styles.screen}>
       <h1 className={styles.title}>Información personal</h1>
       <div className={styles.identityCard}>
-        <AvatarPicker avatarPath={profile?.avatarPath ?? null} />
+        <AvatarPicker avatarPath={profile?.avatarPath ?? null} editable />
       </div>
       <form className={styles.identityCard} onSubmit={async (event) => {
         event.preventDefault();
         setSaving(true);
         setMessage(null);
         try {
-          await saveOwnProfile({ displayName, phone });
+          const result = await saveOwnProfile({ displayName, phone, email });
           await refreshAuthSession();
-          setMessage({ ok: true, text: "Tus datos se guardaron." });
+          setMessage({
+            ok: true,
+            text: result.emailPending
+              ? "Tus datos se guardaron. Revisa tu nuevo correo para confirmar el cambio."
+              : "Tus datos se guardaron.",
+          });
         } catch (failure) {
           setMessage({ ok: false, text: failure instanceof Error ? failure.message : "Intenta de nuevo." });
         } finally {
@@ -70,10 +77,11 @@ export default function PersonalInfoPage() {
           <input className={styles.input} value={phone} maxLength={20} inputMode="tel"
             placeholder="+507 6000-0000" onChange={(event) => setPhone(event.target.value)} />
         </label>
-        <div className={styles.field}>
+        <label className={styles.field}>
           <span className={styles.fieldLabel}>Correo</span>
-          <span className={styles.readonlyValue}>{profile?.email ?? "—"}</span>
-        </div>
+          <input className={styles.input} type="email" value={email} maxLength={120}
+            onChange={(event) => setEmail(event.target.value)} />
+        </label>
         {message && (
           <p className={message.ok ? styles.okText : styles.errorText} role="status">{message.text}</p>
         )}

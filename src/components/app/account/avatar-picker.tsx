@@ -9,7 +9,10 @@ import { uploadOwnAvatar } from "@/lib/profile";
 import styles from "./avatar-picker.module.css";
 
 // Foto de perfil: muestra la actual y permite elegir otra desde el dispositivo.
-export function AvatarPicker({ avatarPath }: { avatarPath: string | null }) {
+export function AvatarPicker({ avatarPath, editable = false }: {
+  avatarPath: string | null;
+  editable?: boolean;
+}) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const url = avatarPath ? publicMediaUrl(avatarPath, "avatars") : "";
@@ -24,6 +27,7 @@ export function AvatarPicker({ avatarPath }: { avatarPath: string | null }) {
           <IoPerson size={40} color="var(--indigo)" aria-hidden />
         )}
       </span>
+      {editable && (
       <label className={styles.change}>
         <IoCameraOutline size={16} aria-hidden />
         {busy ? "Subiendo..." : "Cambiar foto"}
@@ -45,6 +49,7 @@ export function AvatarPicker({ avatarPath }: { avatarPath: string | null }) {
             }
           }} />
       </label>
+      )}
       {error && <p className={styles.error} role="alert">{error}</p>}
     </div>
   );
