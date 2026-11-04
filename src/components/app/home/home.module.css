@@ -72,16 +72,6 @@
   text-overflow: ellipsis;
 }
 
-.bell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border: 0;
-  background: none;
-}
 
 .titleBlock {
   position: relative;

@@ -1,11 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
 import Link from "next/link";
-import { IoNotificationsOutline, IoSearch } from "react-icons/io5";
+import { IoSearch } from "react-icons/io5";
 import { useAuthSession } from "@/lib/auth-session";
-import { InlineDialog } from "@/components/app/inline-dialog";
 import styles from "./home.module.css";
 
 export const SEARCH_PLACEHOLDER = "Busca destinos, hospedajes o experiencias";
@@ -15,10 +13,8 @@ export const SEARCH_PLACEHOLDER = "Busca destinos, hospedajes o experiencias";
 export function HomeHeader() {
   const session = useAuthSession();
   const name = session.status === "signedIn" ? session.profile?.displayName : undefined;
-  const [noticeOpen, setNoticeOpen] = useState(false);
 
   return (
-    <>
     <section className={styles.header}>
       <Image
         src="/app/home/header-beach.jpg"
@@ -34,24 +30,17 @@ export function HomeHeader() {
       <div className={styles.headerContent}>
         <div className={styles.topRow}>
           <div className={styles.logoRow}>
-            <Image src="/app/brand/icon.png" alt="" width={40} height={40} />
             <Image
-              src="/app/brand/wordmark-transparent.png"
+              src="/app/brand/logo-rectangular-white.svg"
               alt="Panamá Viajero"
-              width={82}
-              height={40}
+              width={151}
+              height={50}
+              unoptimized
+              priority
             />
           </div>
           <div className={styles.accountRow}>
             <span className={styles.greeting}>{name ? `Hola, ${name}` : "Hola,"}</span>
-            <button
-              type="button"
-              className={styles.bell}
-              aria-label="Notificaciones"
-              onClick={() => setNoticeOpen(true)}
-            >
-              <IoNotificationsOutline size={20} color="#FFFFFF" aria-hidden />
-            </button>
           </div>
         </div>
 
@@ -70,15 +59,5 @@ export function HomeHeader() {
         </Link>
       </div>
     </section>
-  {noticeOpen && (
-        <InlineDialog
-          title="Notificaciones"
-          message="No tienes notificaciones por el momento."
-          confirmLabel="Entendido"
-          onConfirm={() => setNoticeOpen(false)}
-          onCancel={() => setNoticeOpen(false)}
-        />
-      )}
-    </>
   );
 }
