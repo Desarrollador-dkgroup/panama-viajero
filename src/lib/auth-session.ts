@@ -6,7 +6,11 @@ import { getSupabaseBrowserClient } from "@/lib/supabase-browser";
 // Sesión del visitante, igual que la app (src/hooks/use-auth-session.ts): nombre real de
 // `profiles.display_name`, nunca uno inventado.
 
-export type AuthProfile = { displayName: string; avatarStoragePath: string | null };
+export type AuthProfile = {
+  displayName: string;
+  lastName: string | null;
+  avatarStoragePath: string | null;
+};
 
 export type AuthState = {
   status: "loading" | "signedIn" | "signedOut";
@@ -29,11 +33,15 @@ async function fetchProfile(userId: string): Promise<AuthProfile | null> {
   if (!supabase) return null;
   const { data } = await supabase
     .from("profiles")
-    .select("display_name, avatar_storage_path")
+    .select("display_name, last_name, avatar_storage_path")
     .eq("id", userId)
     .maybeSingle();
   return data
-    ? { displayName: data.display_name, avatarStoragePath: data.avatar_storage_path }
+    ? {
+      displayName: data.display_name,
+      lastName: data.last_name,
+      avatarStoragePath: data.avatar_storage_path,
+    }
     : null;
 }
 

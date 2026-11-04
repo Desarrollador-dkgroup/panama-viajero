@@ -41,7 +41,9 @@ export default function AccountPage() {
       {status === "signedIn" ? (
         <div className={styles.identityCard}>
           <AvatarPicker avatarPath={profile?.avatarStoragePath ?? null} />
-          <span className={styles.identityTitle}>{profile?.displayName ?? "Tu cuenta"}</span>
+          <span className={styles.identityTitle}>
+            {[profile?.displayName, profile?.lastName].filter(Boolean).join(" ") || "Tu cuenta"}
+          </span>
           {email && <span className={styles.identityEmail}>{email}</span>}
           <div className={styles.authButtons}>
             <Link href="/cuenta/cambiar-contrasena" className={styles.secondaryButton}>
