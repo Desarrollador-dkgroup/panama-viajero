@@ -59,6 +59,8 @@ export default async function DestinationPage({ params, searchParams }: Props) {
 
       <div className={styles.sheet}>
         {destination.description && <p className={styles.sheetText}>{destination.description}</p>}
+        <h2 className={styles.sectionHeading}>¿Qué quieres explorar en {destination.name}?</h2>
+        <ExploreGrid query={explore} />
         <h2 className={styles.sectionHeading}>Sitios turísticos</h2>
         {sites.length === 0 ? (
           <p className={styles.emptyState}>
@@ -69,8 +71,6 @@ export default async function DestinationPage({ params, searchParams }: Props) {
             {sites.map((site) => <TouristSiteCard key={site.id} site={site} query={query} />)}
           </div>
         )}
-        <h2 className={styles.sectionHeading}>¿Qué quieres explorar en {destination.name}?</h2>
-        <ExploreGrid query={explore} />
         {destination.mapsEmbedUrl && (
           <>
             <h2 className={styles.sectionHeading}>Mapa</h2>
