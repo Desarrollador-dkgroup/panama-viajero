@@ -59,10 +59,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className={styles.topBarInner}>
           <Link href="/" className={styles.logo} aria-label="Panamá Viajero, inicio">
             <Image
-              src="/app/brand/logotype-positivo.png"
+              src="/app/brand/logo-rectangular.svg"
               alt="Panamá Viajero"
-              width={1600}
-              height={598}
+              width={151}
+              height={50}
+              unoptimized
               className={styles.logoImage}
               priority
             />
