@@ -44,6 +44,11 @@ export async function signInWithGoogle(next: string) {
   });
 }
 
+export async function hasSession(): Promise<boolean> {
+  const { data } = await client().auth.getSession();
+  return data.session !== null;
+}
+
 export async function signOut() {
   return client().auth.signOut();
 }
