@@ -183,6 +183,15 @@
   border-radius: 18px;
 }
 
+@media (min-width: 768px) {
+  .destinationSlide {
+    flex: 0 0 170px;
+    width: 170px;
+    min-width: 170px;
+    max-width: 170px;
+  }
+}
+
 .destinationSlide:active,
 .tourCard:active,
 .featuredCard:active {

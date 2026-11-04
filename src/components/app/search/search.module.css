@@ -229,7 +229,10 @@
 
 @media (min-width: 768px) {
   .citySlide {
-    height: 180px;
+    flex: 0 0 170px;
+    width: 170px;
+    min-width: 170px;
+    max-width: 170px;
   }
 }
 
