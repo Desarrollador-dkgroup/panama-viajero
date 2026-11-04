@@ -1,6 +1,36 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { IoCalendarOutline } from "react-icons/io5";
+import { useAuthSession } from "@/lib/auth-session";
+import { loginHref } from "@/lib/session-gate";
 import styles from "./service.module.css";
+
+// Reservar exige cuenta: sin sesión se abre el acceso y, después de entrar, vuelve aquí.
+function ReserveLink({ href, className, label, children }: {
+  href: string;
+  className: string;
+  label?: string;
+  children: React.ReactNode;
+}) {
+  const router = useRouter();
+  const { status } = useAuthSession();
+  return (
+    <Link
+      href={href}
+      className={className}
+      aria-label={label}
+      onClick={(event) => {
+        if (status === "signedIn") return;
+        event.preventDefault();
+        router.push(loginHref(href));
+      }}
+    >
+      {children}
+    </Link>
+  );
+}
 
 // Barras inferiores de la ficha (reserve-bar.tsx y booking-bar.tsx). En escritorio se
 // muestran como una tarjeta fija a la derecha.
@@ -19,10 +49,10 @@ export function ReserveBar({ href, summary, priceLine, label = "Reservar" }: {
           {priceLine && <span className={styles.barPriceLine}>{priceLine}</span>}
         </div>
       )}
-      <Link href={href} className={styles.reserveButton} aria-label={label}>
+      <ReserveLink href={href} className={styles.reserveButton} label={label}>
         <IoCalendarOutline size={20} color="#FFFFFF" aria-hidden />
         Reservar
-      </Link>
+      </ReserveLink>
     </div>
   );
 }
@@ -35,7 +65,7 @@ export function BookingBar({ href, priceLine }: { href: string; priceLine?: stri
           <span className={styles.barPriceLine}>{priceLine}</span>
         </div>
       )}
-      <Link href={href} className={styles.reserveButton}>Reservar</Link>
+      <ReserveLink href={href} className={styles.reserveButton}>Reservar</ReserveLink>
     </div>
   );
 }

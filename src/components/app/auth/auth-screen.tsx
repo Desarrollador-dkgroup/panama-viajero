@@ -23,6 +23,7 @@ import {
   signUpWithEmail,
   updatePassword,
 } from "@/lib/auth-actions";
+import { continueAsGuest } from "@/lib/session-gate";
 import styles from "./auth.module.css";
 
 export type AuthMode = "login" | "register" | "forgot" | "recovery" | "change-password";
@@ -130,7 +131,6 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
         className={styles.photo} />
       <div className={styles.topTint} aria-hidden />
       <div className={styles.bottomTint} aria-hidden />
-      <span className={styles.illustrativeTag}>Imagen ilustrativa</span>
 
       <form className={styles.scroll} onSubmit={handleSubmit} noValidate>
         <div className={styles.headerRow}>
@@ -198,6 +198,12 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
           <Link href="/cuenta/registro" className={styles.footerLink}>
             ¿No tienes cuenta? <strong>Regístrate</strong>
           </Link>
+        )}
+        {(mode === "login" || mode === "register") && (
+          <button type="button" className={styles.guestButton}
+            onClick={() => { continueAsGuest(); router.replace(next); }}>
+            Continuar sin iniciar sesión
+          </button>
         )}
         {mode === "register" && (
           <Link href="/cuenta/ingresar" className={styles.footerLink}>

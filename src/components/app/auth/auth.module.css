@@ -26,18 +26,6 @@
   pointer-events: none;
 }
 
-.illustrativeTag {
-  position: fixed;
-  top: calc(env(safe-area-inset-top) + 8px);
-  left: 50%;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: rgb(0 0 0 / 45%);
-  color: #FFFFFF;
-  font-size: 10px;
-  font-weight: 600;
-  transform: translateX(-50%);
-}
 
 .scroll {
   position: relative;
@@ -214,6 +202,19 @@
   margin-top: 20px;
   color: rgb(255 255 255 / 85%);
   font-size: 13px;
+}
+
+.guestButton {
+  align-self: center;
+  margin-top: 12px;
+  padding: 6px 14px;
+  border: 1px solid rgb(255 255 255 / 45%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 10%);
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .footerLink strong {

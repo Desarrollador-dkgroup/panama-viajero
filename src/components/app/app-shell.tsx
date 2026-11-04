@@ -15,6 +15,8 @@ import {
   IoSearchOutline,
 } from "react-icons/io5";
 import styles from "./app-shell.module.css";
+import { SessionGate } from "@/components/app/session-gate";
+import { isAccessRoute } from "@/lib/session-gate";
 
 type Tab = { href: string; label: string; icon: IconType; activeIcon: IconType };
 
@@ -48,8 +50,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "/";
   const withTabs = showsTabBar(pathname);
 
+  if (isAccessRoute(pathname)) return <>{children}</>;
+
   return (
     <div className={styles.shell}>
+      <SessionGate />
       <header className={styles.topBar}>
         <div className={styles.topBarInner}>
           <Link href="/" className={styles.logo} aria-label="Panamá Viajero, inicio">

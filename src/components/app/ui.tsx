@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { IoChevronForward, IoHeart, IoHeartOutline, IoImageOutline } from "react-icons/io5";
 import { toggleFavorite, useIsFavorite } from "@/lib/favorites";
+import { useAuthSession } from "@/lib/auth-session";
+import { loginHref } from "@/lib/session-gate";
 import styles from "./ui.module.css";
 
 // Piezas pequeñas compartidas por varias pantallas, copiadas de la app.
@@ -46,13 +49,17 @@ export function FavoriteButton({ serviceId, className = "" }: {
   className?: string;
 }) {
   const isFavorite = useIsFavorite(serviceId);
+  const router = useRouter();
+  const pathname = usePathname() ?? "/";
+  const { status } = useAuthSession();
   return (
     <button
       type="button"
       onClick={(event) => {
         event.preventDefault();
         event.stopPropagation();
-        toggleFavorite(serviceId);
+        if (status === "signedIn") toggleFavorite(serviceId);
+        else router.push(loginHref(pathname));
       }}
       aria-label={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
       aria-pressed={isFavorite}
