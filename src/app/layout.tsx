@@ -6,6 +6,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Panamá Viajero | Descubre tu próxima aventura",
   description: "Descubre destinos, hospedajes, restaurantes y experiencias en Panamá.",
+  formatDetection: { email: false, address: false, telephone: false },
 };
 
 // Ocupa toda la pantalla del celular, incluida la zona bajo la barra del sistema.
