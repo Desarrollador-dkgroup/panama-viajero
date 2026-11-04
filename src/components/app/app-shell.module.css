@@ -12,6 +12,22 @@
   min-height: 100dvh;
 }
 
+@keyframes pageEnterFromRight {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 767px) {
+  .pageEnter {
+    animation: pageEnterFromRight 260ms ease-out;
+  }
+}
+
 .mainWithTabs {
   padding-bottom: calc(var(--tab-bar-height) + env(safe-area-inset-bottom));
 }

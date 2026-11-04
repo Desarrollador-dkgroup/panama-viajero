@@ -16,6 +16,7 @@ import {
 } from "react-icons/io5";
 import styles from "./app-shell.module.css";
 import { SessionGate } from "@/components/app/session-gate";
+import { EdgeSwipeBack } from "@/components/app/edge-swipe-back";
 import { isAccessRoute } from "@/lib/session-gate";
 
 type Tab = { href: string; label: string; icon: IconType; activeIcon: IconType };
@@ -88,9 +89,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main id="contenido" className={`${styles.main} ${withTabs ? styles.mainWithTabs : ""}`}>
+      <main key={pathname} id="contenido"
+        className={`${styles.main} ${styles.pageEnter} ${withTabs ? styles.mainWithTabs : ""}`}>
         {children}
       </main>
+      <EdgeSwipeBack />
 
       {withTabs && (
         <nav className={styles.tabBar} aria-label="Pestañas">
