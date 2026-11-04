@@ -26,6 +26,7 @@ export default function AccountPage() {
   const [signingOut, setSigningOut] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [confirmingSignOut, setConfirmingSignOut] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [fetched, setFetched] = useState<BusinessMembership[]>([]);
   const memberships = status === "signedIn" ? fetched : [];
@@ -50,11 +51,7 @@ export default function AccountPage() {
               Cambiar contraseña
             </Link>
             <button type="button" className={styles.secondaryButton} disabled={signingOut}
-              onClick={async () => {
-                setSigningOut(true);
-                await signOut().catch(() => undefined);
-                setSigningOut(false);
-              }}>
+              onClick={() => setConfirmingSignOut(true)}>
               Cerrar sesión
             </button>
           </div>
@@ -116,6 +113,22 @@ export default function AccountPage() {
           onClick={() => setConfirmingDelete(true)}>
           <IoTrashOutline size={16} color="#C0392B" aria-hidden /> Eliminar cuenta
         </button>
+      )}
+      {confirmingSignOut && (
+        <InlineDialog
+          title="Cerrar sesión"
+          message="¿Seguro que quieres cerrar tu sesión?"
+          confirmLabel="Sí"
+          cancelLabel="No"
+          busy={signingOut}
+          onCancel={() => setConfirmingSignOut(false)}
+          onConfirm={async () => {
+            setSigningOut(true);
+            await signOut().catch(() => undefined);
+            setSigningOut(false);
+            setConfirmingSignOut(false);
+          }}
+        />
       )}
       {confirmingDelete && (
         <InlineDialog
