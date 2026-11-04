@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { IconType } from "react-icons";
 import {
   IoArrowBack,
@@ -55,6 +55,14 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
   const [notice, setNotice] = useState<{ title: string; body: string; action?: () => void } | null>(
     null);
   const copy = COPY[mode];
+
+  useEffect(() => {
+    const previous = document.body.style.background;
+    document.body.style.background = "#0A1428";
+    return () => {
+      document.body.style.background = previous;
+    };
+  }, []);
   const needsEmail = mode === "login" || mode === "register" || mode === "forgot";
   const needsPassword = mode !== "forgot";
   const confirmsPassword = mode === "recovery" || mode === "change-password";
