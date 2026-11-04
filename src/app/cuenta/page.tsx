@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   IoBusinessOutline,
+  IoBulbOutline,
   IoCalendarOutline,
   IoTrashOutline,
   IoChevronForward,
@@ -94,6 +95,11 @@ export default function AccountPage() {
           <IoChevronForward size={18} color="#C0C0C0" />
         </Link>
       )}
+      <Link href="/cuenta/sugerencias" className={styles.row}>
+        <span className={styles.rowIcon}><IoBulbOutline size={18} color="var(--indigo)" /></span>
+        <span className={styles.rowLabel}>Sugerencias</span>
+        <IoChevronForward size={18} color="#C0C0C0" />
+      </Link>
       <Link href="/promociones" className={styles.row}>
         <span className={styles.rowIcon}><IoPricetagsOutline size={18} color="var(--indigo)" /></span>
         <span className={styles.rowLabel}>Promociones</span>
