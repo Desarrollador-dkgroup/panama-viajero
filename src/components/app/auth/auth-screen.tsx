@@ -129,16 +129,18 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
     <div className={styles.background}>
       <Image src="/app/themes/montana-valle.jpg" alt="" fill priority sizes="100vw"
         className={styles.photo} />
-      <div className={styles.topTint} aria-hidden />
       <div className={styles.bottomTint} aria-hidden />
 
       <form className={styles.scroll} onSubmit={handleSubmit} noValidate>
         <div className={styles.headerRow}>
-          <button type="button" className={styles.iconButton} aria-label="Volver"
-            onClick={() => (window.history.length > 1 ? router.back() : router.push("/cuenta"))}>
-            <IoArrowBack size={22} color="#FFFFFF" aria-hidden />
-          </button>
-          <Image src="/app/brand/icon-negativo.png" alt="Panamá Viajero" width={34} height={35} />
+          {mode !== "login" && mode !== "register" ? (
+            <button type="button" className={styles.iconButton} aria-label="Volver"
+              onClick={() => (window.history.length > 1 ? router.back() : router.push("/cuenta"))}>
+              <IoArrowBack size={22} color="#FFFFFF" aria-hidden />
+            </button>
+          ) : null}
+          <Image src="/app/brand/logotype-negativo.png" alt="Panamá Viajero" width={190}
+            height={71} className={styles.brandLogo} priority />
         </div>
 
         <div className={styles.titleBlock}>

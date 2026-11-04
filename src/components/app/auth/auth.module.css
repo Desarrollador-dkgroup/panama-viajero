@@ -10,13 +10,6 @@
   object-fit: cover;
 }
 
-.topTint {
-  position: fixed;
-  inset: 0 0 auto;
-  height: calc(env(safe-area-inset-top) + 140px);
-  background: linear-gradient(rgb(10 20 40 / 75%), rgb(10 20 40 / 15%));
-  pointer-events: none;
-}
 
 .bottomTint {
   position: fixed;
@@ -40,7 +33,12 @@
 .headerRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  min-height: 44px;
+}
+
+.brandLogo {
+  height: auto;
 }
 
 .iconButton {
