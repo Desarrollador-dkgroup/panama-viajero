@@ -15,6 +15,7 @@ import { formatPlace, type CatalogDestination, type CatalogItem } from "@/lib/ca
 import type { ServicePromotion } from "@/lib/service-promotions";
 import styles from "./home.module.css";
 import { PriceTag } from "@/components/app/price-tag";
+import { ScrollRow } from "@/components/app/scroll-row";
 
 // Secciones de la portada de la app (src/components/home/*), con datos del panel.
 
@@ -55,7 +56,7 @@ export function DestinationsCarousel({ destinations }: { destinations: CatalogDe
   return (
     <section>
       <SectionHeader title="Destinos Populares" href="/destinos" />
-      <div className={`${styles.carousel} no-scrollbar`}>
+      <ScrollRow className={`${styles.carousel} no-scrollbar`}>
         {destinations.map((destination) => (
           <Link
             key={destination.id}
@@ -69,7 +70,7 @@ export function DestinationsCarousel({ destinations }: { destinations: CatalogDe
             </div>
           </Link>
         ))}
-      </div>
+      </ScrollRow>
     </section>
   );
 }
@@ -79,7 +80,7 @@ export function ToursCarousel({ tours }: { tours: CatalogItem[] }) {
   return (
     <section>
       <SectionHeader title="Tours y experiencias" href="/categoria/tour-operador" />
-      <div className={`${styles.carousel} no-scrollbar`}>
+      <ScrollRow className={`${styles.carousel} no-scrollbar`}>
         {tours.map((item) => (
           <Link key={item.id} href={`/servicios/${item.slug}`} className={styles.tourCard}>
             <CoverPhoto src={item.photo} alt="" />
@@ -98,7 +99,7 @@ export function ToursCarousel({ tours }: { tours: CatalogItem[] }) {
             </div>
           </Link>
         ))}
-      </div>
+      </ScrollRow>
     </section>
   );
 }
@@ -106,7 +107,7 @@ export function ToursCarousel({ tours }: { tours: CatalogItem[] }) {
 export function FeaturedServices({ services }: { services: CatalogItem[] }) {
   if (services.length === 0) return null;
   return (
-    <div className={`${styles.carousel} no-scrollbar`}>
+    <ScrollRow className={`${styles.carousel} no-scrollbar`}>
       {services.map((item) => (
         <Link key={item.id} href={`/servicios/${item.slug}`} className={styles.featuredCard}>
           <CoverPhoto src={item.photo} alt="" />
@@ -121,7 +122,7 @@ export function FeaturedServices({ services }: { services: CatalogItem[] }) {
           </div>
         </Link>
       ))}
-    </div>
+    </ScrollRow>
   );
 }
 
@@ -148,7 +149,7 @@ export function StaysCarousel({ stays }: { stays: CatalogItem[] }) {
   return (
     <section>
       <SectionHeader title="Encuentra tu próxima estadía" href="/categoria/hospedaje" />
-      <div className={`${styles.carousel} no-scrollbar`}>
+      <ScrollRow className={`${styles.carousel} no-scrollbar`}>
         {stays.map((item) => (
           <div key={item.id} className={styles.stayCard}>
             <Link
@@ -173,7 +174,7 @@ export function StaysCarousel({ stays }: { stays: CatalogItem[] }) {
             </div>
           </div>
         ))}
-      </div>
+      </ScrollRow>
     </section>
   );
 }
@@ -183,7 +184,7 @@ export function RestaurantsCarousel({ restaurants }: { restaurants: CatalogItem[
   return (
     <section>
       <SectionHeader title="¿Algo para comer?" href="/categoria/restaurantes" />
-      <div className={`${styles.carousel} no-scrollbar`}>
+      <ScrollRow className={`${styles.carousel} no-scrollbar`}>
         {restaurants.map((item) => (
           <div key={item.id} className={styles.restaurantCard}>
             <Link
@@ -204,7 +205,7 @@ export function RestaurantsCarousel({ restaurants }: { restaurants: CatalogItem[
             </div>
           </div>
         ))}
-      </div>
+      </ScrollRow>
     </section>
   );
 }
@@ -214,7 +215,7 @@ export function ActivitiesCarousel({ activities }: { activities: CatalogItem[] }
   return (
     <section>
       <SectionHeader title="Actividades para vivir" href="/categoria/actividades" />
-      <div className={`${styles.carousel} no-scrollbar`}>
+      <ScrollRow className={`${styles.carousel} no-scrollbar`}>
         {activities.map((item) => (
           <div key={item.id} className={styles.restaurantCard}>
             <Link
@@ -235,7 +236,7 @@ export function ActivitiesCarousel({ activities }: { activities: CatalogItem[] }
             </div>
           </div>
         ))}
-      </div>
+      </ScrollRow>
     </section>
   );
 }
@@ -245,7 +246,7 @@ export function PromotionsCarousel({ promotions }: { promotions: ServicePromotio
   return (
     <section>
       <SectionHeader title="Promociones" href="/promociones" />
-      <div className={`${styles.carousel} no-scrollbar`}>
+      <ScrollRow className={`${styles.carousel} no-scrollbar`}>
         {promotions.map((promo) => (
           <div key={promo.id} className={styles.stayCard}>
             <Link
@@ -267,7 +268,7 @@ export function PromotionsCarousel({ promotions }: { promotions: ServicePromotio
             </div>
           </div>
         ))}
-      </div>
+      </ScrollRow>
     </section>
   );
 }

@@ -28,6 +28,7 @@ import {
   type SearchSuggestion,
 } from "@/lib/search-suggestions";
 import styles from "./search.module.css";
+import { ScrollRow } from "@/components/app/scroll-row";
 
 const SEARCH_TAB_PLACEHOLDER = "Busca destinos o experiencias";
 
@@ -151,7 +152,7 @@ export function SearchScreen({ catalog, initialQuery = "" }: {
                 Ver todo <IoChevronForward size={14} aria-hidden />
               </Link>
             </div>
-            <div className={`${styles.cityCarousel} no-scrollbar`}>
+            <ScrollRow className={`${styles.cityCarousel} no-scrollbar`}>
               {catalog.destinations.map((destination) => (
                 <Link
                   key={destination.id}
@@ -163,7 +164,7 @@ export function SearchScreen({ catalog, initialQuery = "" }: {
                   <span className={styles.cityName}>{destination.name}</span>
                 </Link>
               ))}
-            </div>
+            </ScrollRow>
           </section>
 
           <section className={styles.section}>
