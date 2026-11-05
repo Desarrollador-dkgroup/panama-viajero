@@ -31,6 +31,46 @@
   height: 100%;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  cursor: grab;
+  user-select: none;
+}
+
+/* Flechas solo para ratón: en el teléfono se desliza con el dedo. */
+.arrow {
+  display: none;
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  margin-top: -20px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 92%);
+  color: var(--text-strong);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 18%);
+}
+
+.arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.arrowPrev {
+  left: 14px;
+}
+
+.arrowNext {
+  right: 14px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .arrow {
+    display: block;
+  }
 }
 
 .galleryImage {
