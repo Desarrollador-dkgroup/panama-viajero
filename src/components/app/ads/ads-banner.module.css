@@ -21,10 +21,25 @@
   background: #000;
 }
 
-.image {
+/* Ventana de la imagen: los anuncios se deslizan dentro de ella. */
+.viewport {
+  position: relative;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.45s ease;
+}
+
+.image {
+  flex: 0 0 100%;
   width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -32,7 +47,7 @@
   position: absolute;
   top: 16px;
   right: 16px;
-  z-index: 1;
+  z-index: 3;
   display: grid;
   place-items: center;
   width: 40px;
@@ -41,6 +56,30 @@
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.45);
   cursor: pointer;
+}
+
+/* Flechas: solo en escritorio. En el celular se desliza con el dedo. */
+.nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+}
+
+.navPrev {
+  left: 12px;
+}
+
+.navNext {
+  right: 12px;
 }
 
 .dots {
@@ -87,33 +126,13 @@
   cursor: pointer;
 }
 
-/* Flechas para cambiar de anuncio (en escritorio y celular). */
-.nav {
-  position: absolute;
-  top: 50%;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  margin-top: -22px;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.45);
-  cursor: pointer;
-}
-
-.navPrev {
-  left: 12px;
-}
-
-.navNext {
-  right: 12px;
-}
-
 @media (min-width: 768px) {
   .overlay {
     padding: 32px;
+  }
+
+  .nav {
+    display: grid;
   }
 
   /* Mismo tamaño que en el celular (390 × 844), centrado y sin pasar de la pantalla. */
@@ -123,13 +142,8 @@
     height: auto;
     max-height: 86vh;
     border-radius: 24px;
+    background: rgba(20, 22, 40, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
-  }
-
-  .image {
-    flex: 1;
-    height: auto;
-    max-height: none;
-    min-height: 0;
   }
 }
