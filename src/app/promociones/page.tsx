@@ -2,18 +2,18 @@ import Link from "next/link";
 import { PromoCard } from "@/components/app/promotions/promo-card";
 import { PromotionsHeader } from "@/components/app/promotions/promotions-header";
 import styles from "@/components/app/promotions/promotions.module.css";
-import { getActiveServicePromotions } from "@/lib/service-promotions";
+import { getServicePromotionAgenda } from "@/lib/service-promotions";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = { title: "Promociones | Panamá Viajero" };
 
-// Promociones vigentes hoy. Se filtran por sitio turístico o destino, como el catálogo.
+// Promociones vigentes y próximas. Se filtran por sitio turístico o destino, como el catálogo.
 export default async function PromotionsPage({ searchParams }: {
   searchParams: Promise<{ sitio?: string; destino?: string; promo?: string }>;
 }) {
   const { sitio, destino } = await searchParams;
-  const promotions = await getActiveServicePromotions();
+  const promotions = await getServicePromotionAgenda();
 
   const visible = promotions.filter((promo) => {
     if (sitio) return promo.siteIds.includes(sitio);

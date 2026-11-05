@@ -26,7 +26,8 @@ export function PromoCard({ promo }: { promo: ServicePromotion }) {
         <h3 className={styles.title}>
           {promo.title}{promo.roomName ? ` · ${promo.roomName}` : ""}
         </h3>
-        {promo.regularCents !== null && promo.finalCents !== null && (
+        {!promo.active && <p className={styles.priceLine}>Próximamente</p>}
+        {promo.active && promo.regularCents !== null && promo.finalCents !== null && (
           <p className={styles.priceLine}>
             <s>{formatMoney(promo.regularCents)}</s> {formatMoney(promo.finalCents)}
           </p>

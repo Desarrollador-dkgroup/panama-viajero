@@ -1,4 +1,4 @@
-import { getActiveServicePromotions, type ServicePromotion } from "@/lib/service-promotions";
+import { getServicePromotionAgenda, type ServicePromotion } from "@/lib/service-promotions";
 import { cache } from "react";
 import { coverPath, formatPlace, getServices, type CatalogItem } from "@/lib/catalog";
 import { publicMediaUrl } from "@/lib/storage";
@@ -240,7 +240,8 @@ export const getServiceDetail = cache(async (slug: string): Promise<ServiceDetai
   const restaurantRow = restaurant.data as Row | null;
   const reviewRows = (reviews.data ?? []) as Row[];
   const authors = await reviewAuthors(reviewRows.map((row) => String(row.customer_id)));
-  const promotions = await getActiveServicePromotions(new Date(), item.id);
+  // Incluye las promociones próximas para anunciarlas antes del día que aplican.
+  const promotions = await getServicePromotionAgenda(new Date(), item.id);
 
   return {
     item,

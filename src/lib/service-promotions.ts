@@ -7,6 +7,8 @@ export type ServicePromotion = {
   title: string;
   description: string | null;
   discountPct: number;
+  // true si aplica hoy; false si todavía no empieza (se muestra como próxima).
+  active: boolean;
   scheduleLabel: string;
   serviceId: string;
   serviceName: string;
@@ -72,8 +74,25 @@ type PromotionRow = {
   room_types: { id: string; name: string; price_cents: number | null } | null;
 };
 
+// Una promoción terminada ya no se muestra. Las de días de la semana no terminan.
+function isPromotionOver(
+  row: { schedule_mode: string; ends_on: string | null },
+  today: { date: string },
+) {
+  return row.schedule_mode === "range" && Boolean(row.ends_on) && today.date > (row.ends_on ?? "");
+}
+
 // Promociones de servicio vigentes hoy. Solo llegan servicios publicados (RLS).
 export async function getActiveServicePromotions(
+  now: Date = new Date(),
+  serviceId?: string,
+): Promise<ServicePromotion[]> {
+  const all = await getServicePromotionAgenda(now, serviceId);
+  return all.filter((promo) => promo.active);
+}
+
+// Promociones vigentes hoy y las próximas (todavía no empiezan, pero no han terminado).
+export async function getServicePromotionAgenda(
   now: Date = new Date(),
   serviceId?: string,
 ): Promise<ServicePromotion[]> {
@@ -95,7 +114,8 @@ export async function getActiveServicePromotions(
   const rows = (data ?? []) as unknown as PromotionRow[];
   return rows.flatMap((row) => {
     const service = row.services;
-    if (!service || !isPromotionActiveOn(row, today)) return [];
+    if (!service || isPromotionOver(row, today)) return [];
+    const active = isPromotionActiveOn(row, today);
     const room = row.room_types;
     const regularCents = room ? room.price_cents : service.base_price_cents;
     const discount = Number(row.discount_pct);
@@ -109,6 +129,7 @@ export async function getActiveServicePromotions(
       title: row.title,
       description: row.description,
       discountPct: discount,
+      active,
       scheduleLabel: formatPromotionSchedule(row),
       serviceId: service.id,
       serviceName: service.name,

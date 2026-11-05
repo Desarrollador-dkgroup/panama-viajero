@@ -81,7 +81,8 @@ export default async function RoomPage({ params, searchParams }: {
             )}
           </div>
           {(() => {
-            const promo = result.data.promotions.find((item) => item.roomId === room.id);
+            const promo = result.data.promotions.find((item) =>
+              item.roomId === room.id && item.active);
             return (
               <p className={styles.roomPriceLarge}>
                 <PriceTag price={room.price} promoPrice={promo?.finalCents != null

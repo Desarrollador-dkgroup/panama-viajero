@@ -251,6 +251,11 @@ export function BookingScreen({ serviceId, serviceName, serviceSlug, place, rati
                   Hasta {combo.totalCapacity} personas · ${combo.pricePerNight} por noche ·{" "}
                   {combo.nights} {combo.nights === 1 ? "noche" : "noches"}
                 </span>
+                {combo.discount > 0 && (
+                  <span className={styles.priceCardText}>
+                    Promoción aplicada: ahorras ${combo.discount.toFixed(2)}
+                  </span>
+                )}
               </button>
             ))}
           </div>

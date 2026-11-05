@@ -135,7 +135,8 @@ export function PromoNotice({ promotions }: { promotions: ServicePromotion[] }) 
         <div key={promo.id} className={styles.promoBlock}>
           <b className={styles.promoTitle}>{promo.title}</b>
           <span className={styles.infoItem}>Descuento: -{promo.discountPct}%</span>
-          {promo.regularCents !== null && promo.finalCents !== null && (
+          {!promo.active && <span className={styles.infoItem}>Próximamente</span>}
+          {promo.active && promo.regularCents !== null && promo.finalCents !== null && (
             <div className={styles.infoItem}>
               Precio: <PriceTag price={promo.regularCents / 100} promoPrice={promo.finalCents / 100} />
             </div>
@@ -170,7 +171,7 @@ export function RoomList({ rooms, hrefFor, promotions = [] }: {
               )}
               <span className={styles.roomPrice}>
                 {(() => {
-                  const promo = promotions.find((item) => item.roomId === room.id);
+                  const promo = promotions.find((item) => item.roomId === room.id && item.active);
                   return (
                     <>
                       <PriceTag price={room.price} promoPrice={promo?.finalCents != null

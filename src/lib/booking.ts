@@ -80,6 +80,8 @@ export type QuoteCombination = {
   pricePerNight: number;
   nights: number;
   totalPrice: number;
+  // Descuento por promociones de las noches de la estancia (en dólares).
+  discount: number;
 };
 export type StayQuote = { nights: number; combinations: QuoteCombination[] };
 
@@ -93,12 +95,16 @@ export async function quoteStay(serviceId: string, checkIn: string, checkOut: st
     p_guests: guests,
   });
   if (error) throw toBookingError(error);
-  const result = data as { nights: number; combinations: Omit<QuoteCombination, "id">[] };
+  const result = data as {
+    nights: number;
+    combinations: (Omit<QuoteCombination, "id" | "discount"> & { discountCents: number })[];
+  };
   return {
     nights: result.nights,
     combinations: (result.combinations ?? []).map((combo) => ({
       ...combo,
       id: combo.lines.map((line) => `${line.roomTypeId}x${line.quantity}`).join("+"),
+      discount: (combo.discountCents ?? 0) / 100,
       pricePerNight: combo.pricePerNight / 100,
       totalPrice: combo.totalPrice / 100,
       lines: combo.lines.map((line) => ({ ...line, pricePerNight: line.pricePerNight / 100 })),
