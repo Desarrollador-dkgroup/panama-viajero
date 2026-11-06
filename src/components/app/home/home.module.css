@@ -77,8 +77,7 @@
 .titleScrim {
   position: absolute;
   inset: -34px calc(-1 * var(--page-padding)) -50px;
-  background: linear-gradient(rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 35%) 30%, rgb(0 0 0 / 35%) 75%,
-    rgb(0 0 0 / 0%) 100%);
+  background: none;
   pointer-events: none;
 }
 
@@ -522,8 +521,7 @@
 
   /* Sombra más sutil en escritorio */
   .titleScrim {
-    background: linear-gradient(rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 30%) 30%, rgb(0 0 0 / 30%) 75%,
-      rgb(0 0 0 / 0%) 100%);
+    background: none;
   }
 
   .title {
