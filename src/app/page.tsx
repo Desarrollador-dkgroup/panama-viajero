@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { AdsBanner, type AdItem } from "@/components/app/ads/ads-banner";
+import accountStyles from "@/components/app/account.module.css";
 import { CatalogError } from "@/components/app/catalog-status";
 import { HomeHeader } from "@/components/app/home/home-header";
 import {
@@ -43,6 +45,13 @@ export default async function HomePage() {
         <RestaurantsCarousel restaurants={byCategory("restaurantes").slice(0, 10)} />
         <ActivitiesCarousel activities={byCategory("actividades").slice(0, 10)} />
         <ToursCarousel tours={byCategory("tour-operador").slice(0, 8)} />
+        <section className={styles.publishBlock}>
+          <h2>¿Tienes un negocio en Panamá?</h2>
+          <p>Déjanos tus datos y te contactamos para que tus servicios aparezcan aquí.</p>
+          <Link href="/publicar-negocio" className={accountStyles.primaryButton}>
+            Quiero publicar mi negocio
+          </Link>
+        </section>
       </div>
     </div>
   );

@@ -102,6 +102,11 @@ export default function AccountPage() {
         <span className={styles.rowLabel}>Sugerencias</span>
         <IoChevronForward size={18} color="#C0C0C0" />
       </Link>
+      <Link href="/publicar-negocio" className={styles.row}>
+        <span className={styles.rowIcon}><IoBulbOutline size={18} color="var(--indigo)" /></span>
+        <span className={styles.rowLabel}>Quiero publicar mi negocio</span>
+        <IoChevronForward size={18} color="#C0C0C0" />
+      </Link>
       <Link href="/promociones" className={styles.row}>
         <span className={styles.rowIcon}><IoPricetagsOutline size={18} color="var(--indigo)" /></span>
         <span className={styles.rowLabel}>Promociones</span>

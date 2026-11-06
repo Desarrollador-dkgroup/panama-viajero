@@ -593,3 +593,20 @@
   }
 }
 
+
+/* Bloque para propietarios al final del inicio. */
+.publishBlock {
+  margin: 32px 0 8px;
+  padding: 24px;
+  border-radius: 16px;
+  background: #EEF0FA;
+  text-align: center;
+}
+.publishBlock h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+.publishBlock p {
+  margin: 0 0 16px;
+  color: #4B5563;
+}
