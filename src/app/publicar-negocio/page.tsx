@@ -44,7 +44,11 @@ export default function PublishBusinessPage() {
     });
     setSending(false);
     if (error) {
-      setResult({ ok: false, text: "No pudimos enviar tu solicitud. Revisa los datos e intenta de nuevo." });
+      // 23514: un dato no cumple el largo o el formato que pide la base.
+      const text = error.code === "23514"
+        ? "Revisa los datos: el teléfono debe tener al menos 7 dígitos y el RUC al menos 5 caracteres."
+        : "No pudimos enviar tu solicitud. Intenta de nuevo en unos minutos.";
+      setResult({ ok: false, text });
       return;
     }
     setForm(EMPTY);
@@ -61,27 +65,27 @@ export default function PublishBusinessPage() {
       <form className={styles.identityCard} onSubmit={submit}>
         <label className={styles.field}>
           <span className={styles.fieldLabel}>Nombre comercial</span>
-          <input className={styles.input} required maxLength={120} value={form.businessName}
+          <input className={styles.input} required minLength={2} maxLength={120} value={form.businessName}
             onChange={update("businessName")} />
         </label>
         <label className={styles.field}>
           <span className={styles.fieldLabel}>Razón social</span>
-          <input className={styles.input} required maxLength={160} value={form.legalName}
+          <input className={styles.input} required minLength={2} maxLength={160} value={form.legalName}
             onChange={update("legalName")} />
         </label>
         <label className={styles.field}>
           <span className={styles.fieldLabel}>Número de RUC</span>
-          <input className={styles.input} required maxLength={40} value={form.ruc}
+          <input className={styles.input} required minLength={5} maxLength={40} value={form.ruc}
             onChange={update("ruc")} />
         </label>
         <label className={styles.field}>
           <span className={styles.fieldLabel}>Persona de contacto</span>
-          <input className={styles.input} required maxLength={120} value={form.contactPerson}
+          <input className={styles.input} required minLength={2} maxLength={120} value={form.contactPerson}
             onChange={update("contactPerson")} />
         </label>
         <label className={styles.field}>
           <span className={styles.fieldLabel}>Teléfono</span>
-          <input className={styles.input} type="tel" required maxLength={30} value={form.phone}
+          <input className={styles.input} type="tel" required minLength={7} maxLength={30} value={form.phone}
             onChange={update("phone")} />
         </label>
         <label className={styles.field}>
