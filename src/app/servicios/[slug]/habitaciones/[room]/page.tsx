@@ -5,6 +5,7 @@ import {
   IoPeopleOutline,
   IoWaterOutline,
 } from "react-icons/io5";
+import { formatPrice } from "@/lib/money";
 import { CatalogError } from "@/components/app/catalog-status";
 import { NotFoundScreen } from "@/components/app/not-found-screen";
 import { BookingBar } from "@/components/app/service/bottom-bars";
@@ -115,7 +116,7 @@ export default async function RoomPage({ params, searchParams }: {
         </div>
         <aside className={styles.barSlot}>
           <BookingBar href={`/servicios/${result.data.item.slug}/reservar?${query}`}
-            priceLine={`$${room.price} / noche`} />
+            priceLine={`${formatPrice(room.price)} / noche`} />
         </aside>
       </div>
     </div>

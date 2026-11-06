@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatPrice } from "@/lib/money";
 import type { IconType } from "react-icons";
 import {
   IoCalendarOutline,
@@ -60,7 +61,7 @@ export function ServiceDetails({ detail }: { detail: ServiceDetail }) {
       ? [{ icon: IoTimeOutline, label: "Salidas",
         value: detail.schedule.map(formatSlot).join(" · ") }] : []),
     { icon: IoCashOutline, label: PRICE_MEANING[item.categoryId] ?? "Precio desde",
-      value: `$${item.price}` },
+      value: formatPrice(item.price) },
   ];
   return <DetailRows title="Detalles" rows={rows} />;
 }

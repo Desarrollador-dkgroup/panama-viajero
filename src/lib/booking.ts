@@ -148,6 +148,27 @@ export async function createStayReservation(params: {
   return { id: data.id, status: data.status, quotedTotalCents: data.quoted_total_cents };
 }
 
+// Precio de un servicio por fecha y personas, con la promoción general de esa fecha.
+export type RequestQuote = {
+  unitRegularCents: number;
+  unitFinalCents: number;
+  discountPct: number;
+  multipliable: boolean;
+  totalRegularCents: number | null;
+  totalFinalCents: number | null;
+};
+
+export async function quoteRequestReservation(serviceId: string, date: string,
+  guests: number): Promise<RequestQuote | null> {
+  const { data, error } = await client().rpc("quote_request_reservation", {
+    p_service_id: serviceId,
+    p_reservation_date: date,
+    p_guests: guests,
+  });
+  if (error) throw toBookingError(error);
+  return (data ?? null) as RequestQuote | null;
+}
+
 export async function createRequestReservation(params: {
   serviceId: string;
   date: string;
@@ -294,5 +315,5 @@ export function formatDateLong(value: string | Date): string {
 
 export function formatMoney(cents: number | null): string {
   if (cents == null) return "";
-  return `$${(cents / 100).toFixed(2).replace(/\.00$/, "")}`;
+  return `$${(cents / 100).toFixed(2)}`;
 }

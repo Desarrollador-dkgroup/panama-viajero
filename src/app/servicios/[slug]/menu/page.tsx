@@ -1,4 +1,5 @@
 import { BackButton } from "@/components/app/back-button";
+import { formatPrice } from "@/lib/money";
 import { CatalogError } from "@/components/app/catalog-status";
 import { NotFoundScreen } from "@/components/app/not-found-screen";
 import styles from "@/components/app/service/menu.module.css";
@@ -7,7 +8,7 @@ import { getServiceDetail } from "@/lib/service-detail";
 
 export const dynamic = "force-dynamic";
 
-const price = (value: number) => `$${Number.isInteger(value) ? value : value.toFixed(2)}`;
+const price = (value: number) => formatPrice(value);
 
 // Carta del restaurante (src/app/menu/[id].tsx de la app).
 export default async function MenuPage({ params }: { params: Promise<{ slug: string }> }) {

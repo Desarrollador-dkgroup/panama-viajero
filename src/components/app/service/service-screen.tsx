@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatPrice } from "@/lib/money";
 import { IoChevronForward, IoLocationOutline, IoStar } from "react-icons/io5";
 import { formatPlace } from "@/lib/catalog";
 import {
@@ -274,7 +275,7 @@ export function ServiceScreen({ detail, search }: {
           <aside className={styles.barSlot}>
             <BookingBar
               href={withQuery(`/servicios/${item.slug}/reservar`)}
-              priceLine={`Desde $${item.price} / noche`}
+              priceLine={`Desde ${formatPrice(item.price)} / noche`}
             />
           </aside>
         )}

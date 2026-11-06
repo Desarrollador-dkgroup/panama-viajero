@@ -1,8 +1,9 @@
 "use client";
 
+import { formatPrice } from "@/lib/money";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoCalendarOutline, IoCheckmark } from "react-icons/io5";
 import { BackButton } from "@/components/app/back-button";
 import { useAuthSession } from "@/lib/auth-session";
@@ -12,7 +13,9 @@ import {
   formatDateLong,
   formatMoney,
   newIdempotencyKey,
+  quoteRequestReservation,
   toISODate,
+  type RequestQuote,
   type ServerReservation,
 } from "@/lib/booking";
 import { formatGuests, formatSlot, type ReservationConfig } from "@/lib/reservation-config";
@@ -44,6 +47,23 @@ export function RequestScreen({ serviceId, serviceName, serviceSlug, price, conf
   const slots = config.slots;
   const canSubmit = Boolean(date) && (slots === null || time !== null);
   const total = config.pricePerPerson ? price * guests : null;
+
+  // Precio con la promoción general de la fecha elegida. Se descarta si la fecha o las
+  // personas cambiaron mientras llegaba la respuesta.
+  const quoteKey = `${date}|${guests}`;
+  const [quoteState, setQuoteState] = useState<{ key: string; quote: RequestQuote | null }>(
+    { key: "", quote: null });
+  useEffect(() => {
+    if (!date) return;
+    let cancelled = false;
+    const key = `${date}|${guests}`;
+    quoteRequestReservation(serviceId, date, guests)
+      .then((quote) => { if (!cancelled) setQuoteState({ key, quote }); })
+      .catch(() => { if (!cancelled) setQuoteState({ key, quote: null }); });
+    return () => { cancelled = true; };
+  }, [serviceId, date, guests]);
+  const quote = date && quoteState.key === quoteKey ? quoteState.quote : null;
+  const promo = quote && quote.discountPct > 0 ? quote : null;
 
   async function submit() {
     if (!canSubmit || submitting) return;
@@ -110,10 +130,32 @@ export function RequestScreen({ serviceId, serviceName, serviceSlug, price, conf
 
             {total !== null && (
               <div className={styles.priceCard}>
-                <span className={styles.priceCardTitle}>Total estimado: ${total}</span>
+                <span className={styles.priceCardTitle}>
+                  Total estimado: {formatPrice(promo?.totalFinalCents != null
+                    ? promo.totalFinalCents / 100 : total)}
+                  {promo?.totalRegularCents != null && (
+                    <s> {formatPrice(promo.totalRegularCents / 100)}</s>
+                  )}
+                </span>
+                {promo && (
+                  <span className={styles.priceCardText}>
+                    Promoción de {promo.discountPct}% para esta fecha.
+                  </span>
+                )}
                 <span className={styles.priceCardText}>
-                  {formatGuests(config, guests)} × ${price} ({config.priceMeaning.toLowerCase()}).
+                  {formatGuests(config, guests)} × {formatPrice(price)} ({config.priceMeaning.toLowerCase()}).
                   El negocio confirma el precio al aceptar.
+                </span>
+              </div>
+            )}
+            {total === null && promo && (
+              <div className={styles.priceCard}>
+                <span className={styles.priceCardTitle}>
+                  Precio: {formatPrice(promo.unitFinalCents / 100)}
+                  <s> {formatPrice(promo.unitRegularCents / 100)}</s>
+                </span>
+                <span className={styles.priceCardText}>
+                  Promoción de {promo.discountPct}% para esta fecha. El negocio confirma el precio al aceptar.
                 </span>
               </div>
             )}

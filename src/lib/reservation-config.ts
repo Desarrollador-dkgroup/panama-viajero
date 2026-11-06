@@ -1,3 +1,4 @@
+import { formatPrice } from "@/lib/money";
 // Tipo de reserva por categoría (src/constants/reservation-demo-data.ts de la app).
 
 export type ReservationKind = "table" | "activity" | "request";
@@ -125,8 +126,8 @@ export function reservationPriceLine(
   guests: number | null,
 ): string {
   if (config.pricePerPerson && guests !== null) {
-    return `Total estimado: $${price * guests} · ${formatGuests(config, guests)} × $${price}`;
+    return `Total estimado: ${formatPrice(price * guests)} · ${formatGuests(config, guests)} × ${formatPrice(price)}`;
   }
-  if (config.pricePerPerson) return `Precio: $${price} por persona`;
-  return `${config.priceMeaning} $${price}`;
+  if (config.pricePerPerson) return `Precio: ${formatPrice(price)} por persona`;
+  return `${config.priceMeaning} ${formatPrice(price)}`;
 }

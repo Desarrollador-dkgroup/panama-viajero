@@ -1,5 +1,6 @@
 "use client";
 
+import { formatPrice } from "@/lib/money";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -245,15 +246,15 @@ export function BookingScreen({ serviceId, serviceName, serviceSlug, place, rati
                   <span className={styles.priceCardTitle}>
                     {combo.lines.map((line) => `${line.quantity} × ${line.name}`).join(" + ")}
                   </span>
-                  <span className={styles.optionTotal}>${combo.totalPrice}</span>
+                  <span className={styles.optionTotal}>{formatPrice(combo.totalPrice)}</span>
                 </span>
                 <span className={styles.priceCardText}>
-                  Hasta {combo.totalCapacity} personas · ${combo.pricePerNight} por noche ·{" "}
+                  Hasta {combo.totalCapacity} personas · {formatPrice(combo.pricePerNight)} por noche ·{" "}
                   {combo.nights} {combo.nights === 1 ? "noche" : "noches"}
                 </span>
                 {combo.discount > 0 && (
                   <span className={styles.priceCardText}>
-                    Promoción aplicada: ahorras ${combo.discount.toFixed(2)}
+                    Promoción aplicada: ahorras {formatPrice(combo.discount)}
                   </span>
                 )}
               </button>
@@ -261,7 +262,7 @@ export function BookingScreen({ serviceId, serviceName, serviceSlug, place, rati
           </div>
           <div className={styles.bar}>
             {selected && (
-              <p className={styles.barHint}>Total de la estancia: <strong>${selected.totalPrice}</strong></p>
+              <p className={styles.barHint}>Total de la estancia: <strong>{formatPrice(selected.totalPrice)}</strong></p>
             )}
             <button type="button" className={styles.primaryButton} disabled={!selected}
               onClick={() => setStep("summary")}>
@@ -291,7 +292,7 @@ export function BookingScreen({ serviceId, serviceName, serviceSlug, place, rati
               ))}
               <div className={styles.optionTop}>
                 <span className={styles.blockTitle}>Total</span>
-                <span className={styles.optionTotal}>${selected.totalPrice}</span>
+                <span className={styles.optionTotal}>{formatPrice(selected.totalPrice)}</span>
               </div>
             </div>
             <div className={styles.block}>
@@ -354,7 +355,7 @@ export function BookingScreen({ serviceId, serviceName, serviceSlug, place, rati
             </span>
             <span className={styles.optionTop}>
               <span className={styles.noteText}>Importe</span>
-              <span className={styles.optionTotal}>${selected.totalPrice}</span>
+              <span className={styles.optionTotal}>{formatPrice(selected.totalPrice)}</span>
             </span>
             <span className={styles.priceCardText}>Referencia: {idempotencyKey.slice(0, 18)}</span>
           </div>
