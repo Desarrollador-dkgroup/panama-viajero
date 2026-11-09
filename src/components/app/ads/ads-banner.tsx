@@ -9,6 +9,8 @@ export type AdItem = {
   id: string;
   title: string;
   imageUrl: string;
+  // Imagen para computadora y tablet (780 × 1688). Si falta, se usa la de celular.
+  desktopImageUrl: string;
   promoHref: string | null;
 };
 
@@ -60,8 +62,10 @@ export function AdsBanner({ ads }: { ads: AdItem[] }) {
         <div className={styles.viewport} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           <div className={styles.track} style={{ transform: `translateX(-${index * 100}%)` }}>
             {ads.map((item) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img key={item.id} src={item.imageUrl} alt={item.title} className={styles.image} />
+              <picture key={item.id}>
+                <source media="(min-width: 768px)" srcSet={item.desktopImageUrl} />
+                <img src={item.imageUrl} alt={item.title} className={styles.image} />
+              </picture>
             ))}
           </div>
           {count > 1 && (

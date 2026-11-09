@@ -26,7 +26,7 @@ export async function getActiveAds(): Promise<AdItem[]> {
   const supabase = getSupabaseServerClient();
   const { data, error } = await supabase
     .from("ads")
-    .select("id, title, image_path, service_promotions(room_type_id, services(slug), room_types(slug))")
+    .select("id, title, image_path, desktop_image_path, service_promotions(room_type_id, services(slug), room_types(slug))")
     .order("position");
   if (error) return [];
   return (data ?? []).map((ad) => {
@@ -35,6 +35,9 @@ export async function getActiveAds(): Promise<AdItem[]> {
       id: ad.id,
       title: ad.title,
       imageUrl: publicMediaUrl(ad.image_path, "ads-media"),
+      // Sin imagen de escritorio (anuncios anteriores), se usa la de celular.
+      desktopImageUrl: publicMediaUrl(ad.desktop_image_path, "ads-media")
+        || publicMediaUrl(ad.image_path, "ads-media"),
       promoHref: adDestination(promo),
     };
   });
