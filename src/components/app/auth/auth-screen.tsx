@@ -18,6 +18,7 @@ import {
   isValidEmail,
   isValidPassword,
   resendSignUpConfirmation,
+  signInWithApple,
   signInWithGoogle,
   sendPasswordResetEmail,
   signInWithEmail,
@@ -127,17 +128,12 @@ export function AuthScreen({ mode }: { mode: AuthMode }) {
   }
 
   async function social(provider: "Google" | "Apple") {
-    if (provider === "Google") {
-      const { error } = await signInWithGoogle(next).catch((failure: unknown) => ({
-        error: failure instanceof Error ? failure : new Error("No se pudo conectar con Google."),
-      }));
-      if (error) setNotice({ title: "No se pudo continuar con Google", body: error.message });
-      return;
-    }
-    setNotice({
-      title: "Continuar con Apple",
-      body: "Iniciar sesión con Apple todavía no está configurado en el proyecto.",
-    });
+    const label = provider === "Google" ? "Google" : "Apple";
+    const start = provider === "Google" ? signInWithGoogle : signInWithApple;
+    const { error } = await start(next).catch((failure: unknown) => ({
+      error: failure instanceof Error ? failure : new Error(`No se pudo conectar con ${label}.`),
+    }));
+    if (error) setNotice({ title: `No se pudo continuar con ${label}`, body: error.message });
   }
 
   return (

@@ -44,6 +44,13 @@ export async function signInWithGoogle(next: string) {
   });
 }
 
+export async function signInWithApple(next: string) {
+  return client().auth.signInWithOAuth({
+    provider: "apple",
+    options: { redirectTo: callbackUrl(next) },
+  });
+}
+
 export async function hasSession(): Promise<boolean> {
   const { data } = await client().auth.getSession();
   return data.session !== null;
