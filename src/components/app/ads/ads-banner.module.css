@@ -135,16 +135,31 @@
     display: grid;
   }
 
-  /* Computadora y tablet: imagen horizontal de 1280 × 720 (16:9), centrada y sin pasar de la
-     pantalla. En celular la tarjeta sigue vertical (390 × 844). */
+  /* Computadora y tablet: la tarjeta toma el tamaño de cada imagen (sin proporción fija),
+     con ancho máximo de 960 px y sin pasar de la pantalla. */
   .panel {
-    width: min(960px, 92vw, calc(84vh * 16 / 9));
-    aspect-ratio: 16 / 9;
+    width: min(960px, 92vw);
     height: auto;
-    max-height: 84vh;
+    max-height: 88vh;
     border-radius: 24px;
     background: rgba(20, 22, 40, 0.72);
     border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  }
+
+  .viewport {
+    flex: 0 1 auto;
+  }
+
+  .track {
+    height: auto;
+    align-items: flex-start;
+  }
+
+  .image {
+    height: auto;
+    max-height: 72vh;
+    object-fit: contain;
+    background: #0b0d1f;
   }
 }
