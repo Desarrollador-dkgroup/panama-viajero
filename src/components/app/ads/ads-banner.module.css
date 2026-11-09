@@ -128,19 +128,20 @@
 
 @media (min-width: 768px) {
   .overlay {
-    padding: 32px;
+    padding: 16px;
   }
 
   .nav {
     display: grid;
   }
 
-  /* Mismo tamaño que en el celular (390 × 844), centrado y sin pasar de la pantalla. */
+  /* Computadora y tablet: la imagen de 780 × 1688 ocupa casi toda la altura de la pantalla,
+     con la misma proporción vertical del celular. */
   .panel {
-    width: min(390px, calc(86vh * 390 / 844));
+    width: min(520px, calc(94vh * 390 / 844));
     aspect-ratio: 390 / 844;
     height: auto;
-    max-height: 86vh;
+    max-height: 94vh;
     border-radius: 24px;
     background: rgba(20, 22, 40, 0.72);
     border: 1px solid rgba(255, 255, 255, 0.18);
