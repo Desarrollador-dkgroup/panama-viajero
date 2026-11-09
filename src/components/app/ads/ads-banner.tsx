@@ -62,7 +62,8 @@ export function AdsBanner({ ads }: { ads: AdItem[] }) {
         <div className={styles.viewport} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           <div className={styles.track} style={{ transform: `translateX(-${index * 100}%)` }}>
             {ads.map((item) => (
-              <picture key={item.id}>
+              <picture key={item.id}
+                className={`${styles.slide} ${item.id === ad.id ? styles.slideActive : ""}`}>
                 <source media="(min-width: 768px)" srcSet={item.desktopImageUrl} />
                 <img src={item.imageUrl} alt={item.title} className={styles.image} />
               </picture>
