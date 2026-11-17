@@ -625,15 +625,12 @@
   opacity: 0.6;
 }
 
-.guideIcon {
-  display: flex;
+.guideImage {
   flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--surface);
+  width: 88px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
 }
 
 .guideText {

@@ -4,7 +4,6 @@ import {
   IoArrowForward,
   IoBedOutline,
   IoBusOutline,
-  IoCompassOutline,
   IoLocationOutline,
   IoMegaphoneOutline,
   IoRestaurantOutline,
@@ -21,6 +20,7 @@ import { ScrollRow } from "@/components/app/scroll-row";
 // Secciones de la portada de la app (src/components/home/*), con datos del panel.
 
 const GUIDE_URL = "https://panama-viajero.pages.dev/";
+const GUIDE_IMAGE = "/banners/guia-emergente.svg";
 
 type GridTile = { id: string; label: string; href: string; icon: IconType; color: string };
 
@@ -87,9 +87,14 @@ export function GuideBanner() {
       target="_blank"
       rel="noopener noreferrer"
     >
-      <span className={styles.guideIcon}>
-        <IoCompassOutline size={20} color="#A82C4C" aria-hidden />
-      </span>
+      {/* eslint-disable-next-line @next/next/no-img-element -- SVG estático de public/ */}
+      <img
+        src={GUIDE_IMAGE}
+        alt=""
+        width={88}
+        height={44}
+        className={styles.guideImage}
+      />
       <span className={styles.guideText}>
         <span className={styles.guideTitle}>¿No sabes qué lugar explorar?</span>
         <span className={styles.guideSubtitle}>Consulta nuestra guía turística</span>
