@@ -91,8 +91,8 @@ export function GuideBanner() {
       <img
         src={GUIDE_IMAGE}
         alt=""
-        width={88}
-        height={44}
+        width={140}
+        height={70}
         className={styles.guideImage}
       />
       <span className={styles.guideText}>

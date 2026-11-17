@@ -627,8 +627,8 @@
 
 .guideImage {
   flex-shrink: 0;
-  width: 88px;
-  height: 44px;
+  width: 140px;
+  height: 70px;
   border-radius: 10px;
   object-fit: cover;
 }
