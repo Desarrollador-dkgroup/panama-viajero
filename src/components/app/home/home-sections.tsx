@@ -4,6 +4,7 @@ import {
   IoArrowForward,
   IoBedOutline,
   IoBusOutline,
+  IoCompassOutline,
   IoLocationOutline,
   IoMegaphoneOutline,
   IoRestaurantOutline,
@@ -18,6 +19,8 @@ import { PriceTag } from "@/components/app/price-tag";
 import { ScrollRow } from "@/components/app/scroll-row";
 
 // Secciones de la portada de la app (src/components/home/*), con datos del panel.
+
+const GUIDE_URL = "https://panama-viajero.pages.dev/";
 
 type GridTile = { id: string; label: string; href: string; icon: IconType; color: string };
 
@@ -72,6 +75,27 @@ export function DestinationsCarousel({ destinations }: { destinations: CatalogDe
         ))}
       </ScrollRow>
     </section>
+  );
+}
+
+// Banner que invita a consultar la guía turística en la web.
+export function GuideBanner() {
+  return (
+    <a
+      href={GUIDE_URL}
+      className={styles.guideBanner}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span className={styles.guideIcon}>
+        <IoCompassOutline size={20} color="#A82C4C" aria-hidden />
+      </span>
+      <span className={styles.guideText}>
+        <span className={styles.guideTitle}>¿No sabes qué lugar explorar?</span>
+        <span className={styles.guideSubtitle}>Consulta nuestra guía turística</span>
+      </span>
+      <IoArrowForward size={16} color="#1A1A1A" aria-hidden />
+    </a>
   );
 }
 

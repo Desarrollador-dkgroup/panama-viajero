@@ -8,6 +8,7 @@ import {
   CategoryGrid,
   DestinationsCarousel,
   FeaturedServices,
+  GuideBanner,
   PromotionsCarousel,
   RestaurantsCarousel,
   StaysCarousel,
@@ -39,6 +40,7 @@ export default async function HomePage() {
       <div className={styles.body}>
         <CategoryGrid />
         <DestinationsCarousel destinations={destinations} />
+        <GuideBanner />
         <PromotionsCarousel promotions={promotions} />
         <FeaturedServices services={recommended.length ? recommended : services.slice(0, 6)} />
         <StaysCarousel stays={byCategory("hospedaje").slice(0, 10)} />
