@@ -256,6 +256,11 @@
   overflow: hidden;
 }
 
+/* La galería ocupa toda la cabecera del sitio, también en escritorio (420 px). */
+.siteGallery {
+  height: 100%;
+}
+
 .siteHeroTag {
   position: absolute;
   bottom: 12px;

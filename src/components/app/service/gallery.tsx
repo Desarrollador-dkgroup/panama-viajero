@@ -5,10 +5,12 @@ import { PhotoPlaceholder } from "@/components/app/ui";
 import styles from "./service.module.css";
 
 // Galería deslizable de la ficha (src/components/service-detail/photo-gallery.tsx).
-export function PhotoGallery({ photos, indicator = "dots", className = "" }: {
+// Con `alt`, cada foto se describe como «<alt>, foto N de M» para lectores de pantalla.
+export function PhotoGallery({ photos, indicator = "dots", className = "", alt }: {
   photos: string[];
   indicator?: "dots" | "counter";
   className?: string;
+  alt?: string;
 }) {
   const [active, setActive] = useState(0);
   const track = useRef<HTMLDivElement>(null);
@@ -43,7 +45,8 @@ export function PhotoGallery({ photos, indicator = "dots", className = "" }: {
   if (photos.length === 0) return <PhotoPlaceholder className={`${styles.gallery} ${className}`} />;
 
   return (
-    <div className={`${styles.gallery} ${className}`}>
+    <div className={`${styles.gallery} ${className}`} role={alt ? "group" : undefined}
+      aria-label={alt ? `Fotos de ${alt}` : undefined}>
       <div
         ref={track}
         className={`${styles.galleryTrack} no-scrollbar`}
@@ -58,12 +61,13 @@ export function PhotoGallery({ photos, indicator = "dots", className = "" }: {
       >
         {photos.map((photo, index) => (
           // eslint-disable-next-line @next/next/no-img-element
-          <img key={photo} src={photo} alt="" className={styles.galleryImage}
+          <img key={photo} src={photo} className={styles.galleryImage}
+            alt={alt ? `${alt}, foto ${index + 1} de ${photos.length}` : ""}
             loading={index === 0 ? "eager" : "lazy"} draggable={false} />
         ))}
       </div>
       {photos.length > 1 && indicator === "counter" && (
-        <span className={styles.counter}>{active + 1}/{photos.length}</span>
+        <span className={styles.counter} aria-live="polite">{active + 1}/{photos.length}</span>
       )}
       {photos.length > 1 && (
         <>

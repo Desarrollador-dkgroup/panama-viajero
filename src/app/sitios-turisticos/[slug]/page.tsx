@@ -6,10 +6,11 @@ import categoryStyles from "@/components/app/category/category.module.css";
 import { NotFoundScreen } from "@/components/app/not-found-screen";
 import { ExploreGrid } from "@/components/app/places/places";
 import styles from "@/components/app/places/places.module.css";
-import { CoverPhoto } from "@/components/app/ui";
+import { PhotoGallery } from "@/components/app/service/gallery";
 import { attempt } from "@/lib/attempt";
 import { getServices, getTouristSites } from "@/lib/catalog";
 import { shuffle } from "@/lib/shuffle";
+import { getTouristSitePhotos } from "@/lib/tourist-site-photos";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +37,9 @@ export default async function TouristSitePage({ params, searchParams }: Props) {
   const [sites, services] = result.data;
   const site = sites.find((item) => item.slug === slug || item.id === slug);
   if (!site) return <NotFoundScreen message="No encontramos este destino." />;
+  // Si la galería no carga, la portada sigue visible en lugar de romper toda la página.
+  const gallery = await attempt(() => getTouristSitePhotos(site.id));
+  const photos = gallery.data?.length ? gallery.data : site.photo ? [site.photo] : [];
 
   const forward = new URLSearchParams();
   for (const key of ["checkIn", "checkOut", "guests"]) {
@@ -49,7 +53,8 @@ export default async function TouristSitePage({ params, searchParams }: Props) {
   return (
     <div className={styles.siteScreen}>
       <div className={styles.siteHero}>
-        <CoverPhoto src={site.photo} alt={site.name} />
+        <PhotoGallery photos={photos} indicator="counter" alt={site.name}
+          className={styles.siteGallery} />
         {site.photo && site.photoIsIllustrative && (
           <span className={styles.siteHeroTag}>Imagen ilustrativa · no verificada</span>
         )}
