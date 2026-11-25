@@ -5,11 +5,13 @@ import { ResultCard } from "@/components/app/category/result-card";
 import categoryStyles from "@/components/app/category/category.module.css";
 import { NotFoundScreen } from "@/components/app/not-found-screen";
 import { ExploreGrid } from "@/components/app/places/places";
+import { SiteActivities } from "@/components/app/places/site-activities";
 import styles from "@/components/app/places/places.module.css";
 import { PhotoGallery } from "@/components/app/service/gallery";
 import { attempt } from "@/lib/attempt";
 import { getServices, getTouristSites } from "@/lib/catalog";
 import { shuffle } from "@/lib/shuffle";
+import { getTouristSiteActivities } from "@/lib/tourist-site-activities";
 import { getTouristSitePhotos } from "@/lib/tourist-site-photos";
 
 export const dynamic = "force-dynamic";
@@ -37,8 +39,12 @@ export default async function TouristSitePage({ params, searchParams }: Props) {
   const [sites, services] = result.data;
   const site = sites.find((item) => item.slug === slug || item.id === slug);
   if (!site) return <NotFoundScreen message="No encontramos este destino." />;
-  // Si la galería no carga, la portada sigue visible en lugar de romper toda la página.
-  const gallery = await attempt(() => getTouristSitePhotos(site.id));
+  // Si la galería o las actividades no cargan, la página se muestra igual: con la portada y
+  // sin la sección «Qué hacer», en lugar de romperse entera.
+  const [gallery, activities] = await Promise.all([
+    attempt(() => getTouristSitePhotos(site.id)),
+    attempt(() => getTouristSiteActivities(site.id)),
+  ]);
   const photos = gallery.data?.length ? gallery.data : site.photo ? [site.photo] : [];
 
   const forward = new URLSearchParams();
@@ -65,6 +71,13 @@ export default async function TouristSitePage({ params, searchParams }: Props) {
         <p className={styles.siteText}>{site.shortDescription}</p>
         {site.description && site.description !== site.shortDescription && (
           <p className={styles.siteText}>{site.description}</p>
+        )}
+        {(activities.data?.length ?? 0) > 0 && (
+          <>
+            <div className={styles.divider} />
+            <SiteActivities siteName={site.name} activities={activities.data ?? []}
+              headingClassName={styles.heading} />
+          </>
         )}
         <div className={styles.divider} />
         <h2 className={styles.heading}>¿Qué quieres explorar en {site.name}?</h2>
