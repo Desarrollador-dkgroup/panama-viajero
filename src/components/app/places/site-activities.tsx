@@ -22,7 +22,7 @@ export function SiteActivities({
       </h2>
       <ul className={styles.list}>
         {activities.map((activity, index) => {
-          const Icon = activityIcon(activity.name);
+          const Icon = activityIcon(activity.name, activity.iconKey);
           return (
             <li key={`${index}-${activity.name}`} className={styles.item}>
               <span className={styles.icon} aria-hidden="true"><Icon /></span>
