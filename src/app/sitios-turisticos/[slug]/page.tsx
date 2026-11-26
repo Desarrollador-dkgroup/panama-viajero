@@ -72,13 +72,6 @@ export default async function TouristSitePage({ params, searchParams }: Props) {
         {site.description && site.description !== site.shortDescription && (
           <p className={styles.siteText}>{site.description}</p>
         )}
-        {(activities.data?.length ?? 0) > 0 && (
-          <>
-            <div className={styles.divider} />
-            <SiteActivities siteName={site.name} activities={activities.data ?? []}
-              headingClassName={styles.heading} />
-          </>
-        )}
         <div className={styles.divider} />
         <h2 className={styles.heading}>¿Qué quieres explorar en {site.name}?</h2>
         <ExploreGrid query={explore} />
@@ -102,6 +95,14 @@ export default async function TouristSitePage({ params, searchParams }: Props) {
             <h2 className={styles.heading}>Ubicación</h2>
             <iframe title={`Mapa de ${site.name}`} src={site.mapsEmbedUrl} className={styles.map}
               loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+          </>
+        )}
+
+        {(activities.data?.length ?? 0) > 0 && (
+          <>
+            <div className={styles.divider} />
+            <SiteActivities siteName={site.name} activities={activities.data ?? []}
+              headingClassName={styles.heading} />
           </>
         )}
       </div>
