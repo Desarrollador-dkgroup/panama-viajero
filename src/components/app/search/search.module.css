@@ -236,9 +236,12 @@
   }
 }
 
+/* El nombre va abajo, sobre un degradado, igual que «Destinos Populares» del inicio. */
 .citySlide {
   position: relative;
   display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   flex: 0 0 calc((100% - 12px) / 2);
   width: calc((100% - 12px) / 2);
   min-width: calc((100% - 12px) / 2);
@@ -261,7 +264,12 @@
 
 
 
-.cityScrim,
+.cityScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgb(0 0 0 / 0%) 40%, rgb(0 0 0 / 75%) 100%);
+}
+
 .themeScrim,
 .bannerShade {
   position: absolute;
@@ -279,8 +287,9 @@
 
 .cityName {
   overflow: hidden;
+  padding: 14px;
   color: var(--surface);
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 800;
   white-space: nowrap;
   text-overflow: ellipsis;
